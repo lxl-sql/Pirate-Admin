@@ -1,0 +1,80 @@
+.detail-basic :deep(.ant-carousel) {
+  margin-right: 16px;
+  width: 300px;
+}
+.detail-basic :deep(.ant-carousel) .slick-slider {
+  overflow: hidden;
+}
+.detail-basic :deep(.ant-carousel) .slick-slider .slick-prev {
+  left: -100%;
+}
+.detail-basic :deep(.ant-carousel) .slick-slider .slick-next {
+  right: -100%;
+}
+.detail-basic :deep(.ant-carousel) .slick-slider:hover .slick-prev {
+  left: 10px;
+}
+.detail-basic :deep(.ant-carousel) .slick-slider:hover .slick-next {
+  right: 10px;
+}
+.detail-basic :deep(.ant-carousel) .slick-prev,
+.detail-basic :deep(.ant-carousel) .slick-next {
+  width: 30px;
+  height: 30px;
+  transition: all 0.3s;
+}
+.detail-basic :deep(.ant-carousel) .custom-slick-arrow {
+  z-index: 9999;
+  color: #fff;
+  font-size: 14px;
+  line-height: 30px;
+  text-align: center;
+  background-color: rgba(31, 45, 61, 0.4);
+  opacity: 0.3;
+  border-radius: 100%;
+}
+.detail-basic :deep(.ant-carousel) .custom-slick-arrow:before {
+  display: none;
+}
+.detail-basic :deep(.ant-carousel) .custom-slick-arrow:hover {
+  opacity: 0.7;
+}
+.detail-basic :deep(.ant-carousel) .basic-img {
+  width: 300px;
+  object-fit: contain;
+}
+.detail-basic .basic-content .basic-title {
+  font-size: 16px;
+}
+.detail-basic .basic-content .content-item {
+  display: flex;
+  align-items: center;
+  line-height: 28px;
+}
+.detail-basic .basic-content .content-item label {
+  width: 80px;
+  color: var(--i-text-color-secondary);
+}
+.detail-basic .basic-content .content-item span {
+  color: var(--i-text-color-regular);
+}
+.detail-basic .basic-content .content-item .content-item_price {
+  font-size: 16px;
+  color: var(--error-color);
+}
+@media screen and (max-width: 900px) {
+  .detail-basic {
+    flex-direction: column;
+  }
+  .detail-basic :deep(.ant-carousel) {
+    width: 100%;
+    margin-right: 0;
+  }
+  .detail-basic :deep(.ant-carousel) .ant-image {
+    width: 100%;
+    height: 200px;
+  }
+  .detail-basic :deep(.ant-carousel) .basic-img {
+    width: 100%;
+  }
+}

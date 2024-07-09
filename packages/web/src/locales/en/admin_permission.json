@@ -1,0 +1,26 @@
+{
+  "table": {
+    "columns": {
+      "title": "Title"
+    }
+  },
+  "form": {
+    "label": {
+      "name": "Name",
+      "title": "Title"
+    },
+    "placeholder": {
+      "parentId": "Please select parent",
+      "name": "Please input the name",
+      "title": "Please input the title",
+      "slug": "Please input the slug",
+      "permissionIds": "Please input the permissions"
+    }
+  },
+  "error": {
+    "path": "Please input the path",
+    "name": "Please input the name",
+    "slug": "Please input the slug",
+    "permissionIds": "Please input the permissions"
+  }
+}

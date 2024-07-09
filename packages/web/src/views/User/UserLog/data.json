@@ -1,0 +1,13 @@
+[
+  {
+    "key": 1,
+    "username": "张三",
+    "nickname": "zs",
+    "groups": "超级管理员",
+    "avatar": "http://localhost:4000/src/assets/svg/logo.svg",
+    "email": "1234567890@qq.com",
+    "url": "/auth/group",
+    "ip": "127.0.0.1",
+    "createTime": "2022-01-01 10:22"
+  }
+]

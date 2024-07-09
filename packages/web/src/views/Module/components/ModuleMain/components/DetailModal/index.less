@@ -1,0 +1,23 @@
+.detail-main {
+  .main-left {
+    flex: 1;
+  }
+
+  .main-right {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .detail-main {
+    flex-direction: column;
+    .main-left {
+      margin-bottom: 16px;
+    }
+    .main-right {
+      padding-top: 12px;
+      width: 100%;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+  }
+}

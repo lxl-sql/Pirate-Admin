@@ -1,0 +1,54 @@
+.default-main {
+    box-sizing: border-box;
+    padding: 16px;
+    background-color: var(--primary-color);
+
+    .container-table {
+        // overflow-y: hidden;
+
+        overflow: hidden;
+
+        .table-form,
+        .table-header,
+        .ant-table-wrapper {
+            background-color: var(--primary-color);
+        }
+
+        .table-form {
+            box-sizing: border-box;
+            padding: 16px;
+            transform-style: preserve-3d;
+            transform-origin: bottom;
+            position: relative;
+            z-index: 0; // 层级低于 table-header
+        }
+
+        .table-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 16px;
+        }
+
+        :deep(.ant-table-wrapper) {
+
+            .ant-table-pagination {
+                margin: 16px;
+            }
+        }
+    }
+}
+
+.zoom-in-enter-active,
+.zoom-in-leave-active {
+    transition: all 0.3s ease;
+}
+
+.zoom-in-enter-from,
+.zoom-in-leave-to {
+    opacity: 0;
+    transform: rotateX(180deg);
+}

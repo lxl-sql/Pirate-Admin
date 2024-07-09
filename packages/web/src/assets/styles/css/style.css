@@ -1,0 +1,381 @@
+:root {
+  --bgColor: #f0f2f5;
+  --box-shadow-light: 0px 0px 12px rgba(0, 0, 0, 0.12);
+  /* --primary-color: #1890ff; */
+  --fontSize-default: 1.3rem;
+  --success-color: #52c41a; /* 成功色 */
+  --error-color: #f5222d; /* 失败色 */
+
+  --ba-main-space: 16px;
+  --ba-color-primary-light: #3f6ad8;
+  --ba-bg-color: var(--primary-bg-color);
+  --ba-bg-color-overlay: #ffffff;
+  --ba-border-color: #f6f6f6;
+
+  --i-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, 0.12);
+
+  --i-text-color-primary: #303133;
+  --i-text-color-regular: #606266;
+  --i-text-color-secondary: #909399;
+  --i-text-color-placeholder: #a8abb2;
+  --i-text-color-disabled: #c0c4cc;
+
+  --i-bg-color: var(--primary-bg-color);
+
+  /* 文本溢出换行 */
+  --ellipsis-clamp: 2;
+
+  --img-placeholder-rate: 0;
+}
+
+html,
+body,
+#app {
+  /*background-color: var(--bgColor) !important;*/
+  font-size: 14px;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+  Microsoft YaHei, SimSun, sans-serif;
+  /* background-color: var(--primary-bg-color); */
+  background-color: #f0f2f5;
+}
+
+/*里面的代码可以根据自己需求去进行更改*/
+
+/* 设置滚动条的样式 */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* 滚动槽 */
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+/* 滚动条滑块 */
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--scrollbar-thumb-bg-color);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-bg-color-hover);
+}
+
+/* ::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(255, 0, 0, 0.4);
+} */
+
+#app {
+  /* overflow: hidden; */
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* 常用定位 */
+
+.p-re {
+  position: relative;
+}
+
+/* 常用display */
+
+/* flex */
+.flex,
+.d-flex-default {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-align-center {
+  align-items: center;
+}
+
+.flex-justify-center {
+  justify-content: center;
+}
+
+.d-flex-center {
+  display: flex;
+  align-items: center;
+}
+
+.d-flex-start {
+  display: flex;
+  align-items: flex-start;
+}
+
+.d-flex-sb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.d-flex-wrap {
+  display: flex;
+  align-items: center;
+  flex-flow: wrap;
+}
+
+.d-none {
+  display: none;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.d-block {
+  display: block;
+}
+
+/* 常用宽度/高度 */
+
+.w_16 {
+  width: 160px !important;
+}
+
+.w_20 {
+  width: 200px !important;
+}
+
+.mh-100 {
+  min-height: 100px;
+}
+
+/* 常用边距 */
+.mtb_4 {
+  margin: 4px 0;
+}
+
+.mlr_4 {
+  margin: 0 4px;
+}
+
+.mr_5 {
+  margin-right: 5px;
+}
+
+.mr_8 {
+  margin-right: 8px;
+}
+
+.mr_10 {
+  margin-right: 10px;
+}
+
+.mr_16 {
+  margin-right: 16px;
+}
+
+.mr_24 {
+  margin-right: 24px;
+}
+
+.mb_8 {
+  margin-bottom: 8px;
+}
+
+.mb_15 {
+  margin-bottom: 15px;
+}
+
+.mb_16 {
+  margin-bottom: 16px;
+}
+
+.mt_8 {
+  margin-top: 8px;
+}
+
+/* 常用内边距 */
+
+.pb_8 {
+  padding-bottom: 8px;
+}
+
+.pr_10 {
+  padding-right: 10px;
+}
+
+.pr_8 {
+  padding-right: 8px;
+}
+
+.pl_8 {
+  padding-left: 8px;
+}
+
+/* 常用字体大小 */
+
+.fs_12 {
+  font-size: 12px;
+}
+
+.fs_14 {
+  font-size: 14px;
+}
+
+.fs_16 {
+  font-size: 16px;
+}
+
+.txt_color_sub {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+/* 常用文本对齐方式 */
+.t-align-c {
+  text-align: center;
+}
+
+.t-align-l {
+  text-align: left;
+}
+
+.t-align-r {
+  text-align: right;
+}
+
+/* 常用宽度 */
+
+.w_200 {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+/* 色系 */
+
+.success-color {
+}
+
+/* 表格点 */
+
+.dot {
+  margin-right: 10px;
+  padding: 4px;
+  border-radius: 50px;
+}
+
+/* 常用鼠标指针 */
+
+.c-pointer {
+  cursor: pointer;
+}
+
+/* 常用文本属性 */
+
+.user-select {
+  user-select: none;
+}
+
+.fontSize-icon {
+  font-size: var(--fontSize-default);
+}
+
+/* block-help */
+.block-help {
+  display: block;
+  width: 100%;
+  color: #909399;
+  font-size: 13px;
+  line-height: 16px;
+  padding-top: 5px;
+}
+
+/* 常用动效 */
+
+.suspension {
+  transition: all 0.3s ease;
+}
+
+.suspension:hover {
+  -webkit-transform: translateY(-4px) scale(1.02);
+  -moz-transform: translateY(-4px) scale(1.02);
+  -ms-transform: translateY(-4px) scale(1.02);
+  -o-transform: translateY(-4px) scale(1.02);
+  transform: translateY(-4px) scale(1.02);
+  -webkit-box-shadow: 0 14px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 14px 24px #0003;
+  z-index: 999;
+  border-radius: 6px;
+}
+
+/* 阴影 */
+.is-always-shadow {
+  box-shadow: 0 12px 32px 4px rgba(0, 0, 0, 0.04),
+  0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 表格 */
+button.drag-row-item {
+  cursor: move;
+}
+
+/* 动画 */
+
+/* 头像无限旋转 */
+.avatar-turn {
+  cursor: pointer;
+}
+
+.avatar-turn:hover {
+  transform: rotate(666turn);
+  transition: all 59s cubic-bezier(0.34, 0, 0.84, 1) 1s;
+}
+
+/* 文本溢出省略号 */
+.ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis_more {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--ellipsis-clamp);
+}
+
+.img_placeholder {
+  overflow: hidden;
+  height: 0;
+  padding-bottom: var(--img-placeholder-rate); /** 其中*处填 图片的高宽百分比=高/宽*100% */
+}
+
+/* 移动端 */
+@media screen and (max-width: 500px) {
+  .avatar-turn:hover {
+    transform: none;
+    transition: none;
+  }
+}

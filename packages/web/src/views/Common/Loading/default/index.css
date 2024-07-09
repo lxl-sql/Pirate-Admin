@@ -1,0 +1,173 @@
+#global_loading {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: #030b0e;
+}
+#global_loading .loading {
+  width: 200px;
+  z-index: 99999;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: bounce-up 1.4s linear infinite;
+}
+#global_loading .item1 {
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 47%;
+  animation: bounce-next1 0.5s linear infinite;
+}
+#global_loading .img {
+  width: 100%;
+  z-index: 99999;
+}
+#global_loading .item2 {
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: 45%;
+  left: 47%;
+  animation: bounce-next1 0.4s linear infinite;
+}
+#global_loading .item3 {
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: 55%;
+  left: 47%;
+  animation: bounce-next3 0.5s linear infinite;
+}
+#global_loading .item4 {
+  display: inline-block;
+  width: 200px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: 25%;
+  right: -10%;
+  animation: bounce-box1 1s linear infinite;
+}
+#global_loading .item5 {
+  display: inline-block;
+  width: 150px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  bottom: 25%;
+  right: -10%;
+  animation: bounce-box2 1.3s linear infinite;
+}
+#global_loading .item6 {
+  display: inline-block;
+  width: 200px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  bottom: 15%;
+  right: -100%;
+  animation: bounce-box3 1s linear infinite;
+}
+#global_loading .item7 {
+  display: inline-block;
+  width: 150px;
+  height: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: 10%;
+  right: -100%;
+  animation: bounce-box3 0.7s linear infinite;
+}
+@-webkit-keyframes bounce-box1 {
+  0% {
+    left: 200%;
+  }
+  50% {
+    left: 35%;
+  }
+  100% {
+    left: -100%;
+  }
+}
+@-webkit-keyframes bounce-box2 {
+  0% {
+    left: 150%;
+  }
+  50% {
+    left: 35%;
+  }
+  100% {
+    left: -50%;
+  }
+}
+@-webkit-keyframes bounce-box3 {
+  0% {
+    left: 100%;
+  }
+  50% {
+    left: 50%;
+  }
+  100% {
+    left: -20%;
+  }
+}
+@-webkit-keyframes bounce-next1 {
+  10% {
+    left: 45%;
+    background-color: #fff;
+  }
+  50% {
+    left: 35%;
+    background-color: #fff;
+  }
+  100% {
+    left: 20%;
+    background-color: #030b0e;
+  }
+}
+@-webkit-keyframes bounce-next3 {
+  10% {
+    left: 45%;
+    background-color: #fff;
+  }
+  50% {
+    left: 25%;
+    background-color: #fff;
+  }
+  100% {
+    left: 20%;
+    background-color: #030b0e;
+  }
+}
+@-webkit-keyframes bounce-next4 {
+  10% {
+    left: 45%;
+    background-color: #fff;
+  }
+  50% {
+    left: 25%;
+    background-color: #fff;
+  }
+  100% {
+    left: 20%;
+    background-color: #030b0e;
+  }
+}
+@-webkit-keyframes bounce-up {
+  25% {
+    top: 49%;
+  }
+  75% {
+    top: 51%;
+  }
+}

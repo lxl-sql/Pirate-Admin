@@ -1,0 +1,29 @@
+.default-main .main-card {
+  overflow: hidden;
+  border-radius: 5px;
+}
+.default-main .main-card :deep(.ant-tabs-nav) {
+  background: var(--primary-color);
+  margin-bottom: 0;
+}
+.default-main .main-card :deep(.ant-tabs-nav) .ant-tabs-tab {
+  border: none;
+}
+.default-main .main-card :deep(.ant-tabs-nav) + .ant-tabs-content-holder {
+  padding: 0;
+}
+.default-main .main-card :deep(.ant-tabs-content-holder) {
+  padding: 16px;
+  padding-top: 0;
+}
+.default-main .main-card .card-head {
+  padding: 8px 16px;
+  background: #fafafa;
+}
+.default-main .main-card .card-main {
+  padding: 16px;
+  background-color: var(--primary-color);
+}
+.default-main .main-card .card-main .ant-btn-sm {
+  font-size: 12px;
+}

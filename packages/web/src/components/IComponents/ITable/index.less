@@ -1,0 +1,55 @@
+.default-main {
+  .container-table {
+    @apply border border-solid overflow-hidden rounded-t-[@border-radius]; // 如果后面出现样式问题 可能是这部 hidden 隐藏导致的
+    border-color: @border-inline-color;
+
+    :deep(.ant-alert) {
+      @apply rounded-b-none;
+    }
+
+    .i-table-form,
+    .table-header,
+    .ant-table-wrapper {
+      @apply box-border p-4 bg-[@colorBgContainer];
+    }
+
+    .i-table-form {
+      @apply style-preserve-3d;
+    }
+
+    .table-header {
+      @apply relative z-1 flex justify-between items-center overflow-auto;
+
+    }
+
+    .ant-table-wrapper {
+      @apply pt-0;
+    }
+
+    .ant-table-cell {
+      @apply whitespace-pre;
+    }
+  }
+}
+
+.zoom-in-enter-active,
+.zoom-in-leave-active {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+.zoom-in-enter-from,
+.zoom-in-leave-to {
+  @apply opacity-0 rotate-x-180;
+}
+
+@media screen and (max-width: 678px) {
+  .table-header_search {
+    @apply hidden;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  :deep(.ant-table-wrapper .ant-table-content) {
+    @apply overflow-auto;
+  }
+}

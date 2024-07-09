@@ -1,0 +1,50 @@
+.icons-title {
+  display: flex;
+  justify-content: space-between;
+
+  .icons-tab {
+    .tab-item {
+      margin-left: 8px;
+      cursor: pointer;
+      user-select: none;
+
+      &.active,
+      &:hover {
+        color: var(--primary-border-color-selected);
+      }
+    }
+  }
+}
+
+.icons-content {
+  max-width: 665px;
+  // overflow: hidden;
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-flow: wrap;
+
+  .icons-item {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 1px solid #eee;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+    &:hover {
+      box-sizing: border-box;
+      border: 1px solid var(--primary-border-color-selected);
+    }
+
+    &.active {
+      box-sizing: border-box;
+      border: 1px solid var(--primary-border-color-selected);
+    }
+  }
+}
+
+.ant-popover-title {
+  display: none !important;
+}

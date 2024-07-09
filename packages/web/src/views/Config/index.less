@@ -1,0 +1,58 @@
+.switch-language {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+}
+
+.bubble {
+  overflow: hidden;
+  background: url("@/assets/images/bg.jpg") repeat;
+}
+
+.form-item-icon {
+  height: auto;
+}
+
+.config {
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 720px) {
+  .login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .login-box {
+      width: 340px;
+      margin-top: 0;
+    }
+  }
+}
+
+.chang-lang :deep(.el-dropdown-menu__item) {
+  justify-content: center;
+}
+
+.content :deep(.el-input__prefix) {
+  display: flex;
+  align-items: center;
+}
+
+.captcha-img {
+  width: 100%;
+}
+
+@media screen and (max-height: 800px) {
+  .login .login-box {
+    margin-bottom: 0;
+  }
+}

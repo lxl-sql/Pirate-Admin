@@ -1,0 +1,97 @@
+{
+  "message": {
+    "success": "Success",
+    "fail": "Fail",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "ok": "OK",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "language": "Language",
+    "zh": "Chinese",
+    "en": "English",
+    "search": "Search",
+    "noDataTips": "No data",
+    "loginExpired": "Login expired, please login again"
+  },
+  "placeholder": {
+    "username": "Please input the username",
+    "password": "Please input the password",
+    "captcha": "Please input the captcha",
+    "keyword": "Please input the keyword",
+    "nickname": "Please input the nickname",
+    "roles": "Please select the roles",
+    "status": "Please select the status",
+    "role": "Please input the role"
+  },
+  "success": {
+    "login": "Login success!",
+    "loginOut": "Logout success!",
+    "welcome": "Welcome!",
+    "upload": "Upload success!",
+    "delete": "Delete success!",
+    "create": "Create success!",
+    "update": "Update success!",
+    "saved successfully": "Saved successfully!"
+  },
+  "error": {
+    "userName": "Please input the username",
+    "password": "Please input the password",
+    "nickname": "Please input the nickname",
+    "captcha": "Please input the captcha",
+    "login": "Login failed, please try again later",
+    "network": "Network error, please try again later",
+    "server": "Server error, please try again later",
+    "upload": "Upload failed, please try again later",
+    "uploadSize": "The uploaded file cannot exceed ",
+    "uploadType": "The uploaded file type is incorrect",
+    "roles": "Please select the roles"
+  },
+  "title": {
+    "refresh": "Refresh",
+    "filter": "Filter",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "expandAll": "Expand all",
+    "collapseAll": "Collapse all",
+    "expandUniversalSearch": "Expand universal search",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "remove": "Remove",
+    "detail": "Detail",
+    "remove_selected_row": "Remove selected rows",
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "login": {
+    "login": "Login",
+    "userName": "userName",
+    "password": "password",
+    "remember": "Remember me"
+  },
+  "button": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "enum": {
+    "status": {
+      "0": "Disable",
+      "1": "Enable"
+    }
+  },
+  "other": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "The moving position is beyond the movable range!": "The moving position is beyond the movable range!",
+    "Test email sent successfully!": "Test email sent successfully!"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "table": {
+    "columns": {
+      "number": "Number",
+      "username": "Username",
+      "nickname": "Nickname",
+      "roles": "Roles",
+      "avatar": "Avatar",
+      "gender": "Gender",
+      "email": "Email",
+      "phone": "Phone",
+      "lastLoginIp": "Last Login Ip",
+      "lastLoginTime": "Last Login Time",
+      "status": "Status",
+      "createTime": "Create Time",
+      "operation": "Operation"
+    }
+  },
+  "enum": {
+    "gender": {
+      "0": "Unknown",
+      "1": "Male",
+      "2": "Female"
+    },
+    "status": {
+      "0": "Disable",
+      "1": "Enable"
+    }
+  },
+  "label": {
+    "username": "Username",
+    "nickname": "Nickname",
+    "password": "Password",
+    "roles": "Roles",
+    "avatar": "Avatar",
+    "email": "Email",
+    "phone": "Phone",
+    "status": "Status"
+  },
+  "placeholder": {
+    "admin_username": "Please input the admin username",
+    "username": "Please input the username",
+    "nickname": "Please input the nickname",
+    "password": "Please input the password",
+    "edit_password": "Please input password if you want to change",
+    "roles": "Please select roles",
+    "avatar": "Please upload avatar",
+    "email": "Please input the email",
+    "phone": "Please input the phone",
+    "status": "Please select status"
+  },
+  "error": {
+    "username": "Please input the username",
+    "nickname": "Please input the nickname",
+    "password": "Please input the password",
+    "roles": "Please select roles",
+    "avatar": "Please upload avatar",
+    "email": "Please input the email",
+    "phone": "Please input the phone",
+    "status": "Please select status"
+  }
+}

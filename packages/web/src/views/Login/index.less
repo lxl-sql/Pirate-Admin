@@ -1,0 +1,116 @@
+.switch-language {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+}
+
+.bubble {
+  overflow: hidden;
+  background: url("@/assets/images/bg.jpg") repeat;
+}
+
+.form-item-icon {
+  height: auto;
+}
+
+.login {
+  position: absolute;
+  top: 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+
+  .login-box {
+    transition: cubic-bezier(0.075, 0.82, 0.165, 1) 0.3s;
+    overflow: hidden;
+    width: 430px;
+    padding: 0;
+    background: var(--ba-bg-color-overlay);
+    margin-bottom: 80px;
+    border-radius: 10px;
+  }
+
+  .head {
+    background: #ccccff;
+
+    img {
+      display: block;
+      width: 430px;
+      margin: 0 auto;
+      user-select: none;
+    }
+  }
+
+  .form {
+    position: relative;
+
+    .profile-avatar {
+      display: block;
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      border: 4px solid var(--ba-bg-color-overlay);
+      top: -50px;
+      right: calc(50% - 50px);
+      z-index: 2;
+      user-select: none;
+    }
+
+    .content {
+      padding: 80px 40px 30px 40px;
+
+      .ant-input-affix-wrapper,
+      .submit {
+        height: 40px;
+      }
+
+      .submit {
+        width: 100%;
+        border-radius: 25px !important;
+      }
+
+      .svg-captcha {
+        margin-left: 8px;
+        width: 100px;
+        line-height: 1em;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .login-box {
+      width: 340px;
+      margin-top: 0;
+    }
+  }
+}
+
+.chang-lang :deep(.el-dropdown-menu__item) {
+  justify-content: center;
+}
+
+.content :deep(.el-input__prefix) {
+  display: flex;
+  align-items: center;
+}
+
+.captcha-img {
+  width: 100%;
+}
+
+@media screen and (max-height: 800px) {
+  .login .login-box {
+    margin-bottom: 0;
+  }
+}

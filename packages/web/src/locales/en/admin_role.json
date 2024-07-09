@@ -1,0 +1,36 @@
+{
+  "table": {
+    "columns": {
+      "name": "Name",
+      "slug": "Slug",
+      "status": "Status",
+      "createTime": "Create Time",
+      "updateTime": "Update Time",
+      "operation": "Operation"
+    }
+  },
+  "form": {
+    "label": {
+      "parentId": "Parent",
+      "name": "Name",
+      "slug": "Slug",
+      "permissionIds": "Permissions",
+      "description": "Description",
+      "sort": "Sort",
+      "status": "Status"
+    },
+    "placeholder": {
+      "parentId": "Please select parent",
+      "name": "Please input the name",
+      "slug": "Please input the slug",
+      "permissionIds": "Please input the permissions",
+      "description": "Please input the description",
+      "sort": "Please input the sort"
+    }
+  },
+  "error": {
+    "name": "Please input the name",
+    "slug": "Please input the slug",
+    "permissionIds": "Please input the permissions"
+  }
+}

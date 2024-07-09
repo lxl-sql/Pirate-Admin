@@ -1,0 +1,63 @@
+.default-main .container-table .table-form,
+.default-main .container-table .table-header,
+.default-main .container-table .ant-table-wrapper {
+  background-color: var(--primary-color);
+}
+.default-main .container-table .table-header {
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+.default-main .container-table .table-header :deep(.anticon-spin) {
+  width: 1em;
+  height: 1em;
+}
+.default-main .container-table .i-table-form {
+  box-sizing: border-box;
+  margin-bottom: 16px;
+  transform-style: preserve-3d;
+  transform-origin: bottom;
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+.default-main .container-table .i-table-form .i-table-form-default {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #f0f0f0;
+}
+.default-main .container-table .i-table-form .i-table-form-default .i-table-form-search {
+  flex: 1;
+}
+.default-main .container-table .i-table-form .i-table-form-default .i-form-item {
+  margin-bottom: 16px;
+}
+.default-main .container-table .i-table-form .i-table-form-default .i-form-operate {
+  margin-left: 16px;
+  align-self: flex-end;
+}
+.zoom-in-enter-active,
+.zoom-in-leave-active {
+  transition: all 0.3s ease;
+}
+.zoom-in-enter-from,
+.zoom-in-leave-to {
+  opacity: 0;
+  transform: rotateX(180deg);
+}
+@media screen and (max-width: 678px) {
+  .table-header_search {
+    display: none;
+  }
+}
+@media screen and (max-width: 1200px) {
+  :deep(.ant-table-wrapper .ant-table-content) {
+    overflow-x: auto;
+  }
+}

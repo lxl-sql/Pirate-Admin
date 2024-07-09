@@ -1,0 +1,56 @@
+.detail-author {
+  box-sizing: border-box;
+  padding-left: 16px;
+  border-left: 1px solid;
+  border-color: var(--i-bg-color);
+}
+.detail-author .detail-title {
+  font-size: 16px;
+}
+.detail-author .author-info {
+  display: flex;
+  align-items: center;
+}
+.detail-author .author-info .author-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+.detail-author .author-contact {
+  text-align: center;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+.detail-author .author-title {
+  margin: 4px 0;
+  text-align: center;
+  font-weight: bold;
+  color: var(--i-text-color-secondary);
+}
+.detail-author .other_works .other_work-item {
+  box-sizing: border-box;
+  padding: 8px;
+  margin: 4px 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.detail-author .other_works .other_work-item:hover {
+  background-color: var(--i-bg-color);
+}
+.detail-author .other_works .other_work-item .work-item_img {
+  width: 42px;
+}
+.detail-author .other_works .other_work-item .work-item_name {
+  flex: 1;
+}
+@media screen and (max-width: 900px) {
+  .detail-author {
+    padding-left: 0;
+    border-left: none;
+  }
+  .detail-author .other_works .other_work-item .work-item_img {
+    width: 100px;
+    margin-right: 12px;
+  }
+}

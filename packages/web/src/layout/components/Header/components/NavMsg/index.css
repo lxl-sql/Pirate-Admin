@@ -1,0 +1,47 @@
+.nav-msg-popover {
+  width: 300px;
+}
+.nav-msg-popover .ant-popover-content .ant-popover-inner .ant-popover-title {
+  font-weight: bold;
+}
+.nav-msg-popover .ant-popover-content .ant-popover-inner .ant-popover-inner-content {
+  padding: 0;
+}
+.nav-msg-popover .nav-msg-content {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.nav-msg-popover .nav-msg-content .nav-msg-item {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+.nav-msg-popover .nav-msg-content .nav-msg-item:hover {
+  background: var(--primary-bg-color);
+}
+.nav-msg-popover .nav-msg-content .nav-msg-item .nav-msg-icon {
+  margin-right: 10px;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  border-radius: 50%;
+}
+.nav-msg-popover .nav-msg-content .nav-msg-item .nav-msg-desc .title,
+.nav-msg-popover .nav-msg-content .nav-msg-item .nav-msg-desc .time {
+  margin-bottom: 0;
+}
+.nav-msg-popover .nav-msg-content .nav-msg-item .nav-msg-desc .title {
+  line-height: 18px;
+  margin-bottom: 6px;
+}
+.nav-msg-popover .nav-msg-content .nav-msg-item .nav-msg-desc .time {
+  font-size: 10px;
+}

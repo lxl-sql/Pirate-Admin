@@ -1,0 +1,107 @@
+//# region button
+// custom-button
+.ant-btn {
+  // refresh
+  &.ant-btn-refresh {
+    background-color: @refresh-color;
+  }
+
+  // info
+  &.ant-btn-info {
+    background-color: @info-color;
+  }
+
+  // warning
+  &.ant-btn-warning {
+    background-color: @warning-color;
+  }
+
+  // success
+  &.ant-btn-success {
+    background-color: @success-color;
+  }
+
+  &.ant-btn-refresh,
+  &.ant-btn-info,
+  &.ant-btn-warning,
+  &.ant-btn-success {
+    color: @text-white;
+
+    &:hover,
+    &:focus {
+      opacity: @opacity-btn-hover;
+    }
+  }
+}
+
+//# endregion
+
+//# region table
+.ant-table {
+  .ant-table-container {
+    .ant-table-content {
+      .ant-table-tbody {
+        .ant-table-row {
+          .ant-table-cell {
+            // @apply whitespace-pre;
+          }
+        }
+      }
+    }
+  }
+}
+
+//# endregion
+
+//# region modal
+.ant-modal {
+  &.i-modal {
+    .ant-modal-content {
+      @apply p-0;
+    }
+
+    .ant-modal-header {
+      @apply p-0;
+    }
+
+    .ant-modal-body {
+      @apply p-5;
+    }
+
+    .ant-modal-footer {
+      @apply px-5 py-4 border-0 border-t border-solid;
+      border-top-color: @border-inline-color;
+      box-shadow: @box-shadow-base;
+    }
+  }
+}
+
+//# endregion
+
+//# region popover
+.ant-popover.i-popover-menu {
+  .ant-popover-inner {
+    padding: 0;
+
+    .ant-popover-inner-content {
+      padding-top: 4px;
+
+      .ant-checkbox-group {
+        flex-direction: column;
+      }
+
+      .i-popover-item {
+        text-align: center;
+        padding: 7px 20px;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          background-color: var(--colorBgTextHover);
+        }
+      }
+    }
+  }
+}
+
+//# endregion

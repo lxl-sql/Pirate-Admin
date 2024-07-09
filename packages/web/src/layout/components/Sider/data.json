@@ -1,0 +1,108 @@
+{
+  "code": "0000",
+  "msg": "操作成功",
+  "data": [
+    {
+      "path": "/home",
+      "name": "home",
+      "title": "首页",
+      "icon": "HomeOutlined"
+    },
+    {
+      "path": "/auth",
+      "name": "auth",
+      "title": "权限管理",
+      "icon": "TeamOutlined",
+      "children": [
+        {
+          "path": "/auth/group",
+          "name": "authGroup",
+          "title": "角色组管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/auth/admin",
+          "name": "authAdmin",
+          "title": "管理员管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/auth/menuRules",
+          "name": "menuRules",
+          "title": "菜单规则管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/auth/adminLog",
+          "name": "adminLog",
+          "title": "管理员日志管理",
+          "icon": "HomeOutlined"
+        }
+      ]
+    },
+    {
+      "path": "/user",
+      "name": "user",
+      "title": "会员管理",
+      "icon": "TeamOutlined",
+      "children": [
+        {
+          "path": "/user/index",
+          "name": "userIndex",
+          "title": "会员管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/user/group",
+          "name": "userGroup",
+          "title": "会员分组管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/user/rule",
+          "name": "userRule",
+          "title": "会员规则管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/user/log",
+          "name": "userLog",
+          "title": "会员日志管理",
+          "icon": "HomeOutlined"
+        }
+      ]
+    },
+    {
+      "path": "/routine",
+      "name": "routine",
+      "title": "常规管理",
+      "icon": "TeamOutlined",
+      "children": [
+        {
+          "path": "/routine/config",
+          "name": "routineConfig",
+          "title": "系统配置",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/routine/annex",
+          "name": "routineAnnex",
+          "title": "附件管理",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "/routine/info",
+          "name": "routineInfo",
+          "title": "个人资料",
+          "icon": "HomeOutlined"
+        }
+      ]
+    },
+    {
+      "path": "/module",
+      "name": "module",
+      "title": "模块市场",
+      "icon": "HomeOutlined"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+.module-main {
+  // background: var(--primary-color);
+
+  :deep(.ant-tabs-nav) {
+    margin-bottom: 0;
+
+    .ant-tabs-tab {
+      border-color: transparent;
+    }
+  }
+
+  :deep(.ant-tabs-content) {
+    box-sizing: border-box;
+    padding: 16px;
+    background-color: var(--primary-color);
+  }
+
+  // 内容区域
+  .module-goods {
+    display: flex;
+    flex-wrap: wrap;
+
+    .goods-item {
+      width: 245px;
+      box-shadow: var(--i-box-shadow-light);
+      cursor: pointer;
+
+      .goods-img {
+        width: 100%;
+      }
+
+      .goods-content {
+        box-sizing: border-box;
+        padding: 8px;
+
+        .goods-tags {
+          .tags-item {
+            margin-bottom: 8px;
+          }
+        }
+
+        .goods-title {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+
+        .goods-exhibit {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
+          font-size: 12px;
+
+          .goods-download {
+            display: flex;
+            align-items: center;
+            color: var(--i-text-color-placeholder);
+          }
+
+          .goods-point {
+            display: flex;
+            align-items: flex-end;
+
+            .old-point {
+              color: var(--i-text-color-placeholder);
+              text-decoration: line-through;
+            }
+
+            .new-point {
+              margin-left: 3px;
+              font-size: 16px;
+              line-height: 24px;
+              color: var(--error-color);
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: 590px) {
+      .goods-item {
+        width: 100%;
+        display: flex;
+        margin-right: 0;
+        padding-left: 8px;
+
+        .goods-img {
+          width: 150px;
+          object-fit: contain;
+        }
+
+        .goods-content {
+          flex: 1;
+        }
+      }
+    }
+  }
+}

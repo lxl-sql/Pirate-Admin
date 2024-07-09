@@ -1,0 +1,103 @@
+.detail-basic {
+  :deep(.ant-carousel) {
+    margin-right: 16px;
+    width: 300px;
+
+    .slick-slider {
+      overflow: hidden;
+
+      .slick-prev {
+        left: -100%;
+      }
+
+      .slick-next {
+        right: -100%;
+      }
+
+      &:hover {
+        .slick-prev {
+          left: 10px;
+        }
+
+        .slick-next {
+          right: 10px;
+        }
+      }
+    }
+
+    .slick-prev,
+    .slick-next {
+      width: 30px;
+      height: 30px;
+      transition: all 0.3s;
+    }
+
+    .custom-slick-arrow {
+      z-index: 9999;
+      color: #fff;
+      font-size: 14px;
+      line-height: 30px;
+      text-align: center;
+      background-color: rgba(31, 45, 61, 0.4);
+      opacity: 0.3;
+      border-radius: 100%;
+
+      &:before {
+        display: none;
+      }
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .basic-img {
+      width: 300px;
+      object-fit: contain;
+    }
+  }
+
+  .basic-content {
+    .basic-title {
+      font-size: 16px;
+    }
+
+    .content-item {
+      display: flex;
+      align-items: center;
+      line-height: 28px;
+
+      label {
+        width: 80px;
+        color: var(--i-text-color-secondary);
+      }
+
+      span {
+        color: var(--i-text-color-regular);
+      }
+
+      .content-item_price {
+        font-size: 16px;
+        color: var(--error-color);
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .detail-basic {
+    flex-direction: column;
+    :deep(.ant-carousel) {
+      width: 100%;
+      margin-right: 0;
+      .ant-image {
+        width: 100%;
+        height: 200px;
+      }
+
+      .basic-img {
+        width: 100%;
+      }
+    }
+  }
+}

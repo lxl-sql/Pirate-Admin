@@ -1,0 +1,78 @@
+.module-main {
+  background: #fafafa;
+}
+.module-main :deep(.ant-tabs-nav) {
+  margin-bottom: 0;
+}
+.module-main :deep(.ant-tabs-nav) .ant-tabs-tab {
+  border-color: transparent;
+}
+.module-main :deep(.ant-tabs-content) {
+  box-sizing: border-box;
+  padding: 16px;
+  background-color: var(--primary-color);
+}
+.module-main .module-goods {
+  display: flex;
+  flex-wrap: wrap;
+}
+.module-main .module-goods .goods-item {
+  width: 245px;
+  box-shadow: var(--i-box-shadow-light);
+  cursor: pointer;
+}
+.module-main .module-goods .goods-item .goods-img {
+  width: 100%;
+}
+.module-main .module-goods .goods-item .goods-content {
+  box-sizing: border-box;
+  padding: 8px;
+}
+.module-main .module-goods .goods-item .goods-content .goods-tags .tags-item {
+  margin-bottom: 8px;
+}
+.module-main .module-goods .goods-item .goods-content .goods-title {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.module-main .module-goods .goods-item .goods-content .goods-exhibit {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  font-size: 12px;
+}
+.module-main .module-goods .goods-item .goods-content .goods-exhibit .goods-download {
+  display: flex;
+  align-items: center;
+  color: var(--i-text-color-placeholder);
+}
+.module-main .module-goods .goods-item .goods-content .goods-exhibit .goods-point {
+  display: flex;
+  align-items: flex-end;
+}
+.module-main .module-goods .goods-item .goods-content .goods-exhibit .goods-point .old-point {
+  color: var(--i-text-color-placeholder);
+  text-decoration: line-through;
+}
+.module-main .module-goods .goods-item .goods-content .goods-exhibit .goods-point .new-point {
+  margin-left: 3px;
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--error-color);
+}
+@media screen and (max-width: 590px) {
+  .module-main .module-goods .goods-item {
+    width: 100%;
+    display: flex;
+    margin-right: 0;
+    padding-left: 8px;
+  }
+  .module-main .module-goods .goods-item .goods-img {
+    width: 150px;
+    object-fit: contain;
+  }
+  .module-main .module-goods .goods-item .goods-content {
+    flex: 1;
+  }
+}

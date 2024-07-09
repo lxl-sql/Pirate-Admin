@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  nest-app:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    ports:
+      - 3010:3010
+    restart: on-failure # 设置自动重启，这一步必须设置，主要是存在mysql还没有启动完成就启动了node服务
+    depends_on:
+      - mysql-container
+      - redis-container
+    networks:
+      - common-network
+  mysql-container:
+    image: mysql
+    ports:
+      - '3306:3306'
+    restart: on-failure
+    volumes:
+      - X:\docker\volumes\mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: pirate_admin_system             #数据库名
+      MYSQL_ROOT_PASSWORD: root@123456           #数据库初始话为root用户设置的默认密码
+    networks:
+      - common-network
+  redis-container:
+    image: redis
+    ports:
+      - '6379:6379'
+    restart: on-failure # 自动重启
+    volumes:
+      - X:\docker\volumes\redis\redis-data:/data
+      - X:\docker\volumes\redis\conf\redis.conf:/usr/local/etc/redis/redis.conf
+    command:
+      - redis-server
+      - /usr/local/etc/redis/redis.conf
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - common-network
+networks:
+  common-network:
+    driver: bridge

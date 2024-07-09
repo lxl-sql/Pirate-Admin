@@ -1,0 +1,94 @@
+{
+  "message": {
+    "success": "成功！",
+    "fail": "异常！",
+    "error": "错误！",
+    "loading": "加载中...",
+    "noData": "暂无数据！",
+    "noMoreData": "没有更多数据了！",
+    "noMore": "没有更多了！",
+    "noDataTips": "暂无数据！",
+    "loginExpired": "登录已过期，请重新登录！"
+  },
+  "placeholder": {
+    "username": "请输入用户名",
+    "password": "请输入密码",
+    "nickname": "请输入昵称",
+    "captcha": "验证码",
+    "keyword": "请输入关键字",
+    "role": "请选择角色",
+    "roles": "请选择角色组"
+  },
+  "success": {
+    "login": "登录成功！",
+    "loginOut": "退出成功！",
+    "welcome": "欢迎回来！",
+    "upload": "上传成功！",
+    "delete": "删除成功！",
+    "create": "创建成功！",
+    "update": "修改成功！",
+    "saved successfully": "保存成功！"
+  },
+  "error": {
+    "userName": "用户名不能为空！",
+    "password": "密码不能为空！",
+    "nickname": "昵称不能为空！",
+    "captcha": "验证码不能为空！",
+    "captchaError": "验证码错误！",
+    "userNameError": "用户名错误！",
+    "passwordError": "密码错误！",
+    "login": "登录失败！",
+    "network": "网络异常，请稍后重试！",
+    "server": "服务器异常，请稍后重试！",
+    "upload": "上传失败，请稍后重试！",
+    "uploadSize": "上传文件大小不能超过 ",
+    "uploadType": "上传文件类型不正确！",
+    "roles": "请选择角色组"
+  },
+  "content": {
+    "loginOut": "确定要退出登录吗？"
+  },
+  "title": {
+    "login": "登 录",
+    "loginOutTitle": "退出登录",
+    "refresh": "刷新",
+    "filter": "筛选",
+    "expand": "展开",
+    "collapse": "收起",
+    "expandAll": "展开全部子菜单",
+    "collapseAll": "收起全部子菜单",
+    "expandUniversalSearch": "展开通用搜索",
+    "create": "新增",
+    "update": "编辑",
+    "delete": "删除",
+    "remove": "消除",
+    "detail": "查看详情",
+    "remove_selected_row": "删除选中行",
+    "loading": "加载中...",
+    "cancel": "取消",
+    "confirm": "确定"
+  },
+  "login": {
+    "login": "登 录",
+    "userName": "用户名",
+    "password": "密码",
+    "captcha": "验证码",
+    "remember": "保持会话"
+  },
+  "button": {
+    "confirm": "确定",
+    "cancel": "取消"
+  },
+  "enum": {
+    "status": {
+      "0": "禁用",
+      "1": "启用"
+    }
+  },
+  "other": {
+    "copy": "复制",
+    "copied": "已复制",
+    "The moving position is beyond the movable range!": "移动位置超出了可移动范围！",
+    "Test email sent successfully!": "测试邮件发送成功！"
+  }
+}

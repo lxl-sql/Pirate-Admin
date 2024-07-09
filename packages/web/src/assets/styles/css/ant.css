@@ -1,0 +1,402 @@
+/* 按钮 */
+:root {
+  --ant-success: var(--success-color);
+  --ant-error: var(--error-color);
+  --ant-warning: #e6a23c;
+  --ant-refresh: #40485b;
+  --ant-move: #909399;
+}
+
+button.ant-btn {
+  border-radius: 4px;
+}
+
+.anticon svg {
+  vertical-align: baseline;
+}
+
+/* btn - warning */
+.ant-btn.ant-btn-warning {
+  border-color: var(--ant-warning);
+  background: var(--ant-warning);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
+}
+
+.ant-btn.ant-btn-warning:hover,
+.ant-btn.ant-btn-warning:focus {
+  border-color: var(--ant-warning);
+  background-color: var(--ant-warning);
+}
+
+/* btn - success */
+.ant-btn.ant-btn-success {
+  background-color: var(--ant-success);
+}
+
+.ant-btn.ant-btn-success:hover,
+.ant-btn.ant-btn-success:focus {
+  border-color: var(--ant-success);
+  background-color: var(--ant-success);
+}
+
+/* btn - reload */
+
+/* btn - move */
+.ant-btn.ant-btn-move {
+  background-color: var(--ant-move);
+}
+
+.ant-btn.ant-btn-move:hover,
+.ant-btn.ant-btn-move:focus {
+  border-color: var(--ant-move);
+  background-color: var(--ant-move);
+}
+
+/* btn - 颜色 */
+.ant-btn.ant-btn-warning,
+.ant-btn.ant-btn-warning:hover,
+.ant-btn.ant-btn-warning:focus,
+.ant-btn.ant-btn-refresh,
+.ant-btn.ant-btn-refresh:hover,
+.ant-btn.ant-btn-refresh:focus,
+.ant-btn.ant-btn-move,
+.ant-btn.ant-btn-move:hover,
+.ant-btn.ant-btn-move:focus,
+.ant-btn.ant-btn-success,
+.ant-btn.ant-btn-success:hover,
+.ant-btn.ant-btn-success:focus {
+  color: #fff;
+}
+
+/* 透明度 */
+.ant-btn.ant-btn-move:hover,
+.ant-btn.ant-btn-refresh:hover,
+.ant-btn.ant-btn-warning:hover,
+.ant-btn.ant-btn-success:hover {
+  opacity: 0.8;
+}
+
+/* space */
+
+.ant-space-vertical {
+  width: 100%;
+}
+
+/* notification */
+
+.ant-notification-notice {
+  box-shadow: var(--box-shadow-light);
+  border-radius: 8px;
+  padding: 10px !important;
+  width: 300px;
+}
+
+.ant-notification-notice-close {
+  top: 13px;
+}
+
+.ant-notification-topRight {
+  top: 16px !important;
+  margin-right: 16px !important;
+  /* padding: 10px !important; */
+}
+
+/* 头部个人信息样式 */
+
+.admin-info-base {
+  width: 260px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.admin-info-other {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.admin-info-name {
+  font-size: 18px;
+}
+
+/* card 卡片 */
+
+.ant-card-head {
+  padding: 0 16px !important;
+  font-size: 1rem !important;
+}
+
+.ant-card-body {
+  padding: 16px !important;
+}
+
+/* menu 卡片 */
+.ant-menu,
+.ant-menu .ant-menu-sub.ant-menu-inline {
+  /*background-color: var(--primary-color) !important;*/
+}
+
+ul.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  /*background-color: var(--primary-bg-color-selected);*/
+}
+
+/*侧边栏选中 默认主题色*/
+.ant-menu .ant-menu-item.ant-menu-item-selected {
+  /*color: #1890ff;*/
+}
+
+.ant-menu .ant-menu-item,
+.ant-menu .ant-menu-submenu,
+.ant-menu .ant-menu-submenu .ant-menu-submenu-arrow {
+  /*color: var(--primary-text-color);*/
+}
+
+.ant-menu-title-content {
+  /*user-select: none;*/
+}
+
+/* alert */
+.ant-alert-gray {
+  background-color: #e6e8eb;
+  /* border: 1px solid #91d5ff; */
+}
+
+.ant-alert-gray .ant-alert-message {
+  color: #909399;
+}
+
+/* tag */
+.ant-tag.table-tag {
+  margin: 4px;
+}
+
+.ant-tag.table-tag:last-child {
+  /*margin-right: 0;*/
+  /*margin-bottom: 0;*/
+}
+
+/* transition */
+/* transition - 0.3 */
+span.ant-input-affix-wrapper,
+input.ant-input,
+.ant-table .ant-table-thead > tr > th,
+.ant-table .ant-table-tbody > tr > td,
+.ant-radio-button-wrapper,
+.ant-table .ant-table-tbody > tr > td.ant-table-cell .ant-table-row-expand-icon,
+.ant-pagination li > .ant-pagination-item-link,
+.ant-pagination .ant-pagination-options .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-pagination .ant-pagination-options .ant-select-single .ant-select-selector .ant-select-selection-item,
+.ant-pagination .ant-pagination-options .ant-select-single .ant-select-selector .ant-select-selection-placeholder,
+.ant-radio-group .ant-radio-button-wrapper,
+.ant-breadcrumb .ant-breadcrumb-link a,
+li.ant-menu-inline.ant-menu-root .ant-menu-item,
+li.ant-menu-inline.ant-menu-root .ant-menu-submenu-title {
+  transition-duration: var(--transition-duration_dot3);
+}
+
+/* background */
+/* background-color */
+.ant-spin-container .ant-table,
+.ant-table,
+.ant-table .ant-table-tbody > tr > td,
+.ant-table .ant-table-tbody > tr > td .ant-table-row-expand-icon,
+.ant-table .ant-table-tbody .ant-table-row,
+.ant-pagination,
+.ant-pagination .ant-pagination-total-text,
+.ant-pagination li > .ant-pagination-item-link,
+.ant-pagination .ant-pagination-item-active,
+div.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+.ant-radio-group .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled),
+input.ant-input,
+textarea.ant-input,
+div.ant-input-number,
+.ant-input-number > .ant-input-number-handler-wrap,
+.ant-modal .ant-modal-header,
+.ant-modal .ant-modal-content,
+div.ant-select:not(.ant-select-customize-input) .ant-select-selector,
+div.ant-select-dropdown,
+div.ant-select-item,
+.ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+.ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active,
+tbody.ant-table-tbody > tr.ant-table-placeholder:hover > td {
+  background-color: var(--primary-color);
+}
+
+.ant-dropdown-menu .ant-dropdown-menu-item:hover {
+  background-color: var(--primary-bg-color);
+}
+
+.ant-input-group .ant-input-group-addon,
+div.ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+div.ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab,
+input.ant-input[disabled],
+textarea.ant-input[disabled] {
+  background-color: var(--primary-bg-color-sub);
+}
+
+.ant-spin-container .ant-table-small .ant-table-thead > tr > th,
+.ant-table .ant-table-small .ant-table-thead > tr > th {
+  background-color: var(--primary-bg-color-table);
+}
+
+.ant-table .ant-table-tbody > tr.ant-table-row-hover > td,
+.ant-table .ant-table-tbody > tr > td.ant-table-cell.ant-table-cell-row-hover,
+.ant-table .ant-table-tbody > tr.ant-table-row:hover > td,
+.ant-table .ant-table-tbody > tr > td.ant-table-cell-row-hover,
+div.ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: var(--primary-bg-color-hover);
+}
+
+.ant-table .ant-table-tbody > tr.ant-table-row-selected > td,
+div.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: var(--primary-bg-color-selected);
+  border-color: #f0f0f0;
+}
+
+/* color */
+.ant-spin-container .ant-table,
+.ant-table,
+.ant-spin-container .ant-table-small .ant-table-thead > tr > th,
+.ant-table .ant-table-small .ant-table-thead > tr > th,
+.ant-table .ant-table-tbody > tr > td,
+.ant-table .ant-table-tbody > tr > td .ant-table-row-expand-icon,
+.ant-table .ant-table-tbody .ant-table-row,
+.ant-pagination,
+.ant-pagination .ant-pagination-total-text,
+.ant-pagination li > .ant-pagination-item-link,
+.ant-pagination .ant-pagination-item-active,
+.ant-pagination .ant-pagination-options .ant-select:not(.ant-select-customize-input) .ant-select-selector,
+span.ant-select-arrow,
+input.ant-input,
+textarea.ant-input,
+div.ant-input-number,
+.ant-input-number .ant-input-number-handler,
+.ant-input-number .ant-input-number-handler .ant-input-number-handler-up-inner,
+.ant-input-number .ant-input-number-handler .ant-input-number-handler-down-inner,
+div.ant-select,
+div.ant-select-item,
+div.ant-select-dropdown,
+div.ant-select-item-option-active,
+div.ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+li.ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu-title {
+  color: var(--primary-text-color);
+}
+
+.ant-modal .ant-modal-header,
+.ant-modal .ant-modal-header .ant-modal-title,
+.ant-modal .ant-modal-content .ant-modal-close,
+.ant-form .ant-form-item,
+.ant-form .ant-form-item .ant-form-item-label > label,
+.ant-radio-group .ant-radio-wrapper,
+.ant-input-group > .ant-input-group-addon,
+div.ant-tabs {
+  color: var(--primary-text-color-sub);
+}
+
+li.ant-dropdown-menu-item-disabled,
+.ant-dropdown-menu-submenu-title-disabled,
+li.ant-dropdown-menu-item-disabled:hover,
+.ant-dropdown-menu-submenu-title-disabled:hover,
+div.ant-empty-normal {
+  color: var(--primary-text-color-disabled);
+}
+
+
+/* border */
+/* border-color */
+.ant-modal .ant-modal-header,
+.ant-modal .ant-modal-footer {
+  border-color: var(--primary-border-color);
+}
+
+div.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border-bottom: 1px solid var(--primary-border-color);
+}
+
+/* ant-picker */
+.ant-picker {
+  width: 100%;
+}
+
+/* a-popover */
+.ant-popover-content .ant-popover-arrow-content {
+  background-color: var(--primary-color);
+}
+
+/* ant-dropdown */
+.ant-dropdown .ant-dropdown-content .ant-dropdown-menu {
+  background-color: var(--primary-color);
+}
+
+/* ant-checkbox-group */
+.ant-checkbox-group .ant-checkbox-wrapper {
+  color: var(--primary-text-color);
+}
+
+/* i-popover-menu */
+.i-popover-menu .ant-popover-inner-content {
+  padding: 0;
+  padding-top: 4px;
+  background-color: var(--primary-color);
+}
+
+.i-popover-menu .i-popover-item {
+  text-align: center;
+  padding: 7px 20px;
+  cursor: pointer;
+  color: var(--primary-text-color);
+  user-select: none;
+}
+
+.i-popover-menu .i-popover-item:hover {
+  background-color: var(--primary-bg-color);
+}
+
+/* 抽屉 */
+.i-menu-mobile .ant-drawer-content-wrapper .ant-drawer-body {
+  padding: 0;
+  display: flex;
+  flex-flow: column;
+}
+
+/* 自定义 btn group 组 */
+.ant-btn-group {
+  /* overflow: hidden; */
+}
+
+.ant-btn-group button.ant-btn:nth-of-type(1) {
+  border-top-left-radius: 5px !important;
+  border-bottom-left-radius: 5px !important;
+}
+
+.ant-btn-group button.ant-btn:nth-last-of-type(1) {
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+
+.ant-btn-group .ant-btn {
+  border-radius: initial;
+}
+
+/* modal */
+.ant-modal-content .ant-modal-body {
+  padding: 16px;
+}
+
+/* layout */
+.ant-layout {
+  background-color: var(--primary-bg-color);
+}
+
+@media screen and (max-width: 575px) {
+  .ant-form.ant-form-vertical .ant-form-item,
+  .ant-modal-body .ant-form .ant-form-item {
+    margin-bottom: 8px;
+  }
+
+  div.ant-form-item .ant-form-item-label {
+    padding-bottom: 0;
+  }
+}

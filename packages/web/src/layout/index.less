@@ -1,0 +1,63 @@
+.pirate-container {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background-color: @colorBgLayoutContainer;
+
+  .layout {
+    box-sizing: border-box;
+    flex: 1;
+    height: 100%;
+    transition: all 0.2s;
+    background-color: transparent;
+
+    // 全屏
+    .fullScreen {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      box-sizing: border-box;
+      padding: 1rem !important;
+    }
+
+    .layout-view {
+      box-sizing: border-box;
+      padding: 1rem;
+      //overflow-y: auto;
+      background-color: transparent;
+    }
+  }
+}
+
+// slide-right
+// .slide-right-enter-active,
+// .slide-right-leave-to {
+//     transition: all 0.5s ease;
+// }
+
+// .slide-right-enter-from,
+// .slide-right-leave-to {
+//     opacity: 0;
+//     transform: translateX(50px);
+// }
+
+.slide-right-enter-active,
+.slide-right-leave-active {
+  will-change: transform;
+  transition: all 0.3s ease;
+}
+
+// slide-right
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}

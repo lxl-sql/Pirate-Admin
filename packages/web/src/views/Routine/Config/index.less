@@ -1,0 +1,52 @@
+.default-main {
+  .main-card {
+    border-radius: 5px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: @border-inline-color;
+
+    :deep(.ant-tabs-nav) {
+      //background: var(--primary-color);
+      margin-bottom: 0;
+
+      .ant-tabs-tab {
+        border: none;
+      }
+
+      & + .ant-tabs-content-holder {
+        padding: 0;
+      }
+    }
+
+    :deep(.ant-tabs-content-holder) {
+      padding: 0 16px 16px;
+    }
+
+    .card-head {
+      padding: 8px 16px;
+    }
+
+    .card-main {
+      padding: 16px;
+      background-color: @colorBgContainer;
+      border-width: 1px;
+      border-style: solid;
+      border-color: @border-inline-color;
+      border-left-width: 0;
+      border-right-width: 0;
+      border-bottom-width: 0;
+
+      .ant-btn-sm {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .no-card {
+    border: none;
+
+    .card-main {
+      border-width: 1px;
+    }
+  }
+}

@@ -1,0 +1,19 @@
+.detail-main .main-left {
+  flex: 1;
+}
+.detail-main .main-right {
+  width: 20%;
+}
+@media screen and (max-width: 900px) {
+  .detail-main {
+    flex-direction: column;
+  }
+  .detail-main .main-left {
+    margin-bottom: 16px;
+  }
+  .detail-main .main-right {
+    padding-top: 12px;
+    width: 100%;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}

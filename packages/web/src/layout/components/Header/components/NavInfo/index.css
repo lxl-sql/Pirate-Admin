@@ -1,0 +1,13 @@
+.admin-info {
+  box-sizing: border-box;
+  padding: 0 10px;
+  user-select: none;
+  height: 100%;
+  cursor: pointer;
+}
+.admin-info:hover {
+  background: var(--primary-bg-color);
+}
+.admin-info .admin-name {
+  padding-left: 6px;
+}

@@ -1,0 +1,36 @@
+{
+  "table": {
+    "columns": {
+      "name": "组别名称",
+      "slug": "角色标识",
+      "status": "状态",
+      "createTime": "创建时间",
+      "updateTime": "修改时间",
+      "operation": "操作"
+    }
+  },
+  "form": {
+    "label": {
+      "parentId": "上级分组",
+      "name": "组别名称",
+      "slug": "角色标识",
+      "permissionIds": "权限",
+      "description": "描述",
+      "sort": "排序",
+      "status": "状态"
+    },
+    "placeholder": {
+      "parentId": "请选择上级分组",
+      "name": "请输入组别名称",
+      "slug": "请输入角色标识",
+      "permissionIds": "请选择权限",
+      "description": "请输入描述",
+      "sort": "请输入排序"
+    }
+  },
+  "error": {
+    "name": "请输入组别名称",
+    "slug": "请输入角色标识",
+    "permissionIds": "请选择权限"
+  }
+}

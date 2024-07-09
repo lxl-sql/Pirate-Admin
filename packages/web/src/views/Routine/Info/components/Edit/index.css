@@ -1,0 +1,49 @@
+.edit-info {
+  box-sizing: border-box;
+  padding: 24px;
+  background-color: var(--primary-color);
+  border-top: 5px solid var(--primary-color);
+  border-radius: 5px;
+}
+.edit-info .edit-head {
+  text-align: center;
+}
+.edit-info .edit-head .avatar {
+  margin-bottom: 16px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+.edit-info .edit-head .avatar :deep(.ant-upload) {
+  width: auto;
+  height: auto;
+  margin: 0;
+  border-radius: 100%;
+}
+.edit-info .edit-head .avatar .avatar-img {
+  min-width: 120px;
+  min-height: 120px;
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  line-height: 120px;
+}
+.edit-info .edit-head .avatar .avatar-default {
+  position: relative;
+}
+.edit-info .edit-head .avatar .avatar-default .avatar-loading {
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 100%;
+  color: #fff;
+}
+.edit-info .edit-head .nickname {
+  font-size: 22px;
+}
