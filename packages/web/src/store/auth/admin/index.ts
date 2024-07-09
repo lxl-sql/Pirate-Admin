@@ -6,6 +6,7 @@ import {adminLogin, getAdminAvatar, getAdminById,} from "@/api/auth/admin";
 import {AdminState} from "./types";
 import {$local} from "@/utils/storage";
 import {UserInfo} from "@/api/types/user";
+import {keys} from "lodash-es";
 
 export const useAdminStore = defineStore("adminStore", {
   state: (): AdminState => {
@@ -48,7 +49,7 @@ export const useAdminStore = defineStore("adminStore", {
   },
   getters: {
     userInfo(): UserInfo {
-      return Object.keys(this.rawUserInfo).length === 0 ? $local.get("userInfo") : this.rawUserInfo
+      return keys(this.rawUserInfo).length === 0 ? $local.get("userInfo") : this.rawUserInfo
     },
   },
   actions: {

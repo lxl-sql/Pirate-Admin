@@ -1,7 +1,7 @@
 import {FormFieldProps, IColumns, IPages, ITableProps} from "@/types/table";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 import {Key} from "ant-design-vue/lib/table/interface";
-import {type Ref, UnwrapNestedRefs} from "vue";
+import {type Ref} from "vue";
 import {FormInstance, FormProps, PaginationProps, TableProps} from "ant-design-vue";
 import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
 import type {RuleError} from "ant-design-vue/lib/form/interface";
@@ -226,21 +226,30 @@ export declare interface TableSettingsType<
   QueryForm = DefaultQueryFormType,
   Fields = DefaultFieldsType
 > {
+  /**
+   * 默认接口数据对象
+   */
   _api?: PrivateApi;
 
-  readonly table: UnwrapNestedRefs<TableReactive<RecordType, QueryForm>>;
-
-  readonly form: UnwrapNestedRefs<FormReactive<Fields>>;
+  /**
+   * 表格数据对象
+   */
+  readonly table: TableReactive<RecordType, QueryForm>
 
   /**
    * 表单数据对象
    */
-  readonly detail: UnwrapNestedRefs<DetailReactive<Fields>>;
+  readonly form: FormReactive<Fields>
+
+  /**
+   * 详情数据对象
+   */
+  readonly detail: DetailReactive<Fields>
 
   /**
    * 公共 modal 配置
    */
-  readonly modal: UnwrapNestedRefs<ModalReactive>
+  readonly modal: ModalReactive
 
   /**
    * 表单ref

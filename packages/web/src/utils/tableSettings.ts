@@ -37,10 +37,10 @@ export default class TableSettings<
   /** @type {boolean} 保存初始化时的 默认展开表格 */
   private defaultExpandAllRows: boolean = false;
 
-  /** @type {Fields} 保存初始化时的 form fields */
+  /** @type {cacheFields} 保存初始化时的 form fields */
   private cacheFields: Fields | null = null;
 
-  public readonly table = reactive<TableReactive<RecordType, QueryForm>>({
+  public readonly table = reactive({
     columns: [],
     dataSource: [],
     selectedRowKeys: [],
@@ -69,9 +69,9 @@ export default class TableSettings<
     defaultExpandAllRows: false,
     displayFormModal: true,
     displayDetailModal: true,
-  });
+  }) as TableReactive<RecordType, QueryForm>;
 
-  public readonly form = reactive<FormReactive<Fields>>({
+  public readonly form = reactive({
     fields: {} as Fields,
     formConfig: undefined,
     rules: undefined,
@@ -81,9 +81,9 @@ export default class TableSettings<
       open: false,
       maskClosable: false,
     }
-  });
+  }) as FormReactive<Fields>;
 
-  public readonly detail = reactive<DetailReactive<Fields>>({
+  public readonly detail = reactive({
     fields: {} as Fields,
     i18nPrefixProp: 'detail',
     column: 2,
@@ -92,13 +92,13 @@ export default class TableSettings<
       footer: null,
       closable: true,
     },
-  })
+  }) as DetailReactive<Fields>
 
-  public readonly modal = reactive<ModalReactive>({
+  public readonly modal = reactive({
     init: undefined,
     loading: false,
     draggable: true,
-  })
+  }) as ModalReactive
 
   public formRefs?: FormRefs;
 
@@ -350,7 +350,6 @@ export default class TableSettings<
   /**
    * 转换rules校验
    * @param rules 校验规则
-   * @param isEditing {boolean} 是否编辑 默认 非编辑
    */
   private transformRules = (rules?: Rules | ((fields: Fields) => Rules)) => {
     if (typeof rules === "function") {
@@ -359,7 +358,7 @@ export default class TableSettings<
     return rules;
   };
 
-  private findIndexRow = (data: any[], findIdx: number, keyIndex: number | any = -1): number | any => {
+  private findIndexRow = (data: any[], findIdx: number | undefined, keyIndex: number | any = -1): number | any => {
     for (const key in data) {
       if (typeof keyIndex == 'number') {
         keyIndex++
@@ -385,14 +384,11 @@ export default class TableSettings<
     const el = document.querySelector(".ant-table-container .ant-table-content tbody");
     if (!el) return;
     const parentKey = this.table.parentKey
-    const sortable = Sortable.create(el, {
+    const sortable = Sortable.create(el as HTMLElement, {
       animation: 200,
       handle: this.table.dragClassname, // 指定只能选中 .drag-row-item
       draggable: '.ant-table-row',
       forceFallback: true,
-      // 开始拖拽的事件
-      onStart(event) {
-      },
       // 结束拖拽的事件
       onEnd: async (event: Sortable.SortableEvent) => {
         const {newIndex, oldIndex} = event;

@@ -181,10 +181,6 @@ const onPagesChange = (records: IPages) => {
   pages.value = records;
 };
 
-// 显示与隐藏表头
-const onColumnChange = (newColumns: IColumns[]) => {
-  columns.value = newColumns;
-};
 // 多选
 const onSelectChange = (rowKeys: IDataSource["key"][]) => {
   selectedRowKeys.value = rowKeys;

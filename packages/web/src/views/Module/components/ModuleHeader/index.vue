@@ -2,11 +2,11 @@
 <script setup lang="ts">
 import {defineOptions} from "vue";
 import {HomeOutlined, InfoCircleFilled, SyncOutlined, UploadOutlined, UserOutlined,} from "@ant-design/icons-vue";
-import RocketSvgIcon from "@components/SvgIcon/rocket.vue";
-import UploadCloudSvgIcon from "@components/SvgIcon/uploadCloud.vue";
+import RocketSvgIcon from "@/components/SvgIcon/rocket.vue";
+import UploadCloudSvgIcon from "@/components/SvgIcon/uploadCloud.vue";
 
 const remark =
-    "您可以在此页下载喜欢的系统模块，积分需要做任务来参与生态建设后获得，建议在开发环境（默认端口1818）安装模块";
+  "您可以在此页下载喜欢的系统模块，积分需要做任务来参与生态建设后获得，建议在开发环境（默认端口1818）安装模块";
 
 const onReload = () => {
 };
@@ -27,8 +27,8 @@ defineOptions({
       <i-tooltip title="刷新" type="refresh" class="mr_8 mtb_4">
         <template #icon>
           <sync-outlined
-              @click="onReload"
-              style="color: #fff; font-size: 14px"
+            @click="onReload"
+            style="color: #fff; font-size: 14px"
           />
         </template>
       </i-tooltip>

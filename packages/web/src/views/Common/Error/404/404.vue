@@ -34,7 +34,7 @@ import {useRouter} from "vue-router";
 
 const router = useRouter();
 const complete = ref(0);
-let timer: number | null;
+let timer: NodeJS.Timeout | null;
 
 function process() {
   complete.value += Math.floor(Math.random() * 50);

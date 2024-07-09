@@ -68,7 +68,7 @@ defineOptions({
   </div>
   <div class="i-menu-content">
     <a-menu mode="inline" :open-keys="openKeys" :selected-keys="selectedKeys">
-      <sider-item :menu="menus"/>
+      <sider-item :menu="data.data"/>
     </a-menu>
   </div>
 </template>

@@ -9,6 +9,7 @@ export interface UserInfo {
   phone?: string;
   roles?: string[];
   permissions?: string[];
+  lastLoginTime?: string;
 }
 
 interface RefreshData {

@@ -17,9 +17,7 @@
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     "types": [
       "vue-router",

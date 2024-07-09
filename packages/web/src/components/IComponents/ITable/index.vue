@@ -2,7 +2,6 @@
 <script setup lang="ts">
 import {SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
 import {computed, onMounted, ref, toRaw, watch, withDefaults} from "vue";
-import Sortable from "sortablejs";
 import {IColumns, IPagination, RecordType} from "@/types";
 import {useI18n} from "vue-i18n";
 import {cloneDeep} from "lodash-es";
@@ -11,7 +10,6 @@ import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
 import QueryFormItem from "./components/QueryFormItem/index.vue";
 import useFormInstance from "@/hooks/useFormInstance";
-import {flatTree} from "@/utils/common";
 
 // 国际化
 const {locale, te, t} = useI18n();
@@ -60,10 +58,10 @@ const emits = defineEmits([
 //# endregion
 const [formRef, formInstance] = useFormInstance()
 
-const columnsCache: IColumns[] = cloneDeep(props.columns).filter(column => !column.hide); // 缓存 columns
+const columnsCache: any[] = cloneDeep(props.columns).filter(column => !column.hide); // 缓存 columns
 
-const menuChecked = ref<(IColumns["dataIndex"] | IColumns["key"])[]>([]); // 选中显示隐藏表头
-const menuCheckList = ref<IColumns[]>([]); // 表头的数据列
+const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
+const menuCheckList = ref<any[]>([]); // 表头的数据列
 const expandedRowKeys = ref<string[]>([]);
 const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
 const keyword = ref<string>(""); // 搜索
@@ -74,7 +72,7 @@ const menuCheckAll = ref<boolean>(true); // 全选
 onMounted(() => {
   // 修改 columns
   menuCheckList.value = columnsCache.filter(
-    (column) => ![column.dataIndex, column.key].includes(props.operationKey)
+    (column: any) => ![column.dataIndex, column.key].includes(props.operationKey)
   );
   menuChecked.value = menuCheckList.value.map((column) => column.dataIndex);
 
@@ -223,7 +221,7 @@ const formColumns = computed(() => {
  */
 const columnsComputed = computed(() => {
   return cloneDeep(columnsCache)
-    .filter((column: IColumns) =>
+    .filter((column: any) =>
       [...menuChecked.value, props.operationKey].includes(
         column.key || column.dataIndex
       )
@@ -337,7 +335,7 @@ defineOptions({
                 <!--  这是两部分  -->
                 <a-checkbox-group v-model:value="menuChecked" class="w-[100%]">
                   <label
-                    v-for="item in menuCheckList"
+                    v-for="item in menuCheckList as any"
                     :key="item.key || item.dataIndex"
                     class="i-popover-item block !text-left"
                   >

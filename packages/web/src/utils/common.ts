@@ -28,14 +28,14 @@ export const getTimeState = () => {
 
 // 定义一个节流函数
 export function throttled(fn: Function, delay: number) {
-  let timer: any = null;
+  let timer: NodeJS.Timeout | number | null = null;
   let startTime = Date.now();
   return function () {
     let curTime = Date.now(); // 当前时间
     let remaining = delay - (curTime - startTime); // 从上一次到现在，还剩下多少多余时间
     let context = this;
     let args = arguments;
-    clearTimeout(timer);
+    timer && clearTimeout(timer);
     if (remaining <= 0) {
       fn.apply(context, args);
       startTime = Date.now();

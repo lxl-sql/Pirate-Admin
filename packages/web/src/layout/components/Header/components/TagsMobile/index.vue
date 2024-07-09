@@ -13,14 +13,15 @@ const store = useLayoutStore();
 
 // 面包屑
 const routes = computed(() => {
-  const routers = recursive(cloneDeep(router.matched), (route => {
+  const matched = cloneDeep(router.matched) as any[]
+  const routers = recursive(matched, (route => {
     return {
       path: route.path,
       name: route.name || route.meta.name,
       breadcrumbName: route.meta.title,
       children: route.children
     };
-  }))
+  })) as any[]
   // 移除首页, 首页不需要重复显示
   if (routers[1]?.name === "home") {
     routers.splice(1, 1);

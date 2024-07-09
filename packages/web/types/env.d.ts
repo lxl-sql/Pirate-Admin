@@ -16,3 +16,5 @@ declare module 'sortablejs'
 
 
 declare function $t(key: string, ...args: any[]): string;
+
+export * from 'sortablejs'

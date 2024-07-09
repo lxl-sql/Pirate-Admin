@@ -1,35 +1,26 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { UpsertAdminDto } from './dto/upsert-admin.dto';
-import { LoginAdminDto } from './dto/login-admin.dto';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { Admin } from './entities/admin.entity';
-import { EntityManager, In, Repository, TreeRepository } from 'typeorm';
-import {
-  mapTree,
-  existsByOnFail,
-  like,
-  listToTree,
-  md5,
-  requestHost,
-  sortTree,
-  trimmedIp,
-} from '@/utils/tools';
-import { LoginUserVo } from './vo/login-admin.vo';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { TokenService } from '@/common/token/token.service';
-import { QueryAdminDto } from './dto/query-admin.dto';
-import { AdminRole } from './entities/role-admin.entity';
-import { RemoveAdminDto } from './dto/remove-admin.dto';
-import { AdminPermission } from './entities/permission-admin.entity';
-import { UpsertPermissionDto } from './dto/upsert-permission.dto';
-import { RemovePermissionDto } from './dto/remove-permission.dto';
-import { removePublic, treeRemovePublic, treeUpsertPublic } from '@/utils/crud';
+import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {UpsertAdminDto} from './dto/upsert-admin.dto';
+import {LoginAdminDto} from './dto/login-admin.dto';
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
+import {Admin} from './entities/admin.entity';
+import {EntityManager, In, Repository, TreeRepository} from 'typeorm';
+import {existsByOnFail, like, listToTree, mapTree, md5, requestHost, sortTree, trimmedIp,} from '@/utils/tools';
+import {LoginUserVo} from './vo/login-admin.vo';
+import {JwtService} from '@nestjs/jwt';
+import {ConfigService} from '@nestjs/config';
+import {TokenService} from '@/common/token/token.service';
+import {QueryAdminDto} from './dto/query-admin.dto';
+import {AdminRole} from './entities/role-admin.entity';
+import {RemoveAdminDto} from './dto/remove-admin.dto';
+import {AdminPermission} from './entities/permission-admin.entity';
+import {UpsertPermissionDto} from './dto/upsert-permission.dto';
+import {RemovePermissionDto} from './dto/remove-permission.dto';
+import {removePublic, treeRemovePublic, treeUpsertPublic} from '@/utils/crud';
 import * as dayjs from 'dayjs';
-import { IdsDto } from '@/common/dtos/remove.dto';
-import { StatusPermissionDto } from './dto/status-permission.dto';
-import { UpsertRoleDto } from './dto/upsert-role.dto';
-import { QueryRoleDto } from './dto/query-role.dto';
+import {IdsDto} from '@/common/dtos/remove.dto';
+import {StatusPermissionDto} from './dto/status-permission.dto';
+import {UpsertRoleDto} from './dto/upsert-role.dto';
+import {QueryRoleDto} from './dto/query-role.dto';
 
 @Injectable()
 export class AdminService {
@@ -148,7 +139,7 @@ export class AdminService {
     }
 
     const admin = await this.adminRepository.findOne({
-      where: { username: loginAdmin.username },
+      where: {username: loginAdmin.username},
       relations: ['roles', 'roles.permissions'],
     });
 
@@ -183,7 +174,7 @@ export class AdminService {
       );
     }
 
-    const { accessToken, refreshToken } = this.tokenService.generateToken(
+    const {accessToken, refreshToken} = this.tokenService.generateToken(
       sign,
       vo.userInfo,
       loginAdmin.remember,
@@ -279,12 +270,12 @@ export class AdminService {
         : undefined,
       permissions: relations.includes('roles.permissions')
         ? info.roles.reduce((acc, cur) => {
-            cur.permissions.forEach((permission) => {
-              // 去重
-              if (!acc.includes(permission.code)) acc.push(permission.code);
-            });
-            return acc;
-          }, [])
+          cur.permissions.forEach((permission) => {
+            // 去重
+            if (!acc.includes(permission.code)) acc.push(permission.code);
+          });
+          return acc;
+        }, [])
         : undefined,
     };
   }
@@ -481,7 +472,7 @@ export class AdminService {
         'password',
         'lastLoginTime',
       ],
-      where: { id },
+      where: {id},
       relations,
     });
 
@@ -590,7 +581,7 @@ export class AdminService {
       await this.permissionRepository
         .createQueryBuilder()
         .update(AdminPermission)
-        .set({ status: body.status })
+        .set({status: body.status})
         .whereInIds(body.ids)
         .execute();
       return '修改成功';
@@ -622,8 +613,8 @@ export class AdminService {
     const maxSort = targetData.sort > data.sort ? targetData.sort : data.sort;
     const items = await this.permissionRepository
       .createQueryBuilder('p')
-      .where('p.parentId = :parentId', { parentId: targetData.parentId })
-      .andWhere('p.sort <= :sort', { sort: maxSort })
+      .where('p.parentId = :parentId', {parentId: targetData.parentId})
+      .andWhere('p.sort <= :sort', {sort: maxSort})
       .orderBy('p.sort', 'DESC')
       .getMany();
 

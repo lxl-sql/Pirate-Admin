@@ -12,10 +12,10 @@ import {
 } from "ant-design-vue";
 import {FormType, IOptions} from "@/types/form";
 import {CSSPropertiesType, TStyle} from "@/types/style";
-import {ColumnType} from "ant-design-vue/es/table";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 import {TableRowSelection} from "ant-design-vue/es/table/interface";
 import {RangePickerProps} from "ant-design-vue/lib/date-picker";
+import {ColumnType} from "ant-design-vue/es/table";
 
 type CustomHeaderCellType = {
   style: CSSPropertiesType;
