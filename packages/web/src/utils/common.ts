@@ -1,5 +1,5 @@
 // 获取时间状态
-import {deepArguments, deepCallback, DefaultTreeRecordType, IPages} from "@/types";
+import {deepArguments, deepCallback, DefaultTreeRecordType, IOptions, IPages} from "@/types";
 import {TagProps} from "ant-design-vue";
 import {cloneDeep, isArray, round} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
@@ -428,4 +428,18 @@ export function findIndex<RecordType extends DefaultTreeRecordType<RecordType>>(
     }
   }
   return keyIndex
+}
+
+/**
+ * @description 将 enum 转换为 options，适用于表单控件如 select 组件
+ * @param enumObj
+ * @param type {key | value} label 展示 key 值 还是 value 值 default: value
+ */
+export function enumToOptions<T extends object>(enumObj: T, type: 'key' | 'value' = 'value'): IOptions[] {
+  return Object.keys(enumObj)
+    .filter(key => isNaN(Number(key))) // 过滤掉数字键
+    .map(key => ({
+      label: type === 'value' ? String(enumObj[key as keyof typeof enumObj]) : key,
+      value: key
+    }));
 }

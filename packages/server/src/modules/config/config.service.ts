@@ -1,24 +1,31 @@
 // src/config/config.service.ts
-import { Inject, Injectable } from '@nestjs/common';
-import { DatabaseConfigDto } from './dto/database-config.dto';
-import { promises as fs } from 'fs';
+import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {DatabaseConfigDto} from './dto/database-config.dto';
+import {promises as fs} from 'fs';
 import * as path from 'path';
-import { ConfigDto } from './dto/config.dto';
-import { RedisConfigDto } from './dto/redis-config.dto';
-import { ConfigEmailDto } from '@/common/email/dto/config-email.dto';
-import { EmailService } from '@/common/email/email.service';
-import { GenerateEmailDto } from '@/common/email/dto/generate-email.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Setting } from './entities/settings.entities';
-import { Repository } from 'typeorm';
+import {ConfigDto} from './dto/config.dto';
+import {RedisConfigDto} from './dto/redis-config.dto';
+import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
+import {EmailService} from '@/common/email/email.service';
+import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Config} from './entities/config.entities';
+import {Repository} from 'typeorm';
+import {CreateConfigDto} from "@/modules/config/dto/create-config.dto";
+import {existsByOnFail, parseTextareaData} from "@/utils/tools";
+import {ConfigGroup} from "@/modules/config/entities/config-group.entities";
+import {CreateConfigGroupDto} from "@/modules/config/dto/create-config-group.dto";
 
 @Injectable()
 export class ConfigService {
   @Inject(EmailService)
   private readonly emailServer: EmailService;
 
-  @InjectRepository(Setting)
-  private readonly setting: Repository<Setting>;
+  @InjectRepository(ConfigGroup)
+  private readonly configGroupRepository: Repository<ConfigGroup>;
+
+  @InjectRepository(Config)
+  private readonly configRepository: Repository<Config>;
 
   private readonly envFilePath = path.resolve(__dirname, '../.env');
   private readonly envProdFilePath = path.resolve(
@@ -97,9 +104,11 @@ export class ConfigService {
     }
   }
 
-  private async testDatabaseConnection(config: DatabaseConfigDto) {}
+  private async testDatabaseConnection(config: DatabaseConfigDto) {
+  }
 
-  private async testRedisConnection(config: RedisConfigDto) {}
+  private async testRedisConnection(config: RedisConfigDto) {
+  }
 
   /**
    * 保存邮件信息
@@ -122,8 +131,85 @@ export class ConfigService {
     return await this.emailServer.testEmail(config);
   }
 
-  public async index() {
-    const settings = await this.setting.find();
-    return settings;
+  /**
+   * 新增配置项目
+   * @param body
+   */
+  public async create(body: CreateConfigDto) {
+    const group = await this.configGroupRepository.findOneBy({
+      id: body.groupId
+    })
+
+    if (!group) {
+      throw new HttpException('指定分组不存在', HttpStatus.BAD_REQUEST)
+    }
+
+    try {
+      const new_config = this.configRepository.create({
+        ...body,
+        group,
+        rule: body.rule?.join(',')
+      });
+      await this.configRepository.save(new_config)
+      return '保存成功'
+    } catch (error) {
+      if (error.code === 'ER_DUP_ENTRY') {
+        await existsByOnFail(this.configRepository, 'name', body.name, '$value 字段名已存在');
+      }
+    }
   }
+
+  public async findAll() {
+    const configGroup = await this.findAllGroup()
+    const config = await this.configRepository.find({
+      order: {
+        weight: "DESC"
+      },
+      relations: {
+        group: true
+      }
+    });
+    const groupedData = {}
+    config.forEach((conf) => {
+      const groupName = conf.group.name
+
+      if (!groupedData[groupName]) {
+        groupedData[groupName] = []
+      }
+      const new_conf = {
+        ...conf,
+        rule: conf.rule?.split(','),
+        inputExtend: parseTextareaData(conf.inputExtend)
+      }
+      groupedData[groupName].push(new_conf)
+    })
+
+    return {
+      configGroup,
+      config: groupedData,
+    };
+  }
+
+  /**
+   * 新增配置项分组
+   */
+  public async createGroup(body: CreateConfigGroupDto) {
+    try {
+      const new_config = this.configGroupRepository.create(body);
+      await this.configGroupRepository.save(new_config)
+      return '保存成功'
+    } catch (error) {
+      if (error.code === 'ER_DUP_ENTRY') {
+        await existsByOnFail(this.configGroupRepository, 'name', body.name, '$value 字段名已存在');
+      }
+    }
+  }
+
+  /**
+   * 查询所有配置项分组
+   */
+  public async findAllGroup() {
+    return await this.configGroupRepository.find()
+  }
+
 }

@@ -1,34 +1,29 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue";
+import {computed, inject, reactive, ref} from "vue";
 import {Form, notification} from "ant-design-vue";
-import {Rules} from "@/types/form";
+import {FormTypeEnum, Rules, RuleTypeEnum} from "@/types/form.d";
 import {merge} from "lodash-es";
 import {useI18n} from "vue-i18n";
+import {ConfigItem} from "@/views/Routine/Config";
+import {configCreate} from "@/api/config";
+import {enumToOptions} from "@/utils/common";
 
 const {t} = useI18n()
 
-interface FormState {
-  group?: string
-  title?: string
-  name?: string
-  type?: string
-  tip?: string
-  rule?: string
-  content?: string
-  value?: string
-  extend?: string
-  inputExtend?: string
-  weight?: number
-}
+const configGroupList = inject('configGroupList', [])
+const emits = defineEmits(['confirm'])
 
-const typeOptions = reactive([])
-const ruleOptions = reactive([
-  {label: 'password', value: 'password'}
-])
 const rules = reactive<Rules>({
-  to: [{required: true, message: 'Please input the to'}],
+  groupId: [{required: true, message: 'Please select the group'}],
+  name: [{required: true, message: 'Please input the name'}],
+  title: [{required: true, message: 'Please input the title'}],
+  type: [{required: true, message: 'Please select the type'}],
 })
-const formState = reactive<FormState>({
+const formState = reactive<Partial<ConfigItem>>({
+  groupId: undefined,
+  name: undefined,
+  title: undefined,
+  type: undefined,
   weight: 0
 })
 const open = ref<boolean>(false)
@@ -50,19 +45,30 @@ const handleConfirm = async () => {
   await validate()
   const params = {
     ...formState,
-    subject: "测试邮件"
   }
+  console.log('formState', formState)
   loading.value = true
   try {
+    await configCreate(formState)
+    emits('confirm')
     notification.success({
       message: t('message.success'),
-      description: t('other.Test email sent successfully!'),
+      description: t('success.create'),
     })
     handleCancel()
   } finally {
     loading.value = false
   }
 }
+
+// 变量类型
+const typeOptions = computed(() => {
+  return enumToOptions(FormTypeEnum, 'key')
+})
+// 验证规则
+const ruleTypeOptions = computed(() => {
+  return enumToOptions(RuleTypeEnum, 'key')
+})
 
 defineOptions({
   name: 'AddConfigItemModal'
@@ -83,13 +89,14 @@ defineExpose({
     @confirm="handleConfirm"
   >
     <a-form
-      name="to-email"
-      autocomplete="off"
+      name="config-item"
       layout="vertical"
     >
-      <a-form-item label="变量分组" name="group" v-bind="validateInfos.group">
-        <a-input
-          v-model:value="formState.group"
+      <a-form-item label="变量分组" name="groupId" v-bind="validateInfos.groupId">
+        <a-select
+          v-model:value="formState.groupId"
+          :options="configGroupList"
+          :field-names="{label:'title',value:'id'}"
           allow-clear
           placeholder="请选择变量分组"
         />
@@ -133,7 +140,7 @@ defineExpose({
       <a-form-item label="验证规则" name="rule">
         <a-select
           v-model:value="formState.rule"
-          :options="ruleOptions"
+          :options="ruleTypeOptions"
           allow-clear
           placeholder="请选择验证规则"
         />

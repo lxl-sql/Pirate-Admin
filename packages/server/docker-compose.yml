@@ -5,7 +5,7 @@ services:
       context: ./
       dockerfile: ./Dockerfile
     ports:
-      - 3010:3010
+      - "3010:3010"
     restart: on-failure # 设置自动重启，这一步必须设置，主要是存在mysql还没有启动完成就启动了node服务
     depends_on:
       - mysql-container
@@ -13,7 +13,7 @@ services:
     networks:
       - common-network
   mysql-container:
-    image: mysql
+    image: mysql:8.4
     ports:
       - '3306:3306'
     restart: on-failure
@@ -25,7 +25,7 @@ services:
     networks:
       - common-network
   redis-container:
-    image: redis
+    image: redis:7.2
     ports:
       - '6379:6379'
     restart: on-failure # 自动重启

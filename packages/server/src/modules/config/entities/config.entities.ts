@@ -1,16 +1,15 @@
 // 快捷配置入口
-import { DefaultEntity } from '@/common/entities/default.entity';
-import { Column, Entity } from 'typeorm';
+import {DefaultEntity} from '@/common/entities/default.entity';
+import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
+import {ConfigGroup} from "./config-group.entities";
 
 @Entity({
-  name: 'setting',
+  name: 'config',
 })
-export class Setting extends DefaultEntity {
-  @Column({
-    length: 100,
-    comment: '分组',
-  })
-  group: string;
+export class Config extends DefaultEntity {
+  @ManyToOne(() => ConfigGroup, (group) => group.configs)
+  @JoinColumn({name: 'group_id'})
+  group: ConfigGroup;
 
   @Column({
     length: 100,
@@ -21,6 +20,7 @@ export class Setting extends DefaultEntity {
   @Column({
     length: 100,
     comment: '字段名',
+    unique: true,
   })
   name: string;
 
@@ -32,19 +32,22 @@ export class Setting extends DefaultEntity {
 
   @Column({
     length: 300,
-    comment: '提示形象',
+    comment: '提示信息',
+    nullable: true
   })
   tip: string;
 
   @Column({
     length: 300,
     comment: '校验规则',
+    nullable: true
   })
   rule: string;
 
   @Column({
     length: 300,
     comment: '字典数据',
+    nullable: true
   })
   content: string;
 

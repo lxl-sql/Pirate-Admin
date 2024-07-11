@@ -17,7 +17,9 @@
     "noEmit": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     "types": [
       "vue-router",
@@ -40,7 +42,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "types/env.d.ts"
+    "types/**/*.d.ts"
   ],
   "references": [
     {

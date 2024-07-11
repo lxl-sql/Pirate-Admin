@@ -1,17 +1,37 @@
 <!-- 系统配置 -->
 <script setup lang="ts">
-import {nextTick, ref} from "vue";
-import Basic from "./components/Basic/index.vue";
-import Mail from "./components/Mail/index.vue";
-import QuickAccess from "./components/QuickAccess/index.vue";
-import AddConfigItemModal from "@/views/Routine/Config/components/AddConfigItemModal/index.vue";
+import {nextTick, onMounted, provide, Ref, ref} from "vue";
+import AddConfigItemModal from "./components/AddConfigItemModal/index.vue";
+import ConfigItem from "./components/ConfigItem/index.vue";
+import {getConfig} from "@/api/routine/config";
+
+interface GroupList {
+  // 字段名
+  name: string
+  // 字段标题
+  title: string
+}
 
 const addConfigItemModalRef = ref()
+const configGroupList = ref<GroupList[]>([])
+const config = ref({})
 const activeKey = ref<string>("1");
+
+provide<Ref<GroupList[]>>('configGroupList', configGroupList)
+
+onMounted(async () => {
+  await init()
+})
+
+const init = async () => {
+  const {data} = await getConfig()
+  configGroupList.value = data.configGroup
+  config.value = data.config
+}
 
 const handleTabClick = (key: string) => {
   const _key = activeKey.value;
-  if (key === '4') {
+  if (key === '0') {
     addConfigItemModalRef.value.init()
     nextTick(() => {
       activeKey.value = _key
@@ -31,24 +51,21 @@ const handleTabClick = (key: string) => {
         class="main-card no-card"
         @tab-click="handleTabClick"
       >
-        <a-tab-pane key="1" tab="基础配置">
+        <a-tab-pane
+          v-for="(group,index) in configGroupList"
+          :key="`${index + 1}`"
+          :tab="group.title"
+        >
           <div class="card-main is-always-shadow">
-            <Basic/>
+            <ConfigItem :items="config[group.name]"/>
           </div>
         </a-tab-pane>
-        <a-tab-pane key="2" tab="邮件配置">
-          <div class="card-main is-always-shadow">
-            <Mail/>
-          </div>
-        </a-tab-pane>
-        <a-tab-pane key="3" tab="快捷配置入口">
-          <div class="card-main is-always-shadow">
-            <QuickAccess/>
-          </div>
-        </a-tab-pane>
-        <a-tab-pane key="4" tab="新增配置项"/>
+        <a-tab-pane key="0" tab="新增配置项"/>
       </a-tabs>
-      <add-config-item-modal ref="addConfigItemModalRef"/>
+      <add-config-item-modal
+        ref="addConfigItemModalRef"
+        @confirm="init"
+      />
     </a-col>
     <a-col :lg="8" :xs="24">
       <div class="main-card is-always-shadow">

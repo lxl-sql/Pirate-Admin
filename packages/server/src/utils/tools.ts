@@ -9,11 +9,13 @@ import {
   Repository,
   TreeRepository,
 } from 'typeorm';
-import { BadRequestException, HttpException, HttpStatus } from '@nestjs/common';
+import {BadRequestException, HttpException, HttpStatus} from '@nestjs/common';
 import * as crypto from 'crypto';
 import * as dayjs from 'dayjs';
-import { DateValue, PageFormat } from 'src/types';
-import { Request } from 'express';
+import {DateValue, PageFormat} from 'src/types';
+import {Request} from 'express';
+import * as yaml from 'js-yaml';
+import * as safeEval from 'safe-eval';
 
 // 加盐
 const salt = '6D35z8%W$jrH@pirate';
@@ -113,9 +115,9 @@ export function between<T extends Date | number | string>(
     // example "['2024-01-01', '2024-01-01']" --> ['2024-01-01 00:00:00', '2024-01-02 00:00:00']; 需要加 1 天
     return from && to
       ? Between(
-          dayjs(start).toDate() as T,
-          dayjs(end).add(1, 'day').toDate() as T,
-        )
+        dayjs(start).toDate() as T,
+        dayjs(end).add(1, 'day').toDate() as T,
+      )
       : undefined;
   }
   return from && to ? Between(from as T, to as T) : undefined;
@@ -298,6 +300,7 @@ export function listToTree<T>(
     return acc;
   }, []);
 }
+
 /**
  * 检查数据库中是否存在指定条件的实体。
  * 如果存在，则抛出一个带有自定义消息和状态码的HTTP异常。
@@ -325,6 +328,63 @@ export async function existsByOnFail<Entity = any, Value = any>(
   } as FindOptionsWhere<Entity>);
 
   if (exist) {
+    if (typeof message === 'string') {
+      if (message.indexOf("$key") > -1) {
+        message = message.replace(/\$key/gi, key as string)
+      }
+      if (message.indexOf("$value") > -1) {
+        message = message.replace(/\$value/gi, value as string)
+      }
+    }
     throw new HttpException(message, status);
   }
+}
+
+/**
+ * 解析 textarea 数据为对象。
+ * 每行数据格式应为 key=value。
+ * 行之间以 '\n' 分隔。值会被自动转换为适当的类型，包括布尔值、数组、对象和函数。
+ *
+ * @param {string} textareaData - textarea 数据字符串。
+ * @returns {Object} - 解析后的包含键值对的对象。
+ */
+export function parseTextareaData(textareaData?: string) {
+  if (!textareaData) return null;
+
+  // 按换行符 '\n' 分割输入字符串，得到每个键值对
+  const lines = textareaData.split('\n');
+
+  // 创建一个空对象来存储解析后的键值对
+  const result = {};
+
+  // 遍历每一行
+  lines.forEach(line => {
+    // 按等号 '=' 分割每一行，得到键和值
+    const [key, value] = line.split('=');
+
+    // 如果键和值都定义，则将它们添加到结果对象中
+    if (key && value !== undefined) {
+      // 根据值的内容进行类型转换
+      try {
+        if (value === 'true') {
+          result[key] = true;
+        } else if (value === 'false') {
+          result[key] = false;
+        } else if (value.startsWith('[') || value.startsWith('{')) {
+          // 使用 js-yaml 解析 JSON 形式的数组和对象
+          result[key] = yaml.load(value);
+        } else if (value.startsWith('function') || value.includes('=>')) {
+          // 使用 safe-eval 解析函数
+          result[key] = safeEval(value);
+        } else {
+          result[key] = value;
+        }
+      } catch (error) {
+        console.error(`Error parsing value for key "${key}":`, error);
+        result[key] = value;
+      }
+    }
+  });
+
+  return result;
 }

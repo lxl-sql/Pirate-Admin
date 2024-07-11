@@ -1,6 +1,6 @@
 // index.ts
-import { createRouter, createWebHistory } from "vue-router";
-import { routes } from "./routes";
+import {createRouter, createWebHistory} from "vue-router";
+import {routes} from "./routes";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; // nprogress 样式文件
 import GlobalLoading from "@/views/Common/Loading";
@@ -26,11 +26,11 @@ router.beforeEach((to, from, next) => {
 
   // 开启进度条
   NProgress.start();
-  // 开启全局loading 100ms后 如果页面没有加载完毕则显示loading 如果加载完毕则不显示loading 100ms是为了防止页面加载过快loading闪烁
+  // 开启全局loading 100ms后 如果页面没有加载完毕则显示loading 如果加载完毕则不显示loading 500ms是为了防止页面加载过快loading闪烁
   timer = setTimeout(() => {
     GlobalLoading.show();
     timer = null;
-  }, 100);
+  }, 500);
 
   clearErrorCache();
 

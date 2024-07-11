@@ -34,7 +34,7 @@
 
 > 在运行项目前记得先安装 mysql 以及 redis 环境
 
-#### 下载依赖
+#### 初始化依赖
 
 ```bash
 $ pnpm bootstrap
@@ -48,6 +48,16 @@ $ pnpm install
 $ pnpm run start # 开发环境 对应 .env.development
 # 或
 $ pnpm run start:prod # 线上环境 对应 .env.production
+```
+
+#### 安装依赖
+
+```bash
+# 安装全局依赖
+$ pnpm install xxx
+# 安装指定package包的依赖，例如
+$ pnpm -r --filter=pirate-web install xxx
+$ pnpm -r --filter=pirate-server install xxx --save-dev
 ```
 
 #### 删除依赖

@@ -1,6 +1,9 @@
 // 配置文件
 import request from "@/utils/request";
 
+export const configCreate = (data) => {
+  return request.post("/config", data);
+};
 // 数据库配置
 export const configDatabase = (data) => {
   return request.post("/config/database", data);
