@@ -1,9 +1,10 @@
 // 获取时间状态
 import {deepArguments, deepCallback, DefaultTreeRecordType, IOptions, IPages} from "@/types";
 import {TagProps} from "ant-design-vue";
-import {cloneDeep, isArray, round} from "lodash-es";
+import {cloneDeep, isArray, keys, round, values} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
-import {DateRangeTuple} from "@/types/form";
+import {DateRangeTuple, RuleType} from "@/types/form";
+import {RuleObject} from "ant-design-vue/es/form";
 
 export const getTimeState = () => {
   // 获取当前时间
@@ -436,10 +437,69 @@ export function findIndex<RecordType extends DefaultTreeRecordType<RecordType>>(
  * @param type {key | value} label 展示 key 值 还是 value 值 default: value
  */
 export function enumToOptions<T extends object>(enumObj: T, type: 'key' | 'value' = 'value'): IOptions[] {
-  return Object.keys(enumObj)
+  return keys(enumObj)
     .filter(key => isNaN(Number(key))) // 过滤掉数字键
     .map(key => ({
       label: type === 'value' ? String(enumObj[key as keyof typeof enumObj]) : key,
       value: key
     }));
+}
+
+/**
+ * form-item 校验规则
+ * @param types
+ * @param label
+ */
+export function getRules<T>(types?: RuleType[], label?: string) {
+  if (!types) return []
+
+  const rules: RuleObject[] = [];
+
+  types.forEach((type) => {
+    switch (type) {
+      case 'required':
+        rules.push({required: true, message: `请输入有效的${label}`});
+        break;
+      case 'phone':
+        rules.push({required: true, pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号'});
+        break;
+      case 'idCard':
+        rules.push({required: true, pattern: /^\d{15}|\d{18}$/, message: '请输入有效的身份证号'});
+        break;
+      case 'username':
+        rules.push({required: true, pattern: /^[a-zA-Z0-9_]{3,16}$/, message: '请输入有效的用户名'});
+        break;
+      case 'password':
+        rules.push({required: true, pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/, message: '请输入有效的密码'});
+        break;
+      case 'array':
+        rules.push({
+          required: true,
+          type: 'array',
+          validator: (_rule, value) => {
+            if (Array.isArray(value) && value.length) {
+              const isValid = value.every(v => {
+                if (typeof v === 'object' && v !== null) {
+                  return values(v).every(Boolean);
+                } else {
+                  return Boolean(v);
+                }
+              })
+              if (isValid) {
+                return Promise.resolve();
+              } else {
+                return Promise.reject('数组中的每个值都必须有值');
+              }
+            }
+            return Promise.reject('必须是数组类型');
+          },
+        });
+        break;
+      default:
+        rules.push({required: true, type, message: `请输入有效的${label}`});
+        break;
+    }
+  });
+
+  return rules
 }

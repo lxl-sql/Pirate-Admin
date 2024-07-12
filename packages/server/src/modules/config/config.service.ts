@@ -10,11 +10,12 @@ import {EmailService} from '@/common/email/email.service';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Config} from './entities/config.entities';
-import {Repository} from 'typeorm';
+import {In, Repository} from 'typeorm';
 import {CreateConfigDto} from "@/modules/config/dto/create-config.dto";
 import {existsByOnFail, parseTextareaData} from "@/utils/tools";
 import {ConfigGroup} from "@/modules/config/entities/config-group.entities";
 import {CreateConfigGroupDto} from "@/modules/config/dto/create-config-group.dto";
+import {ValueConfigDto} from "@/modules/config/dto/value-config.dto";
 
 @Injectable()
 export class ConfigService {
@@ -159,6 +160,47 @@ export class ConfigService {
     }
   }
 
+  /**
+   * 保存配置项的value值
+   * @param valueConfigDto
+   */
+  public async createValue(valueConfigDto: ValueConfigDto & Record<string, any>) {
+    const {group: groupName, ...resetValue} = valueConfigDto
+    if (!groupName) {
+      throw new HttpException('变量分组不能为空！', HttpStatus.BAD_REQUEST)
+    }
+    const group = await this.configGroupRepository.find({
+      where: {
+        name: groupName
+      }
+    })
+    const configNames = Object.keys(resetValue)
+    const config = await this.configRepository.find({
+      where: {
+        group,
+        name: In(configNames)
+      },
+      relations: {
+        group: true
+      }
+    })
+    for (const conf of config) {
+      await this.configRepository.update(conf.id, {
+        value: JSON.stringify(resetValue[conf.name])
+      })
+      if (conf.name === 'configGroup' && resetValue[conf.name]) {
+        const dtos = resetValue[conf.name].map((dto: any) => {
+          return {
+            name: dto.key,
+            title: dto.value
+          }
+        })
+        await this.createOrUpdateConfigGroups(dtos)
+      }
+    }
+    return await this.findAll()
+  }
+
   public async findAll() {
     const configGroup = await this.findAllGroup()
     const config = await this.configRepository.find({
@@ -170,6 +212,8 @@ export class ConfigService {
       }
     });
     const groupedData = {}
+
+    let quickEntrance = []
     config.forEach((conf) => {
       const groupName = conf.group.name
 
@@ -178,15 +222,23 @@ export class ConfigService {
       }
       const new_conf = {
         ...conf,
+        group: groupName,
         rule: conf.rule?.split(','),
-        inputExtend: parseTextareaData(conf.inputExtend)
+        extend: parseTextareaData(conf.extend),
+        inputExtend: parseTextareaData(conf.inputExtend),
+        value: conf.value && JSON.parse(conf.value),
       }
       groupedData[groupName].push(new_conf)
+
+      if (new_conf.name === 'configQuickEntrance') {
+        quickEntrance = new_conf.value || []
+      }
     })
 
     return {
       configGroup,
       config: groupedData,
+      quickEntrance
     };
   }
 
@@ -203,6 +255,49 @@ export class ConfigService {
         await existsByOnFail(this.configGroupRepository, 'name', body.name, '$value 字段名已存在');
       }
     }
+  }
+
+  async createOrUpdateConfigGroups(createConfigGroupDtos: CreateConfigGroupDto[]) {
+    const keys = createConfigGroupDtos.map(dto => dto.name);
+
+    await this.configGroupRepository.manager.transaction(async (entityManager) => {
+      // 批量查询现有的 ConfigGroups
+      const existingGroups = await entityManager.find(ConfigGroup);
+
+      // 获取现有组的名称到实体的映射
+      const existingGroupMap = new Map(existingGroups.map(group => [group.name, group]));
+
+      // 找到需要删除的组
+      const groupsToDelete = existingGroups.filter(group => !keys.includes(group.name));
+
+      const groupsToSave = [];
+
+      for (const dto of createConfigGroupDtos) {
+        const existingGroup = existingGroupMap.get(dto.name);
+        if (existingGroup) {
+          // 如果存在且标题不同，则更新
+          if (existingGroup.title !== dto.title) {
+            existingGroup.title = dto.title;
+            groupsToSave.push(existingGroup);
+          }
+        } else {
+          // 如果不存在，则创建新的
+          groupsToSave.push(
+            entityManager.create(ConfigGroup, dto),
+          );
+        }
+      }
+
+      // 批量插入或更新组
+      if (groupsToSave.length > 0) {
+        await entityManager.save(groupsToSave);
+      }
+
+      // 批量删除组
+      if (groupsToDelete.length > 0) {
+        await entityManager.remove(groupsToDelete);
+      }
+    });
   }
 
   /**

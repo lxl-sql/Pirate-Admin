@@ -123,13 +123,26 @@ defineExpose({
           placeholder="请选择变量类型"
         />
       </a-form-item>
-      <a-form-item label="字典数据" name="content">
+      <a-form-item
+        v-if="formState.type && ['select','tree-select','cascader','checkbox','radio','radio-button'].includes(formState.type)"
+        label="字典数据"
+        name="content"
+      >
         <a-textarea
           v-model:value="formState.content"
           allow-clear
+          rows="3"
           placeholder="一行一个，无需引号，比如：key1=value1"
         />
       </a-form-item>
+<!--      <a-form-item v-if="formState.type" label="默认值" name="value">-->
+<!--        <a-textarea-->
+<!--          v-model:value="formState.value"-->
+<!--          allow-clear-->
+<!--          rows="3"-->
+<!--          placeholder="基本数据类型填写对应值，比如 true&#13对象数据类型请规范格式，比如 [{example: '示例'}]"-->
+<!--        />-->
+<!--      </a-form-item>-->
       <a-form-item label="提示信息" name="tip">
         <a-input
           v-model:value="formState.tip"
@@ -142,6 +155,7 @@ defineExpose({
           v-model:value="formState.rule"
           :options="ruleTypeOptions"
           allow-clear
+          mode="multiple"
           placeholder="请选择验证规则"
         />
       </a-form-item>
@@ -149,6 +163,7 @@ defineExpose({
         <a-textarea
           v-model:value="formState.extend"
           allow-clear
+          rows="3"
           placeholder="FormItem的扩展属性，一行一个，无需引号，比如：size=large"
         />
       </a-form-item>
@@ -156,6 +171,7 @@ defineExpose({
         <a-textarea
           v-model:value="formState.inputExtend"
           allow-clear
+          rows="3"
           placeholder="Input的扩展属性，一行一个，无需引号，比如：size=large"
         />
       </a-form-item>

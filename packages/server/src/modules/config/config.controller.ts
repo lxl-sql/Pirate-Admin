@@ -6,6 +6,7 @@ import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
 import {CreateConfigDto} from "@/modules/config/dto/create-config.dto";
 import {CreateConfigGroupDto} from "@/modules/config/dto/create-config-group.dto";
+import {ValueConfigDto} from "@/modules/config/dto/value-config.dto";
 
 @Controller('config')
 export class ConfigController {
@@ -15,6 +16,11 @@ export class ConfigController {
   @Post()
   public async create(@Body() createConfigDto: CreateConfigDto) {
     return await this.configService.create(createConfigDto);
+  }
+
+  @Post('/value')
+  public async createValue(@Body() valueConfigDto: ValueConfigDto & Record<string, any>) {
+    return await this.configService.createValue(valueConfigDto);
   }
 
   @Get()

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {withDefaults} from 'vue'
 import {IColumns} from "@/types";
+import {TimePicker as ATimePicker} from 'ant-design-vue';
 
 interface CustomInputProps {
   type?: IColumns['type'],
@@ -17,7 +18,7 @@ withDefaults(defineProps<CustomInputProps>(), {});
     allow-clear
     v-bind="$attrs"
   />
-  <a-input
+  <a-input-number
     v-else-if="type === 'input-number'"
     allow-clear
     v-bind="$attrs"
@@ -55,6 +56,10 @@ withDefaults(defineProps<CustomInputProps>(), {});
     v-else-if="type === 'upload'"
     v-bind="$attrs"
   />
+  <a-checkbox-group
+    v-else-if="type === 'checkbox'"
+    v-bind="$attrs"
+  />
   <a-radio-group
     v-else-if="type === 'radio'"
     :options="options"
@@ -74,8 +79,26 @@ withDefaults(defineProps<CustomInputProps>(), {});
     v-else-if="type === 'range-picker'"
     v-bind="$attrs"
   />
+  <a-time-picker
+    v-else-if="type === 'time-picker'"
+    value-format="HH:mm:ss"
+  />
+  <a-switch
+    v-else-if="type === 'switch'"
+    v-bind="$attrs"
+  />
   <i-icon
     v-else-if="type === 'icon'"
+    v-bind="$attrs"
+  />
+  <a-input
+    v-if="type === 'color'"
+    type="color"
+    allow-clear
+    v-bind="$attrs"
+  />
+  <key-value
+    v-if="type === 'key-value'"
     v-bind="$attrs"
   />
 </template>

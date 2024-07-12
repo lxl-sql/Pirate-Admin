@@ -1,4 +1,4 @@
-import {RuleType} from "@/types/form";
+import {FormType, RuleType} from "@/types/form";
 
 /**
  * 配置项
@@ -13,7 +13,7 @@ export interface ConfigItem {
   // 变量字段
   name: string
   // 变量类型
-  type: string
+  type: FormType
   // 提示信息
   tip?: string
   // 校验规则

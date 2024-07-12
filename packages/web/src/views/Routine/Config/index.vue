@@ -5,19 +5,28 @@ import AddConfigItemModal from "./components/AddConfigItemModal/index.vue";
 import ConfigItem from "./components/ConfigItem/index.vue";
 import {getConfig} from "@/api/routine/config";
 
-interface GroupList {
+interface Group {
   // 字段名
   name: string
   // 字段标题
   title: string
 }
 
-const addConfigItemModalRef = ref()
-const configGroupList = ref<GroupList[]>([])
-const config = ref({})
-const activeKey = ref<string>("1");
+interface Entrance {
+  // 字段名
+  key: string
+  // 字段标题
+  value: string
+}
 
-provide<Ref<GroupList[]>>('configGroupList', configGroupList)
+const configItemRef = ref()
+const addConfigItemModalRef = ref()
+const configGroupList = ref<Group[]>([])
+const quickEntrance = ref<Entrance[]>([])
+const config = ref({})
+const activeKey = ref<string>("0");
+
+provide<Ref<Group[]>>('configGroupList', configGroupList)
 
 onMounted(async () => {
   await init()
@@ -25,20 +34,34 @@ onMounted(async () => {
 
 const init = async () => {
   const {data} = await getConfig()
-  configGroupList.value = data.configGroup
-  config.value = data.config
+  await onConfirm(data)
 }
 
 const handleTabClick = (key: string) => {
   const _key = activeKey.value;
-  if (key === '0') {
+  if (key === '-1') {
     addConfigItemModalRef.value.init()
     nextTick(() => {
       activeKey.value = _key
     })
   } else {
     activeKey.value = key
+    nextTick(() => {
+      const _ref = configItemRef.value[key]
+      console.log('key', key, configItemRef.value, _ref)
+      _ref?.init()
+    })
   }
+}
+
+const onConfirm = async (data) => {
+  configGroupList.value = data.configGroup
+  config.value = data.config
+  quickEntrance.value = data.quickEntrance
+  await nextTick(() => {
+    const _ref = configItemRef.value[+activeKey.value]
+    _ref?.init()
+  })
 }
 </script>
 
@@ -53,14 +76,21 @@ const handleTabClick = (key: string) => {
       >
         <a-tab-pane
           v-for="(group,index) in configGroupList"
-          :key="`${index + 1}`"
+          :key="`${index}`"
           :tab="group.title"
+          force-render
         >
           <div class="card-main is-always-shadow">
-            <ConfigItem :items="config[group.name]"/>
+            <config-item
+              v-if="config[group.name]?.length"
+              ref="configItemRef"
+              :items="config[group.name]"
+              @confirm="onConfirm"
+            />
+            <a-empty v-else/>
           </div>
         </a-tab-pane>
-        <a-tab-pane key="0" tab="新增配置项"/>
+        <a-tab-pane key="-1" tab="新增配置项"/>
       </a-tabs>
       <add-config-item-modal
         ref="addConfigItemModalRef"
@@ -71,7 +101,17 @@ const handleTabClick = (key: string) => {
       <div class="main-card is-always-shadow">
         <div class="card-head">快捷配置入口</div>
         <div class="card-main">
-          <a-button size="small">快捷配置入口</a-button>
+          <template v-if="quickEntrance.length">
+            <a-button
+              v-for="item in quickEntrance"
+              :key="item.key"
+              size="small"
+              @click="$router.push(item.value)"
+            >
+              {{ item.key }}
+            </a-button>
+          </template>
+          <a-empty v-else/>
         </div>
       </div>
     </a-col>

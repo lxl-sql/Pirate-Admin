@@ -2,105 +2,107 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue";
 import {ConfigItem} from "../../index.d";
-import {RuleObject} from "ant-design-vue/es/form";
-import {RuleType, RuleTypeEnum} from "@/types/form.d";
+import {getRules} from "@/utils/common";
+import useFormInstance from "@/hooks/useFormInstance";
+import {configValueCreate} from "@/api/config";
+import {notification} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
+import ToEmailModal from "../ToEmailModal/index.vue";
 
+const {t} = useI18n()
+
+//# region interface
 interface ConfigItemProps {
   items: ConfigItem[]
 }
 
-const props = defineProps<ConfigItemProps>()
-
-//#region interface
-interface FormState {
-  // 站点名称
-  siteName?: string;
-  // 备案号
-  recordNo?: string;
-  // 版本号
-  version?: string;
-  // 禁止访问 ip
-  noAccessIp?: string;
-  // 时区
-  timeZone?: string;
+interface FormState extends Record<string, any> {
+  group?: string;
 }
 
+//# endregion
 
-//#endregion
+//# region 变量定义
+const props = defineProps<ConfigItemProps>()
 
-//#region 变量定义
+const emits = defineEmits(['confirm'])
 // 校验规则
-const formRef = ref()
+const [formRef, formInstance] = useFormInstance()
+const toEmailModalRef = ref()
 const formState = reactive<FormState>({});
 
 const loading = ref<boolean>(false);
-//#endregion
+//# endregion
 
-//#region 函数方法
-const getRules = (types?: RuleType[]) => {
-  if (!types) return []
-
-  const rules: RuleObject[] = [];
-
-  types.forEach((type) => {
-    switch (type) {
-      case 'required':
-        rules.push({required: true});
-        break;
-      case 'phone':
-        rules.push({pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号'});
-        break;
-      case 'idCard':
-        rules.push({pattern: /^\d{15}|\d{18}$/, message: '请输入有效的身份证号'});
-        break;
-      case 'username':
-        rules.push({pattern: /^[a-zA-Z0-9_]{3,16}$/, message: '请输入有效的用户名'});
-        break;
-      case 'password':
-        rules.push({pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/, message: '请输入有效的密码'});
-        break;
-      default:
-        rules.push({type, message: `请输入有效的${RuleTypeEnum[type]}`});
-        break;
+//# region 函数方法
+const init = () => {
+  console.log('init --> items', props.items)
+  formState.group = props.items?.[0].group
+  props.items.forEach(item => {
+    if (item.value) {
+      formState[item.name] = item.value
     }
-  });
-
-  return rules
+  })
 }
 // 保存
 const handleSubmit = async () => {
-  await formRef.value.validate();
+  await formInstance.validate();
+  loading.value = true;
   try {
-    loading.value = true;
-    console.log("res", formState);
-    formRef.value.resetFields()
+    const {data} = await configValueCreate(formState)
+    emits('confirm', data)
+    notification.success({
+      message: t('message.success'),
+      description: t('success.saved successfully'),
+    })
   } finally {
     loading.value = false;
   }
 };
-//#endregion
+// 测试发送邮件地址
+const handleSendEmail = async () => {
+  await formInstance.validate();
+  const params = {
+    ...formState,
+    address: formState.user,
+  }
+  toEmailModalRef.value.init(params)
+};
+
+//# endregion
+
+//# region computed
+
+//# endregion
 
 defineOptions({
   name: "ConfigItem"
+})
+defineExpose({
+  init
 })
 </script>
 
 <template>
   <a-form
     ref="formRef"
-    name="config"
     :model="formState"
     :wrapper-col="{ span: 16 }"
     layout="vertical"
+    class="config-item"
   >
     <a-form-item
       v-for="item in items"
       :key="item.name"
-      :label="item.title"
       :name="item.name"
-      :rules="getRules(item.rule)"
+      :rules="getRules(item.rule, item.title)"
+      :style="{'--config-name': `'$${item.name}'`}"
       v-bind="item.extend"
     >
+      <template #label>
+        {{ item.title }}
+        <question-tooltip v-if="item.tip" :title="item.tip"/>
+      </template>
       <custom-input
         v-model:value="formState[item.name]"
         :type="item.type"
@@ -109,7 +111,23 @@ defineOptions({
       />
     </a-form-item>
   </a-form>
-  <a-button type="primary" :loading="loading" @click="handleSubmit">
-    保存
-  </a-button>
+  <a-space direction="vertical">
+    <a-button
+      v-if="formState.group === 'email'"
+      class="!text-xs"
+      size="small"
+      @click="handleSendEmail"
+    >
+      测试发送地址
+    </a-button>
+    <a-button type="primary" :loading="loading" @click="handleSubmit">
+      保存
+    </a-button>
+  </a-space>
+
+  <to-email-modal ref="toEmailModalRef"/>
 </template>
+
+<style lang="less" scoped>
+@import "./index";
+</style>

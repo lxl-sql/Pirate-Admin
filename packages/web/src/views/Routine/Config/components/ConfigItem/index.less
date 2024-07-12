@@ -1,0 +1,21 @@
+.config-item {
+  :deep(.ant-form-item-row) {
+    .ant-form-item-control {
+      @apply relative;
+
+      &::after {
+        content: var(--config-name);
+        @apply absolute top-0 text-[@colorPrimary] hidden opacity-50;
+        left: 104%;
+      }
+    }
+
+    &:hover {
+      .ant-form-item-control {
+        &::after {
+          @apply inline-block;
+        }
+      }
+    }
+  }
+}

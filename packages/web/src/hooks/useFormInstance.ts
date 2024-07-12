@@ -20,10 +20,10 @@ export default function useFormInstance() {
         formRef.value?.scrollToField(...args)
       },
       validate(...args) {
-        formRef.value?.validate(...args)
+        return formRef.value?.validate(...args)
       },
       validateFields(...args) {
-        formRef.value?.validateFields(...args)
+        return formRef.value?.validateFields(...args)
       },
     } as FormExpose
   ] as [Ref<FormInstance | undefined>, FormExpose]

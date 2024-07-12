@@ -11,11 +11,18 @@ export type FormType =
   | "select"
   | "tree-select"
   | "cascader"
+  | "checkbox"
   | "radio"
-  | 'radio-button'
+  | "radio-button"
   | "date-picker"
   | "range-picker"
+  | "time-picker"
   | "upload"
+  | "key-value"
+  | "switch"
+  | "editor"
+  | "city"
+  | "color"
   | "icon"
 
 export enum FormTypeEnum {
@@ -26,11 +33,18 @@ export enum FormTypeEnum {
   "select" = "选择框",
   "tree-select" = "树选择框",
   "cascader" = "级联选择",
+  "checkbox" = "多选",
   "radio" = "单选",
   "radio-button" = "单选按钮",
   "date-picker" = "日期选择器",
   "range-picker" = "范围选择器",
+  "time-picker" = "时间选择器",
   "upload" = "上传",
+  "key-value" = "键值对",
+  "switch" = "开关",
+  "editor" = "富文本编辑器",
+  "city" = "城市选择器",
+  "color" = "颜色选择器",
   "icon" = "图标选择"
 }
 
@@ -41,14 +55,16 @@ export type RuleType =
   | 'idCard' // 身份证号
   | 'username' // 用户名
   | 'password' // 密码
+  | 'array'
   | AntRuleType
 
 export enum RuleTypeEnum {
-  'required' = '必填',
-  'phone' = '手机号',
-  'idCard' = '身份证号',
-  'username' = '用户名',
-  'password' = '密码',
+  'required' = "必填",
+  'phone' = "手机号",
+  'idCard' = "身份证号",
+  'username' = "用户名",
+  'password' = "密码",
+  'array' = "数组",
   'string' = "字符串",
   'number' = "数字",
   'boolean' = "布尔值",

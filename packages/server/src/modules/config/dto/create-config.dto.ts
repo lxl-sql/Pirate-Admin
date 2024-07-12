@@ -1,16 +1,19 @@
-import {IsArray, IsInt, IsNotEmpty, IsOptional} from "class-validator";
+import {IsArray, IsInt, IsNotEmpty, IsOptional, IsString} from "class-validator";
 
 export class CreateConfigDto {
   @IsInt({message: "请传递正确的分组类型"})
   @IsNotEmpty({message: '变量分组不能为空！'})
   groupId?: number
 
+  @IsString()
   @IsNotEmpty({message: '变量名不能为空！'})
   name?: string
 
+  @IsString()
   @IsNotEmpty({message: '变量标题不能为空！'})
   title?: string
 
+  @IsString()
   @IsNotEmpty({message: '变量类型不能为空！'})
   type?: string
 
