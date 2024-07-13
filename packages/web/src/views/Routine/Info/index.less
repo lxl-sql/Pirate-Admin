@@ -6,12 +6,13 @@
     border-radius: 5px;
   }
 
-  :deep(.edit-info) {
+  .edit-info {
+    @apply bg-[@colorBgContainer];
     &::before {
       width: 100%;
       height: 50px;
-      background-color: var(--primary-color);
-      background-color: black;
+      //background-color: var(--primary-color);
+      //background-color: black;
     }
   }
 }

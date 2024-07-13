@@ -1,56 +1,15 @@
 .edit-info {
-  box-sizing: border-box;
-  padding: 24px;
-  background-color: var(--primary-color);
-  border-top: 5px solid var(--primary-color);
-  border-radius: 5px;
+  @apply box-border p-6 bg-[@colorBgContainer] border-0 border-t-4 border-solid border-[@colorPrimary] rounded;
 
   .edit-head {
-    text-align: center;
+    @apply text-center;
 
-    .avatar {
-      margin-bottom: 16px;
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-
-      :deep(.ant-upload) {
-        width: auto;
-        height: auto;
-        margin: 0;
-        border-radius: 100%;
-      }
-
-      .avatar-img {
-        min-width: 120px;
-        min-height: 120px;
-        width: 120px;
-        height: 120px;
-        border-radius: 100%;
-        line-height: 120px;
-      }
-
-      .avatar-default {
-        position: relative;
-
-        .avatar-loading {
-          display: flex;
-          align-items: center;
-          flex-flow: column;
-          justify-content: center;
-          position: absolute;
-          top: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(0, 0, 0, 0.2);
-          border-radius: 100%;
-          color: #fff;
-        }
-      }
+    :deep(.ant-upload) {
+      @apply w-auto h-auto m-0 rounded-full;
     }
 
     .nickname {
-      font-size: 22px;
+      @apply text-3xl;
     }
   }
 }

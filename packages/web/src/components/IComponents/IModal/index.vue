@@ -109,7 +109,7 @@ const warpClassName = computed(() => {
     <template #title>
       <div
         ref="modalTitleRef"
-        class="w-[100%] px-[24px] py-[16px]"
+        class="w-[100%] px-[24px] py-[16px] border-0 border-b-[1px] border-solid border-[var(--colorBorder)]"
         :style="{ cursor: draggable ? 'move' : 'auto' }"
       >
         {{ title }}

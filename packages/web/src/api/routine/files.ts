@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import {DeleteParams} from "@/types/request";
 
 // 上传附件
 export const upload = (data: any) => {
@@ -11,6 +12,6 @@ export const getFileList = (data: any) => {
 };
 
 // 删除附件
-export const removeFile = (ids: number[]) => {
-  return request.post("/files/remove", {ids});
+export const removeFile = (data: DeleteParams) => {
+  return request.post("/files/remove", data);
 }

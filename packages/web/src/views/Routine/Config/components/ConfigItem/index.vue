@@ -36,7 +36,6 @@ const loading = ref<boolean>(false);
 
 //# region 函数方法
 const init = () => {
-  console.log('init --> items', props.items)
   formState.group = props.items?.[0].group
   props.items.forEach(item => {
     if (item.value) {
@@ -68,10 +67,6 @@ const handleSendEmail = async () => {
   }
   toEmailModalRef.value.init(params)
 };
-
-//# endregion
-
-//# region computed
 
 //# endregion
 

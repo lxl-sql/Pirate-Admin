@@ -2,35 +2,21 @@
 <script setup lang="ts">
 import {ref, watch, withDefaults,} from "vue";
 import {LoadingOutlined, PlusOutlined} from "@ant-design/icons-vue";
-import {notification, UploadChangeParam} from "ant-design-vue";
+import {notification, UploadChangeParam, UploadFile} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import {upload} from "@/api/routine/files";
 import {formatFileSize} from "@/utils/common";
+import {FileType} from "ant-design-vue/es/upload/interface";
+import type {UploadRequestOption as RcCustomRequestOptions} from "ant-design-vue/es/vc-upload/interface";
+import {IUploadProps} from "@/types/upload";
 
 const {t} = useI18n();
 
-interface IPropsModal {
-  fileList?: any[]; // 文件列表
-  alt?: string; // alt
-  title?: string; // title
-  placeholder?: string; // upload 占位内容
-  listType: 'picture-card',
-  length?: number; // 上传文件数量
-  accept?: string; // 接受上传的文件类型 详见 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept
-  size?: number; // 上传文件大小
-  beforeUpload?: (file) => boolean; // 上传前的钩子函数
-}
-
-const props = withDefaults(defineProps<IPropsModal>(), {
-  alt: "upload",
-  title: "",
+const props = withDefaults(defineProps<IUploadProps>(), {
   placeholder: "上传",
+  name: "files",
   listType: 'picture-card',
-  fileList: undefined,
-  length: undefined,
-  accept: undefined,
-  size: undefined,
-  beforeUpload: undefined,
+  multiple: true,
 });
 const emits = defineEmits([
   "update:fileList", // 文件列表
@@ -53,29 +39,31 @@ watch(() => props.fileList, (val) => {
  * 自定义上传请求接口
  * @param originObject
  */
-const customRequest = async (originObject) => {
+const customRequest = async (originObject: any) => {
+  if (props.customRequest) {
+    return props.customRequest(originObject as RcCustomRequestOptions)
+  }
   const {file, onSuccess, onError, onProgress} = originObject;
-  console.log("file", originObject);
   const formData = new FormData();
   formData.append('files', file);
   formData.append('uid', file.uid);
-  onProgress({percent: 50});
+  onProgress?.({percent: 50});
   try {
     const {data} = await upload(formData);
-    onProgress({percent: 100});
+    onProgress?.({percent: 100});
     const [_data] = data || [];
     const response = {
       ..._data,
       ...file,
       status: 'done'
     }
-    onSuccess(response, file);
+    onSuccess?.(response, file);
     notification.success({
       message: t('message.success'),
       description: t('success.upload'),
     })
-  } catch (err) {
-    onError(err)
+  } catch (error) {
+    onError?.(error)
   }
 };
 
@@ -95,31 +83,31 @@ const handleUploadChange = (info: UploadChangeParam) => {
     })
   }
   const _fileList = info.fileList
-      .filter(file => file.status !== 'error' && file.status)
-      .map(file => {
-        if (file.response) {
-          return {
-            ...file,
-            ...file.response,
-          }
+    .filter(file => file.status !== 'error' && file.status)
+    .map(file => {
+      if (file.response) {
+        return {
+          ...file,
+          ...file.response,
         }
-        return file
-      });
+      }
+      return file
+    });
   fileList.value = _fileList;
   emits("update:fileList", _fileList);
   emits("change", info.file, _fileList);
 };
-const generateAcceptRegex = (accept) => {
+const generateAcceptRegex = (accept: string) => {
   // 将 accept 字符串中的通配符 * 替换为正则表达式中的 .*
   const regexString = accept
-      .replace(/\./g, '\\.')
-      .replace(/,/g, '|') // 将逗号替换为竖线，表示逻辑或
-      .replace(/\*/g, '.*'); // 将星号替换为匹配任意字符
+    .replace(/\./g, '\\.')
+    .replace(/,/g, '|') // 将逗号替换为竖线，表示逻辑或
+    .replace(/\*/g, '.*'); // 将星号替换为匹配任意字符
   // 构建正则表达式对象
   return new RegExp(`(${regexString})`);
 }
 // beforeUpload
-const beforeUpload = (file) => {
+const beforeUpload = (file: FileType, fileList: FileType[]) => {
   let isAccept = true;
   let isLtSize = true;
   if (props.accept) {
@@ -141,12 +129,11 @@ const beforeUpload = (file) => {
       })
     }
   }
-  const beforeUpload = props.beforeUpload && props.beforeUpload(file) || true;
+  const beforeUpload = props.beforeUpload ? props.beforeUpload(file, fileList) : true;
   return isAccept && isLtSize && beforeUpload;
 };
 
-const onUploadPreview = (file) => {
-  // console.log('onUploadPreview', file)
+const handleUploadPreview = (file: UploadFile) => {
   isPreviewImageVisible.value = true;
   // 获取预览图片的索引
   const current = fileList.value.findIndex(f => f.uid === file.uid)
@@ -170,52 +157,50 @@ const onFileModalConfirm = () => {
 <template>
   <div class="i-upload relative inline-block rounded-md transition-all">
     <a-upload
-        v-model:file-list="fileList"
-        :custom-request="customRequest"
-        :list-type="props.listType"
-        :accept="props.accept"
-        :before-upload="beforeUpload"
-        name="files"
-        class="uploader"
-        multiple
-        @change="handleUploadChange"
-        @preview="onUploadPreview"
+      v-bind="{...$attrs,...props}"
+      v-model:file-list="fileList"
+      :custom-request="customRequest"
+      :before-upload="beforeUpload"
+      @change="handleUploadChange"
+      @preview="handleUploadPreview"
     >
-      <template v-if="!props.length || fileList.length < props.length">
-        <div class="select-text" @click.stop="openFileModal">选择</div>
-        <div class="h-[100%] flex flex-col justify-center items-center">
-          <loading-outlined v-if="isUploadLoading" class="i-upload-icon"/>
-          <plus-outlined v-else class="i-upload-icon"/>
-          <div class="i-upload-text">
-            {{ props.placeholder }}
+      <slot>
+        <template v-if="!maxCount || fileList.length < maxCount">
+          <div class="select-text" @click.stop="openFileModal">选择</div>
+          <div class="h-[100%] flex flex-col justify-center items-center">
+            <loading-outlined v-if="isUploadLoading" class="i-upload-icon"/>
+            <plus-outlined v-else class="i-upload-icon"/>
+            <div class="i-upload-text">
+              {{ placeholder }}
+            </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </slot>
     </a-upload>
   </div>
 
   <div class="hidden">
     <a-image-preview-group
-        :preview="{
+      :preview="{
           visible:isPreviewImageVisible,
-          onVisibleChange: vis => (isPreviewImageVisible = vis),
+          onVisibleChange: (vis:boolean) => (isPreviewImageVisible = vis),
           maskClassName: 'i-upload-preview-mask',
           current: previewCurrent
         }"
     >
       <a-image
-          v-for="item in fileList"
-          :key="item.uid"
-          :src="item.url || item.thumbUrl"
+        v-for="item in fileList"
+        :key="item.uid"
+        :src="item.url || item.thumbUrl"
       />
     </a-image-preview-group>
   </div>
 
   <!-- 选择文件 modal -->
   <select-file-modal
-      :open="isSelectFileModalVisible"
-      @confirm="onFileModalConfirm"
-      @cancel="onFileModalCancel"
+    :open="isSelectFileModalVisible"
+    @confirm="onFileModalConfirm"
+    @cancel="onFileModalCancel"
   />
 </template>
 

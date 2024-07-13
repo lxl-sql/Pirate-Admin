@@ -27,7 +27,8 @@
     "delete": "删除成功！",
     "create": "新增成功！",
     "update": "修改成功！",
-    "saved successfully": "保存成功！"
+    "saved successfully": "保存成功！",
+    "sent successfully": "发送成功！"
   },
   "error": {
     "userName": "用户名不能为空！",

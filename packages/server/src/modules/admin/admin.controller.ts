@@ -1,36 +1,22 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Session,
-  Ip,
-  Query,
-  Param,
-  Req,
-} from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { UpsertAdminDto } from './dto/upsert-admin.dto';
-import {
-  LogCall,
-  ProtocolHost,
-  RequireLogin,
-  UserInfo,
-} from '@/decorators/custom.decorator';
-import { LoginAdminDto } from './dto/login-admin.dto';
-import { generateParseIntPipe } from '@/utils/tools';
-import { QueryAdminDto } from './dto/query-admin.dto';
-import { RemoveAdminDto } from './dto/remove-admin.dto';
-import { UpsertPermissionDto } from './dto/upsert-permission.dto';
-import { RemovePermissionDto } from './dto/remove-permission.dto';
-import { IdsDto } from '@/common/dtos/remove.dto';
-import { StatusPermissionDto } from './dto/status-permission.dto';
-import { UpsertRoleDto } from './dto/upsert-role.dto';
-import { QueryRoleDto } from './dto/query-role.dto';
+import {Body, Controller, Get, Ip, Param, ParseIntPipe, Post, Query, Session,} from '@nestjs/common';
+import {AdminService} from './admin.service';
+import {UpsertAdminDto} from './dto/upsert-admin.dto';
+import {LogCall, ProtocolHost, RequireLogin, UserInfo,} from '@/decorators/custom.decorator';
+import {LoginAdminDto} from './dto/login-admin.dto';
+import {generateParseIntPipe} from '@/utils/tools';
+import {QueryAdminDto} from './dto/query-admin.dto';
+import {RemoveAdminDto} from './dto/remove-admin.dto';
+import {UpsertPermissionDto} from './dto/upsert-permission.dto';
+import {RemovePermissionDto} from './dto/remove-permission.dto';
+import {IdsDto} from '@/common/dtos/remove.dto';
+import {StatusPermissionDto} from './dto/status-permission.dto';
+import {UpsertRoleDto} from './dto/upsert-role.dto';
+import {QueryRoleDto} from './dto/query-role.dto';
 
 @Controller('admin')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(private readonly adminService: AdminService) {
+  }
 
   @Post('login')
   @LogCall('admin', '登录')
@@ -57,9 +43,9 @@ export class AdminController {
   // @LogCall('admin', '管理员管理')
   public async list(
     @Query('page', generateParseIntPipe('page', 1))
-    page: number,
+      page: number,
     @Query('size', generateParseIntPipe('size', 10))
-    size: number,
+      size: number,
     @Query() queryAdminDto: QueryAdminDto,
     @ProtocolHost() protocolHost: string,
     @UserInfo('userId') userId: number,
@@ -95,6 +81,16 @@ export class AdminController {
     @ProtocolHost() protocolHost: string,
   ) {
     return await this.adminService.detail(id, protocolHost);
+  }
+
+  @Get('bind-captcha')
+  @RequireLogin()
+  @LogCall('admin', '获取绑定邮箱/手机号验证码')
+  public async bindCaptcha(
+    @Query('type', ParseIntPipe) type: number, // 1: 邮箱注册 2: 手机注册
+    @Query('address') address: string, // 邮箱或手机号
+  ) {
+    return this.adminService.bindCaptcha(type, address)
   }
 
   @Get('role')

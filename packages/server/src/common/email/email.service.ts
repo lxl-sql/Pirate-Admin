@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Transporter, createTransport } from 'nodemailer';
-import { GenerateEmailDto } from './dto/generate-email.dto';
-import { ConfigEmailDto } from './dto/config-email.dto';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {createTransport, Transporter} from 'nodemailer';
+import {GenerateEmailDto} from './dto/generate-email.dto';
+import {ConfigEmailDto} from './dto/config-email.dto';
 
 @Injectable()
 export class EmailService {
@@ -20,7 +20,7 @@ export class EmailService {
     });
   }
 
-  public async sendMail({ to, subject, html }) {
+  public async sendMail({to, subject, html}) {
     await this.transporter.sendMail({
       from: {
         name: 'Pirate Admin',
@@ -49,7 +49,7 @@ export class EmailService {
   }
 
   public async testEmail(config: GenerateEmailDto) {
-    const { address, to, subject, html, host, port, user, pass } = config;
+    const {address, to, subject, html, host, port, user, pass} = config;
     if (address !== to) {
       throw new HttpException(
         '邮件发件人必须与授权用户相同！',

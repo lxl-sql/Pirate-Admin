@@ -1,122 +1,83 @@
 <!-- 个人资料 - 修改信息 -->
 <script setup lang="ts">
-import { onMounted, reactive, ref, unref } from "vue";
-import {
-  EditOutlined,
-  LoadingOutlined,
-  UserOutlined,
-} from "@ant-design/icons-vue";
-import { FormInstance, notification } from "ant-design-vue";
-import { Form } from "ant-design-vue";
-import { useAdminStore } from "@/store";
-import { storeToRefs } from "pinia";
-import { Rule } from "ant-design-vue/es/form";
-import { Rules } from "@/types/form";
+import {reactive, ref} from "vue";
+import {EditOutlined, UserOutlined,} from "@ant-design/icons-vue";
+import {Form, FormInstance, notification} from "ant-design-vue";
+import {useAdminStore} from "@/store";
+import {storeToRefs} from "pinia";
+import {Rules} from "@/types/form";
+import {adminUpsert} from "@/api/auth/admin";
+import {useI18n} from "vue-i18n";
+import BindEmailOrPhoneModal from "./components/BindEmailOrPhoneModal/index.vue";
+import {CaptchaType} from "@/types/request";
+
+const {t} = useI18n()
+
 const store = useAdminStore();
-const { formState } = storeToRefs(store);
-const { userInfo, getAdminByIdRequest } = store;
+const {formState} = storeToRefs(store);
 
 const formRef = ref<FormInstance>();
-// https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png
-const validatePassword = async (_rule: Rule, value: string) => {
-  if (value) {
-    await validateField("checkPassword", formState.value.checkPassword, [
-      { validator: validateCheckPassword },
-    ]);
-  }
-  return Promise.resolve();
-};
-const validateCheckPassword = async (_rule: Rule, value: string) => {
-  if (formState.value.password) {
-    if (!value) {
-      return Promise.reject("Please input the password again");
-    } else if (value !== formState.value.password) {
-      return Promise.reject("Two inputs don't match!");
-    }
-  }
-  return Promise.resolve();
-};
+const bindEmailOrPhoneModalRef = ref()
+
 // 校验规则
 const rules = reactive<Rules>({
-  nickname: [{ required: true, message: "请输入用户昵称" }],
-  password: [{ validator: validatePassword, trigger: "change" }],
-  checkPassword: [
-    {
-      validator: validateCheckPassword,
-      trigger: "change",
-    },
-  ],
+  nickname: [{required: true, message: "请输入用户昵称"}],
 });
-const fileList = ref<object[]>([]);
-const isAvatarUploadLoading = ref<boolean>(false);
-const { resetFields, validate, validateInfos, validateField } = Form.useForm(
-  formState,
-  rules
-);
-
-onMounted(async () => {
-  await getAdminByIdRequest(userInfo.id);
-});
-
-const handleAvatarUploadChange = ({ file }: any) => {
-  const { status, response } = file; // uploading done error
-  if (status === "uploading") {
-    console.log("正在上传");
-    isAvatarUploadLoading.value = true;
-  } else if (status === "done") {
-    console.log("上传成功");
-    console.log(response);
-    const { code, data } = response;
-    if (code === "0000") {
-      formState.value.avatar = data[0].full_url;
-      console.log("fileList", unref(fileList));
-    }
-    isAvatarUploadLoading.value = false;
-  } else if (status === "error") {
-    console.log("上传失败");
-    isAvatarUploadLoading.value = false;
-    notification.error({
-      message: "上传失败",
-    });
-    // message.error('上传失败')
-  }
-};
+const {validate, validateInfos} = Form.useForm(formState, rules);
 
 const handleSubmit = async () => {
   await validate();
+  const params = {
+    ...formState.value,
+    type: 2,
+    avatar: formState.value.avatarPath
+  }
+  try {
+    await adminUpsert(params)
+    notification.success({
+      message: t('message.success'),
+      description: t('success.saved successfully'),
+    })
+    await store.getAdminByIdRequest(store.userInfo.id)
+  } finally {
+
+  }
   console.log("handleSubmit -->", formState.value);
 };
+
+const handleUploadSuccess = (file) => {
+  console.log(file)
+  formState.value.avatar = file.url;
+  formState.value.avatarPath = file.path
+}
+
+const openBindEmailOrPhoneModal = (type: CaptchaType) => {
+  bindEmailOrPhoneModalRef.value.init(type)
+}
 </script>
 
 <template>
   <div class="edit-info">
-    <div class="edit-head mb_16">
-      <a-upload
-        name="file"
-        list-type="picture-card"
-        class="avatar"
+    <div class="edit-head mb-4">
+      <i-upload
+        accept="image/*"
         :show-upload-list="false"
-        action="http://localhost/api/upload"
-        @change="handleAvatarUploadChange"
+        @success="handleUploadSuccess"
       >
-        <div class="avatar-default">
+        <div class="relative">
           <img
             v-if="formState.avatar"
             :src="formState.avatar"
             alt="头像加载失败"
-            class="avatar-img"
+            class="min-w-32 min-h-32 w-32 h-32 rounded-full leading-10"
           />
           <a-avatar :size="120" v-else>
             <template #icon>
-              <user-outlined />
+              <user-outlined class="text-[86px] translate-y-6"/>
             </template>
           </a-avatar>
-          <div class="avatar-loading" v-if="isAvatarUploadLoading">
-            <loading-outlined />
-            <div class="avatar-loading-text">正在上传</div>
-          </div>
         </div>
-      </a-upload>
+      </i-upload>
       <div class="nickname">{{ formState.nickname }}</div>
       <div>
         上次登录于
@@ -151,8 +112,8 @@ const handleSubmit = async () => {
             disabled
           >
             <template #enterButton>
-              <a-button>
-                <edit-outlined />
+              <a-button @click="openBindEmailOrPhoneModal(1)">
+                <edit-outlined/>
               </a-button>
             </template>
           </a-input-search>
@@ -164,8 +125,8 @@ const handleSubmit = async () => {
             disabled
           >
             <template #enterButton>
-              <a-button>
-                <edit-outlined />
+              <a-button @click="openBindEmailOrPhoneModal(2)">
+                <edit-outlined/>
               </a-button>
             </template>
           </a-input-search>
@@ -182,18 +143,14 @@ const handleSubmit = async () => {
             placeholder="不修改请留空"
           />
         </a-form-item>
-        <a-form-item label="确认密码" v-bind="validateInfos.checkPassword">
-          <a-input
-            v-model:value="formState.checkPassword"
-            placeholder="不修改请留空"
-          />
-        </a-form-item>
       </a-form>
     </div>
     <div class="edit-foot">
       <a-button type="primary" @click="handleSubmit">保存</a-button>
     </div>
   </div>
+
+  <bind-email-or-phone-modal ref="bindEmailOrPhoneModalRef"/>
 </template>
 
 <style lang="less" scoped>

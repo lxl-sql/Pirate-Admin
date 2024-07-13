@@ -6,7 +6,7 @@ import {adminLogin, getAdminAvatar, getAdminById,} from "@/api/auth/admin";
 import {AdminState} from "./types";
 import {$local} from "@/utils/storage";
 import {UserInfo} from "@/api/types/user";
-import {keys} from "lodash-es";
+import {cloneDeep, keys} from "lodash-es";
 
 export const useAdminStore = defineStore("adminStore", {
   state: (): AdminState => {
@@ -68,8 +68,10 @@ export const useAdminStore = defineStore("adminStore", {
           uid: "1",
         };
         data.fileList = data.avatar ? [file] : [];
-        data.roleIds = data.roles.map((item: any) => item.id);
+        data.roleIds = data.roles?.map((item: any) => item.id);
         this.formState = data;
+        this.rawUserInfo = cloneDeep(data);
+        $local.set('userInfo', data)
       } finally {
         this.isModalLoading = false;
       }

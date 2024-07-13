@@ -1,9 +1,5 @@
-import { UserInfo } from "@/api/types/user";
-import {
-  DefaultStatus,
-  DefaultTableState,
-  type RecordType,
-} from "@/types/table";
+import {UserInfo} from "@/api/types/user";
+import {DefaultStatus, DefaultTableState, type RecordType,} from "@/types/table";
 
 export interface AdminDataSource extends RecordType {
   /** 登录用户名 */
@@ -29,6 +25,8 @@ export interface AdminDataSource extends RecordType {
 }
 
 export interface AdminDetailInfo extends AdminDataSource {
+  /** 类型格式 */
+  type?: 1 | 2;
   /** 角色组 */
   roleIds?: [];
   /** 签名/座右铭 */

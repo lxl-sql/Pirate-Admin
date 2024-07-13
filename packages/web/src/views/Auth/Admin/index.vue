@@ -159,6 +159,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
   },
   form: {
     fields: {
+      type: 1,
       id: undefined,
       roleIds: [],
       username: undefined,

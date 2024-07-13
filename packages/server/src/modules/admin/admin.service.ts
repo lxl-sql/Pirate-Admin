@@ -21,6 +21,7 @@ import {IdsDto} from '@/common/dtos/remove.dto';
 import {StatusPermissionDto} from './dto/status-permission.dto';
 import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
+import {CaptchaService} from "@/common/captcha/captcha.service";
 
 @Injectable()
 export class AdminService {
@@ -35,6 +36,9 @@ export class AdminService {
 
   @InjectEntityManager()
   private readonly entityManager: EntityManager;
+
+  @Inject(CaptchaService)
+  private captchaService: CaptchaService;
 
   @InjectRepository(Admin)
   private readonly adminRepository: Repository<Admin>;
@@ -94,13 +98,13 @@ export class AdminService {
     const found_admin = await this.findOneById(admin.id, ['roles']);
 
     try {
-      const sameRoles = found_admin.roles.every((role) =>
-        admin.roleIds.includes(role.id),
-      );
-      if (found_admin.roles.length !== admin.roleIds.length || !sameRoles) {
-        admin.roles = await this.roleRepository.findBy({
-          id: In(admin.roleIds),
-        });
+      if (admin.roleIds) {
+        const sameRoles = found_admin.roles.every((role) => admin.roleIds.includes(role.id),);
+        if (found_admin.roles.length !== admin.roleIds.length || !sameRoles) {
+          admin.roles = await this.roleRepository.findBy({
+            id: In(admin.roleIds),
+          });
+        }
       }
       this.adminRepository.merge(found_admin, admin, {
         email: admin.email || null,
@@ -470,7 +474,9 @@ export class AdminService {
         'status',
         'motto',
         'password',
+        'lastLoginIp',
         'lastLoginTime',
+        'updateTime',
       ],
       where: {id},
       relations,
@@ -481,6 +487,20 @@ export class AdminService {
     }
 
     return found_admin;
+  }
+
+  /**
+   * 获取绑定邮箱/手机号验证码
+   * @param type
+   * @param address
+   */
+  public async bindCaptcha(type: number, address: string) {
+    return await this.captchaService.generateCaptcha({
+      key: `admin_bind_captcha_${address}`,
+      type,
+      address,
+      subject: `获取绑定${type === 1 ? '邮箱' : '手机号'}验证码`,
+    })
   }
 
   /**

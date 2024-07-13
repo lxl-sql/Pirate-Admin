@@ -7,8 +7,8 @@ import {formatFileSize} from "@/utils/common";
 
 const tableSettings = new TableSettings({
   api: {
-    request: getFileList,
-    deleteRequest: removeFile
+    find: getFileList,
+    delete: removeFile
   },
   table: {
     operations: ['refresh', 'delete', 'row-delete'],

@@ -66,6 +66,7 @@ export const useTheme = defineStore(
         'colorBgTextHover',
         'colorPrimary',
         'colorText',
+        'colorBorder',
         'colorBorderSecondary',
         'motionUnit',
         'boxShadow',

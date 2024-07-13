@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 import {LoginResult, RefreshResult} from "../types/user";
-import {Response, ResponseList} from "@/types/request";
+import {CaptchaParams, Response, ResponseList} from "@/types/request";
 
 // 获取管理员头像
 export const getAdminAvatar = (params) => {
@@ -30,6 +30,11 @@ export const removeAdmin = (data) => {
 // 刷新access_token
 export const refresh = (refreshToken: string): Promise<RefreshResult> => {
   return request.get("/admin/refresh", {refreshToken});
+};
+
+// 获取绑定邮箱/手机号验证码
+export const bindCaptcha = (params: CaptchaParams) => {
+  return request.get(`/admin/bind-captcha`, params);
 };
 
 // 分页获取角色列表

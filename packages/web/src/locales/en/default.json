@@ -39,7 +39,8 @@
     "delete": "Delete success!",
     "create": "Create success!",
     "update": "Update success!",
-    "saved successfully": "Saved successfully!"
+    "saved successfully": "Saved successfully!",
+    "sent successfully": "Sent successfully"
   },
   "error": {
     "userName": "Please input the username",

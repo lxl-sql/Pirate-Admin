@@ -32,8 +32,9 @@ const handlePageChange = async (page: number, pageSize: number) => {
     </a-timeline>
     <a-pagination
       v-model:current="pages.page"
-      :show-size-changer="false"
       show-quick-jumper
+      size="small"
+      :show-size-changer="false"
       :total="pages.total"
       @change="handlePageChange"
     />

@@ -5,7 +5,7 @@ import {PoweroffOutlined, UserOutlined} from "@ant-design/icons-vue";
 import {useRouter} from "vue-router";
 import {useAdminStore} from '@/store/auth'
 
-const {userInfo, rawUserInfo} = useAdminStore()
+const adminStore = useAdminStore()
 
 const router = useRouter();
 const open = ref(false); // 个人资料
@@ -33,14 +33,14 @@ defineOptions({
   >
     <template #content>
       <div class="admin-info-base">
-        <a-avatar :size="70" :src="userInfo.avatar" class="mb-4 avatar-turn">
-          <template #icon v-if="!userInfo.avatar">
+        <a-avatar :size="70" :src="adminStore.rawUserInfo.avatar" class="mb-4 avatar-turn">
+          <template #icon v-if="!adminStore.rawUserInfo.avatar">
             <user-outlined style="font-size: 70px"/>
           </template>
         </a-avatar>
         <div class="mb-4  admin-info-other">
-          <div class="mb-2 admin-info-name">{{ userInfo.nickname }}</div>
-          <div class="admin-info-lastTime">{{ userInfo.lastLoginTime }}</div>
+          <div class="mb-2 admin-info-name">{{ adminStore.rawUserInfo.nickname }}</div>
+          <div class="admin-info-lastTime">{{ adminStore.rawUserInfo.lastLoginTime }}</div>
         </div>
       </div>
       <div class="flex justify-between">
@@ -55,14 +55,14 @@ defineOptions({
         </a-button>
       </div>
     </template>
-    <div class="admin-info flex items-center px-4 cursor-pointer" :title="userInfo.nickname">
+    <div class="admin-info flex items-center px-4 cursor-pointer" :title="adminStore.rawUserInfo.nickname">
       <!-- 账号信息 -->
-      <a-avatar :size="26" :src="userInfo.avatar">
-        <template #icon v-if="!userInfo.avatar">
-          <user-outlined style="font-size: 26px" class="text-"/>
+      <a-avatar :size="26" :src="adminStore.rawUserInfo.avatar">
+        <template #icon v-if="!adminStore.rawUserInfo.avatar">
+          <user-outlined class="text-[26px]"/>
         </template>
       </a-avatar>
-      <div class="ml-1.5 admin-name ellipsis">{{ userInfo.nickname }}</div>
+      <div class="ml-1.5 admin-name ellipsis">{{ adminStore.rawUserInfo.nickname }}</div>
     </div>
   </a-popover>
 </template>

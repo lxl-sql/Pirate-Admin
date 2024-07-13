@@ -48,7 +48,6 @@ const handleTabClick = (key: string) => {
     activeKey.value = key
     nextTick(() => {
       const _ref = configItemRef.value[key]
-      console.log('key', key, configItemRef.value, _ref)
       _ref?.init()
     })
   }
