@@ -27,8 +27,6 @@ const toRouter = (item: Record<string, any>) => {
   router.push({
     name: item.name,
   });
-  // 调转后收起菜单
-  isSidebarOpen.value = false;
 };
 
 defineOptions({

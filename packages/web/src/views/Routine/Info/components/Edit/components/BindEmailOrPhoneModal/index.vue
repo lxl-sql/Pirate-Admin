@@ -14,8 +14,8 @@ const rules = reactive({
   sms: getRules(['required'], '验证码'),
 })
 const formState = reactive({
-  email: undefined,
-  sms: undefined
+  email: '',
+  sms: ''
 })
 const type = ref<CaptchaType>(1)
 const open = ref<boolean>(false)

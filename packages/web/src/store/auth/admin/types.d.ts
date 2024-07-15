@@ -54,7 +54,7 @@ export interface AdminState extends DefaultTableState<AdminDataSource> {
   /** 头像 */
   avatar?: string;
   /** 用户信息 */
-  rawUserInfo?: UserInfo;
+  rawUserInfo: UserInfo;
   /** modal加载 */
   isModalLoading: boolean;
   /** login form表单加载 */
