@@ -1,24 +1,22 @@
-import {
-  IsEmail,
-  IsMobilePhone,
-  IsNotEmpty,
-  ValidateIf,
-} from 'class-validator';
+import {IsNotEmpty,} from 'class-validator';
+import {CaptchaTypeEnum} from "@/types/enum";
+import {CaptchaType} from "@/types";
+import {CustomType, IsCustomType} from "@/validators/is-custom-type.validator";
 
 export class VerifyCaptchaDto {
-  @IsNotEmpty({ message: '注册类型不能为空' })
-  type: number; // 1: 邮箱注册 2: 手机注册
+  @IsNotEmpty({message: '注册类型不能为空'})
+  type: CaptchaType;
 
-  @ValidateIf((dto) => dto.type === 1)
-  @IsNotEmpty({ message: '邮箱不能为空' })
-  @IsEmail({}, { message: '邮箱格式不正确' })
-  email: string;
+  @IsCustomType(
+    dto => [
+      'not-empty',
+      'string',
+      dto.type === CaptchaTypeEnum.EMAIL && 'email',
+      dto.type === CaptchaTypeEnum.PHONE && 'phone',
+    ] as CustomType[]
+  )
+  address: string;
 
-  @ValidateIf((dto) => dto.type === 2)
-  @IsNotEmpty({ message: '手机号不能为空' })
-  @IsMobilePhone('zh-CN', {}, { message: '手机号格式不正确' })
-  phone: string;
-
-  @IsNotEmpty({ message: '验证码不能为空' })
+  @IsNotEmpty({message: '验证码不能为空'})
   captcha: string;
 }

@@ -1,5 +1,5 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
+import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {ConfigService} from "@/modules/config/config.service";
 import {createTransport, Transporter} from 'nodemailer';
 import {GenerateEmailDto} from './dto/generate-email.dto';
 import {ConfigEmailDto} from './dto/config-email.dto';
@@ -8,23 +8,61 @@ import {ConfigEmailDto} from './dto/config-email.dto';
 export class EmailService {
   private transporter: Transporter;
 
-  constructor(private configService: ConfigService) {
-    this.transporter = createTransport({
-      host: this.configService.get('NODEMAILER_HOST'),
-      port: this.configService.get('NODEMAILER_PORT'),
+  @Inject(forwardRef(() => ConfigService))
+  private readonly configService: ConfigService;
+
+  constructor() {
+    ;(async () => {
+      const {host, port, user, pass} = await this.getFieldsValue()
+      const params = this.getParameters({host, port, user, pass})
+      this.transporter = createTransport(params);
+    })()
+  }
+
+  public async getFieldsValue() {
+    return await this.configService?.findFieldsValue(['host', 'port', 'user', 'pass']) || {};
+  }
+
+  /**
+   * 获取默认参数
+   * @private
+   */
+  private getParameters({host, port, user, pass}) {
+    return {
+      host,
+      port,
       secure: false, // true 是 465 端口，false 是其他端口
       auth: {
-        user: this.configService.get('NODEMAILER_AUTH_USER'),
-        pass: this.configService.get('NODEMAILER_AUTH_PASS'),
+        user,
+        pass,
       },
-    });
+    }
+  }
+
+  /**
+   * 检查邮箱配置参数是否存在
+   * @throws HttpException - 如果任何必需的配置参数缺失
+   */
+  public async validationParameters() {
+    const {host, port, user, pass} = await this.getFieldsValue()
+    if (!host || !port || !user || !pass) {
+      throw new HttpException(
+        '邮箱配置参数缺失',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return {host, port, user, pass}
   }
 
   public async sendMail({to, subject, html}) {
-    await this.transporter.sendMail({
+    const {host, port, user, pass} = await this.getFieldsValue()
+    if (!this.transporter) {
+      this.connectEmail({host, port, user, pass})
+    }
+    this.transporter.sendMail({
       from: {
         name: 'Pirate Admin',
-        address: this.configService.get('NODEMAILER_AUTH_USER'),
+        address: user,
       },
       to,
       subject,
@@ -56,15 +94,8 @@ export class EmailService {
         HttpStatus.NOT_IMPLEMENTED,
       );
     }
-    const transporter = createTransport({
-      host,
-      port,
-      secure: false,
-      auth: {
-        user,
-        pass,
-      },
-    });
+    const params = this.getParameters({host, port, user, pass})
+    const transporter = createTransport(params);
     await transporter.sendMail({
       from: {
         name: 'Pirate Admin',

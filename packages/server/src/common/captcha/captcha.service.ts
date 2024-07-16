@@ -1,11 +1,11 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import * as svgCaptcha from 'svg-captcha-fixed';
-import { RedisService } from '../redis/redis.service';
-import { EmailService } from '../email/email.service';
-import { randomString } from '@/utils/tools';
-import { SmsService } from '../sms/sms.service';
-import { GenerateCaptchaDto } from './dto/generate-captcha.dto';
-import { VerifyCaptchaDto } from './dto/verify-captcha.dto';
+import {RedisService} from '../redis/redis.service';
+import {EmailService} from '../email/email.service';
+import {randomString} from '@/utils/tools';
+import {SmsService} from '../sms/sms.service';
+import {GenerateCaptchaDto} from './dto/generate-captcha.dto';
+import {VerifyCaptchaDto} from './dto/verify-captcha.dto';
 
 @Injectable()
 export class CaptchaService {
@@ -36,7 +36,7 @@ export class CaptchaService {
   public async svgCaptcha(session: Record<string, any>) {
     // create 字母和数字随机验证码
     // createMathExpr 数字算数随机验证码
-    const { data, text } = svgCaptcha.createMathExpr({
+    const {data, text} = svgCaptcha.createMathExpr({
       size: 4,
       //   ignoreChars: '0o1iIl',
       noise: 3,
@@ -60,11 +60,9 @@ export class CaptchaService {
    * @returns
    */
   public async verifyCaptcha(key: string, options: VerifyCaptchaDto) {
-    const { type, email, phone, captcha } = options;
+    const {type, address, captcha} = options;
 
-    const account = type === 1 ? email : phone;
-
-    const redis_key = `${key}_${account}`;
+    const redis_key = `${key}_${address}`;
 
     const _captcha = await this.redisService.get(redis_key);
 
@@ -74,7 +72,6 @@ export class CaptchaService {
     if (captcha !== _captcha) {
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
     }
-
     return redis_key;
   }
 
@@ -84,7 +81,12 @@ export class CaptchaService {
    * @returns
    */
   public async generateCaptcha(options: GenerateCaptchaDto) {
-    const { key, address, type, subject, html } = options;
+    const {key, address, type, subject, html} = options;
+    if (type === 'email') {
+      await this.emailService.validationParameters()
+    } else if (type === 'phone') {
+      await this.smsService.validationParameters('aliyun')
+    }
     const captcha = await this.redisService.get(key);
     if (captcha) {
       throw new HttpException(
@@ -94,10 +96,10 @@ export class CaptchaService {
     }
 
     const code = randomString(6);
-    const ttl = 5 * 60;
+    const ttl = 1 * 60;
 
     try {
-      if (type === 1) {
+      if (type === 'email') {
         await this.emailService.sendMail({
           to: address,
           subject: subject,
@@ -105,7 +107,7 @@ export class CaptchaService {
             ? html(code, ttl / 60)
             : `<p>你的${subject}是 ${code}，有效期为${ttl / 60}分钟</p>`,
         });
-      } else if (type === 2) {
+      } else if (type === 'phone') {
         await this.smsService.sendSMS({
           phone: address,
           type: 'aliyun', // 1：阿里云 2：腾讯云

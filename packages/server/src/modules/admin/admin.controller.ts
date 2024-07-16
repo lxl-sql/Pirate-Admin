@@ -1,7 +1,7 @@
-import {Body, Controller, Get, Ip, Param, ParseIntPipe, Post, Query, Session,} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Query, Session,} from '@nestjs/common';
 import {AdminService} from './admin.service';
 import {UpsertAdminDto} from './dto/upsert-admin.dto';
-import {LogCall, ProtocolHost, RequireLogin, UserInfo,} from '@/decorators/custom.decorator';
+import {LogCall, ProtocolHost, RealIp, RequireLogin, UserInfo,} from '@/decorators/custom.decorator';
 import {LoginAdminDto} from './dto/login-admin.dto';
 import {generateParseIntPipe} from '@/utils/tools';
 import {QueryAdminDto} from './dto/query-admin.dto';
@@ -12,6 +12,8 @@ import {IdsDto} from '@/common/dtos/remove.dto';
 import {StatusPermissionDto} from './dto/status-permission.dto';
 import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
+import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
+import {CaptchaType} from "@/types";
 
 @Controller('admin')
 export class AdminController {
@@ -23,7 +25,7 @@ export class AdminController {
   public async login(
     @Body() loginUser: LoginAdminDto,
     @Session() session: Record<string, any>,
-    @Ip() ip: string,
+    @RealIp() ip: string,
     @ProtocolHost() protocolHost: string,
   ) {
     return await this.adminService.login(loginUser, session, ip, protocolHost);
@@ -87,15 +89,25 @@ export class AdminController {
   @RequireLogin()
   @LogCall('admin', '获取绑定邮箱/手机号验证码')
   public async bindCaptcha(
-    @Query('type', ParseIntPipe) type: number, // 1: 邮箱注册 2: 手机注册
+    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return this.adminService.bindCaptcha(type, address)
   }
 
+  @Post('bind-info')
+  @RequireLogin()
+  @LogCall('admin', '绑定管理员数据')
+  public async bindInfo(
+    @UserInfo('userId') id: number,
+    @Body() bindInfo: VerifyCaptchaDto
+  ) {
+    return this.adminService.bindInfo(id, bindInfo)
+  }
+
   @Get('role')
   @RequireLogin()
-  // @LogCall('admin', '角色组管理')
+  @LogCall('admin', '角色组管理')
   public async role(@Query() query: QueryRoleDto) {
     return await this.adminService.role(query);
   }

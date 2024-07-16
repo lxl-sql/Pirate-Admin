@@ -1,9 +1,11 @@
+import {CaptchaType} from "@/types";
+
 export class GenerateCaptchaDto {
   key: string;
 
   address: string;
 
-  type: number; // 1: 邮箱验证码 2: 短信验证码
+  type: CaptchaType; // email: 邮箱验证码 phone: 短信验证码
 
   subject: string;
 

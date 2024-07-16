@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import * as AliSMSClient from '@alicloud/sms-sdk';
 import * as TencentSMSClient from 'tencentcloud-sdk-nodejs';
-import { SMSDTO } from './dto/sms.dto';
-import { ConfigService } from '@nestjs/config';
+import {SMSDTO} from './dto/sms.dto';
+import {ConfigService} from '@nestjs/config';
 
 @Injectable()
 export class SmsService {
@@ -25,6 +25,50 @@ export class SmsService {
         break;
       default:
         throw new HttpException('Unsupported SMS Type', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * 验证短信服务配置参数是否存在
+   * @param type - 短信服务类型 ('aliyun' 或 'tencent')
+   * @throws HttpException - 如果任何必需的配置参数缺失
+   */
+  public async validationParameters(type: SMSDTO['type']) {
+    switch (type) {
+      case "aliyun": {
+        const accessKeyId = this.configService.get('Ali_SMS_ACCESS_KEY_ID');
+        const secretAccessKey = this.configService.get('Ali_SMS_SECRT_ACCESS_KEY');
+        const signName = this.configService.get('Ali_SMS_SIGN_NAME');
+        const templateCode = this.configService.get('Ali_SMS_TEMPLATE_CODE');
+
+        // 校验阿里云短信服务的必需参数
+        if (!accessKeyId || !secretAccessKey || !signName || !templateCode) {
+          throw new HttpException(
+            '阿里云短信服务配置参数缺失',
+            HttpStatus.INTERNAL_SERVER_ERROR
+          );
+        }
+        break
+      }
+      case "tencent": {
+        const secretId = this.configService.get('Tencent_SMS_SECRET_ID');
+        const secretKey = this.configService.get('Tencent_SMS_SECRET_KEY');
+        const region = this.configService.get('Tencent_SMS_REGION');
+        const smsSdkAppId = this.configService.get('Tencent_SMS_SDK_APP_ID');
+        const templateId = this.configService.get('Tencent_SMS_TEMPLATE_ID');
+        const signName = this.configService.get('Tencent_SMS_SIGN_NAME');
+
+        // 校验腾讯云短信服务的必需参数
+        if (!secretId || !secretKey || !region || !smsSdkAppId || !templateId || !signName) {
+          throw new HttpException(
+            '腾讯云短信服务配置参数缺失',
+            HttpStatus.INTERNAL_SERVER_ERROR
+          );
+        }
+        break
+      }
+      default:
+        throw new HttpException('无效的短信服务类型', HttpStatus.BAD_REQUEST)
     }
   }
 

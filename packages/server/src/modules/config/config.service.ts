@@ -1,8 +1,9 @@
 // src/config/config.service.ts
-import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import {DatabaseConfigDto} from './dto/database-config.dto';
 import {promises as fs} from 'fs';
 import * as path from 'path';
+import {ConfigService as NestConfigService} from '@nestjs/config'
 import {ConfigDto} from './dto/config.dto';
 import {RedisConfigDto} from './dto/redis-config.dto';
 import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
@@ -19,7 +20,10 @@ import {ValueConfigDto} from "@/modules/config/dto/value-config.dto";
 
 @Injectable()
 export class ConfigService {
-  @Inject(EmailService)
+  @Inject(NestConfigService)
+  private readonly nestConfigService: NestConfigService;
+
+  @Inject(forwardRef(() => EmailService))
   private readonly emailServer: EmailService;
 
   @InjectRepository(ConfigGroup)
@@ -28,11 +32,8 @@ export class ConfigService {
   @InjectRepository(Config)
   private readonly configRepository: Repository<Config>;
 
-  private readonly envFilePath = path.resolve(__dirname, '../.env');
-  private readonly envProdFilePath = path.resolve(
-    __dirname,
-    '../.env.production',
-  );
+  private readonly envFilePath = path.resolve(__dirname, '.env');
+  private readonly envProdFilePath = path.resolve(__dirname, '.env.production');
 
   private async readEnvFile(filePath: string): Promise<string> {
     try {
@@ -119,8 +120,8 @@ export class ConfigService {
   public async saveEmail(config: ConfigEmailDto) {
     await this.emailServer.connectEmail(config);
     const updates = {
-      NODEMAILER_HOST: config.host || 'smtp.qq.com',
-      NODEMAILER_PORT: config.port || 465,
+      NODEMAILER_HOST: config.host || '1211',
+      NODEMAILER_PORT: config.port,
       NODEMAILER_AUTH_USER: config.user,
       NODEMAILER_AUTH_PASS: config.pass,
     };
@@ -166,6 +167,11 @@ export class ConfigService {
    */
   public async createValue(valueConfigDto: ValueConfigDto & Record<string, any>) {
     const {group: groupName, ...resetValue} = valueConfigDto
+
+    if (groupName === this.nestConfigService.get<string>('CONFIG_ALIAS_EMAIL')) {
+      await this.saveEmail(resetValue as ConfigEmailDto);
+    }
+
     if (!groupName) {
       throw new HttpException('变量分组不能为空！', HttpStatus.BAD_REQUEST)
     }
@@ -230,7 +236,7 @@ export class ConfigService {
       }
       groupedData[groupName].push(new_conf)
 
-      if (new_conf.name === 'configQuickEntrance') {
+      if (new_conf.name === this.nestConfigService.get<string>('CONFIG_ALIAS_QUICK_ENTRANCE')) {
         quickEntrance = new_conf.value || []
       }
     })
@@ -240,6 +246,27 @@ export class ConfigService {
       config: groupedData,
       quickEntrance
     };
+  }
+
+  /**
+   * 查找指定配置项的值
+   * @param names - 配置项名称数组
+   * @returns 包含配置项名称和对应值的对象
+   */
+  public async findFieldsValue(names: string[]): Promise<{ [key: string]: any }> {
+    // 查询指定名称的配置项
+    const config = await this.configRepository.find({
+      select: ['name', 'value'],
+      where: {
+        name: In(names),
+      },
+    });
+
+    // 将查询结果转换为键值对对象
+    return config.reduce((acc, conf) => {
+      acc[conf.name] = conf.value && JSON.parse(conf.value);
+      return acc;
+    }, {} as { [key: string]: any });
   }
 
   /**
@@ -306,5 +333,4 @@ export class ConfigService {
   public async findAllGroup() {
     return await this.configGroupRepository.find()
   }
-
 }

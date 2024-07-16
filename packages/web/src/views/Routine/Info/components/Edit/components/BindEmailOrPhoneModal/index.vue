@@ -4,21 +4,28 @@ import {reactive, ref} from "vue";
 import {getRules} from "@/utils/common";
 import {Form, notification} from "ant-design-vue";
 import {CaptchaType} from "@/types/request";
-import {bindCaptcha} from "@/api/auth/admin";
+import {bindCaptcha, bindInfo} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
+import useCountdown from "@/hooks/useCountdown";
 
 const {t} = useI18n()
+const {timeLeft, isRunning, start, reset} = useCountdown();
+
+const emits = defineEmits(['confirm'])
 
 const rules = reactive({
   email: getRules(['email'], '邮箱'),
-  sms: getRules(['required'], '验证码'),
+  phone: getRules(['phone'], '手机号'),
+  captcha: getRules(['required'], '验证码'),
 })
 const formState = reactive({
   email: '',
-  sms: ''
+  phone: '',
+  captcha: '',
 })
-const type = ref<CaptchaType>(1)
+const type = ref<CaptchaType>('email') // email: 邮箱; phone: 手机号
 const open = ref<boolean>(false)
+const loading = ref<boolean>(false)
 const isCaptchaLoading = ref<boolean>(false)
 
 const {validate, resetFields, validateInfos} = Form.useForm(formState, rules)
@@ -29,10 +36,10 @@ const init = (t: CaptchaType) => {
 }
 
 const handleSendCaptcha = async () => {
-  await validate(['email'])
+  await validate([type.value])
   const params = {
     type: type.value,
-    address: formState.email
+    address: formState[type.value]
   }
   isCaptchaLoading.value = true
   try {
@@ -41,6 +48,7 @@ const handleSendCaptcha = async () => {
       message: t('message.success'),
       description: t('success.sent successfully')
     })
+    start(60)
   } finally {
     isCaptchaLoading.value = false
   }
@@ -48,9 +56,28 @@ const handleSendCaptcha = async () => {
 
 const handleCancel = () => {
   open.value = false
+  reset()
+  resetFields()
 }
 const handleConfirm = async () => {
-  await validate()
+  await validate([type.value, 'captcha'])
+  const params = {
+    type: type.value,
+    address: formState[type.value],
+    captcha: formState.captcha
+  }
+  loading.value = true
+  try {
+    await bindInfo(params)
+    emits('confirm')
+    handleCancel()
+    notification.success({
+      message: t('message.success'),
+      description: t('success.binding successful')
+    })
+  } finally {
+    loading.value = false
+  }
 }
 
 defineOptions({
@@ -64,29 +91,36 @@ defineExpose({
 <template>
   <i-modal
     v-model:open="open"
-    title="绑定邮箱"
-    draggable
+    :title="type === 'email' ? '绑定邮箱' : '绑定手机号'"
+    :loading="loading"
     @confirm="handleConfirm"
     @cancel="handleCancel"
   >
     <a-form
       layout="vertical"
     >
-      <a-form-item label="邮箱" name="email" v-bind="validateInfos.email">
+      <a-form-item v-if="type === 'email'" label="邮箱" name="email" v-bind="validateInfos.email">
         <a-input
           v-model:value="formState.email"
           type="email"
           placeholder="请输入邮箱"
         />
       </a-form-item>
-      <a-form-item label="验证码" name="sms" v-bind="validateInfos.sms">
+      <a-form-item v-else-if="type === 'phone'" label="手机号" name="phone" v-bind="validateInfos.phone">
+        <a-input
+          v-model:value="formState.phone"
+          type="phone"
+          placeholder="请输入手机号"
+        />
+      </a-form-item>
+      <a-form-item label="验证码" name="captcha" v-bind="validateInfos.captcha">
         <a-input-search
-          v-model:value="formState.sms"
-          placeholder="请输入邮箱验证码"
+          v-model:value="formState.captcha"
+          placeholder="请输入验证码"
         >
           <template #enterButton>
-            <a-button :loading="isCaptchaLoading" @click="handleSendCaptcha">
-              获取验证码
+            <a-button :loading="isCaptchaLoading" :disabled="isRunning" @click="handleSendCaptcha">
+              {{ isRunning ? `已发送${timeLeft}秒` : '获取验证码' }}
             </a-button>
           </template>
         </a-input-search>
@@ -94,7 +128,3 @@ defineExpose({
     </a-form>
   </i-modal>
 </template>
-
-<style scoped lang="less">
-
-</style>

@@ -40,7 +40,8 @@
     "create": "Create success!",
     "update": "Update success!",
     "saved successfully": "Saved successfully!",
-    "sent successfully": "Sent successfully"
+    "sent successfully": "Sent successfully!",
+    "binding successful": "Binding Successful!"
   },
   "error": {
     "userName": "Please input the username",

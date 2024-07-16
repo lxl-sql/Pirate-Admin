@@ -22,6 +22,8 @@ import {StatusPermissionDto} from './dto/status-permission.dto';
 import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
 import {CaptchaService} from "@/common/captcha/captcha.service";
+import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
+import {CaptchaType} from "@/types";
 
 @Injectable()
 export class AdminService {
@@ -107,8 +109,10 @@ export class AdminService {
         }
       }
       this.adminRepository.merge(found_admin, admin, {
-        email: admin.email || null,
-        phone: admin.phone || null,
+        // email: admin.email || null,
+        // phone: admin.phone || null,
+        email: found_admin.email, // TODO 不允许通过接口更新，只能通过绑定用户数据更新
+        phone: found_admin.phone, // TODO 不允许通过接口更新，只能通过绑定用户数据更新
         avatar: admin.avatar || null,
         updateTime: new Date(),
         roles: admin.roles || found_admin.roles,
@@ -494,13 +498,25 @@ export class AdminService {
    * @param type
    * @param address
    */
-  public async bindCaptcha(type: number, address: string) {
+  public async bindCaptcha(type: CaptchaType, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `admin_bind_captcha_${address}`,
       type,
       address,
-      subject: `获取绑定${type === 1 ? '邮箱' : '手机号'}验证码`,
+      subject: `获取绑定${type === 'email' ? '邮箱' : '手机号'}验证码`,
     })
+  }
+
+  /**
+   * 绑定管理员关键信息
+   * @param bindInfoDot
+   */
+  public async bindInfo(userId: number, bindInfo: VerifyCaptchaDto) {
+    await this.captchaService.verifyCaptcha('admin_bind_captcha', bindInfo)
+    this.adminRepository.update(userId, {
+      [bindInfo.type]: bindInfo.address
+    })
+    return '绑定成功'
   }
 
   /**

@@ -2,7 +2,7 @@
  * @file src/types/index.d.ts
  * @description 全局类型定义
  */
-import { Dayjs } from 'dayjs';
+import {Dayjs} from 'dayjs';
 
 export type DateValue = string | number | Date | Dayjs | undefined | null;
 
@@ -19,6 +19,8 @@ export type AnyFunction = (...args: any[]) => any;
 export type AnyConstructor = new (...args: any[]) => any;
 
 export type LogCallType = 'admin' | 'user';
+
+export type CaptchaType = 'email' | 'phone'
 
 /**
  * @description 分页格式

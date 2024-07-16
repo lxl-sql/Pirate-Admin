@@ -77,7 +77,7 @@ export class CustomLoggerInterceptor implements NestInterceptor {
       userId: user.userId, // 登录时使用 userInfo
       username: user.username,
       title: title,
-      ip: trimmedIp(request.ip),
+      ip: trimmedIp(request.realIp || request.ip),
       method: request.method,
       url: request.url,
       params: this.paramsToString(this.getParams(request)),

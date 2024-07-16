@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AdminLog } from './entities/admin.log.entity';
+import { AdminLog } from './entities/admin-log.entity';
 import { QueryAdminLogDto } from './dtos/query-admin-log.dto';
 
 @Injectable()

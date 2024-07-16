@@ -1,29 +1,23 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import {HttpException, HttpStatus, Inject, Injectable, Logger, UnauthorizedException,} from '@nestjs/common';
+import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
+import {EntityManager, Repository} from 'typeorm';
 import * as svgCaptcha from 'svg-captcha-fixed';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { dateFormat, mapTree, like, md5, trimmedIp } from '@/utils/tools';
-import { RedisService } from '@/common/redis/redis.service';
-import { User } from './entities/user.entity';
-import { UserRole } from './entities/role-user.entity';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { UpdatePasswordUserDto } from './dto/update-password-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { FrozenUserDto } from './dto/frozen-user.dto';
-import { LoginUserVo } from './vo/login-user.vo';
-import { CaptchaService } from '@/common/captcha/captcha.service';
-import { UserInfoVo } from '@/common/token/vo/user-info.vo';
-import { QueryUserDto } from './dto/query-user.dto';
+import {JwtService} from '@nestjs/jwt';
+import {ConfigService} from '@nestjs/config';
+import {like, mapTree, md5, trimmedIp} from '@/utils/tools';
+import {RedisService} from '@/common/redis/redis.service';
+import {User} from './entities/user.entity';
+import {UserRole} from './entities/role-user.entity';
+import {RegisterUserDto} from './dto/register-user.dto';
+import {LoginUserDto} from './dto/login-user.dto';
+import {UpdatePasswordUserDto} from './dto/update-password-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {FrozenUserDto} from './dto/frozen-user.dto';
+import {LoginUserVo} from './vo/login-user.vo';
+import {CaptchaService} from '@/common/captcha/captcha.service';
+import {UserInfoVo} from '@/common/token/vo/user-info.vo';
+import {QueryUserDto} from './dto/query-user.dto';
+import {CaptchaType} from "@/types";
 
 @Injectable()
 export class UserService {
@@ -83,11 +77,11 @@ export class UserService {
 
   /**
    * @description 发送验证码
-   * @param type 1: 邮箱注册 2: 手机注册
+   * @param type {email|phone} email: 邮箱注册 phone: 手机注册
    * @param address 邮箱或手机号
    * @returns
    */
-  public async captcha(type: number, address: string) {
+  public async captcha(type: CaptchaType, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `user_captcha_${address}`,
       address,
@@ -140,7 +134,7 @@ export class UserService {
     vo.userInfo.sign = user.sign;
     vo.userInfo = this.generateUserInfo(user);
 
-    const { accessToken, refreshToken } = this.generateToken(vo.userInfo);
+    const {accessToken, refreshToken} = this.generateToken(vo.userInfo);
     vo.accessToken = accessToken;
     vo.refreshToken = refreshToken;
     session.captcha = null;
@@ -164,7 +158,7 @@ export class UserService {
   public async svgCaptcha(session: Record<string, any>) {
     // let captcha = svgCaptcha.create(options); //字母和数字随机验证码
     // let captcha = svgCaptcha.createMathExpr(options) //数字算数随机验证码
-    const { data, text } = svgCaptcha.createMathExpr({
+    const {data, text} = svgCaptcha.createMathExpr({
       size: 4,
       ignoreChars: '0o1iIl',
       noise: 3,
@@ -275,12 +269,12 @@ export class UserService {
         : undefined,
       permissions: relations.includes('roles.permissions')
         ? user.roles.reduce((acc, cur) => {
-            cur.permissions.forEach((permission) => {
-              // 去重
-              if (!acc.includes(permission.code)) acc.push(permission.code);
-            });
-            return acc;
-          }, [])
+          cur.permissions.forEach((permission) => {
+            // 去重
+            if (!acc.includes(permission.code)) acc.push(permission.code);
+          });
+          return acc;
+        }, [])
         : undefined,
     };
   }
@@ -317,7 +311,7 @@ export class UserService {
       },
     );
 
-    return { accessToken, refreshToken };
+    return {accessToken, refreshToken};
   }
 
   /**
@@ -349,11 +343,11 @@ export class UserService {
 
   /**
    * @description 修改密码验证码
-   * @param type 1: 邮箱注册 2: 手机注册
+   * @param type {email|phone} email: 邮箱注册 phone: 手机注册
    * @param address 邮箱或手机号
    * @returns
    */
-  public async updatePasswordCaptcha(type: number, address: string) {
+  public async updatePasswordCaptcha(type: CaptchaType, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `user_update_password_captcha_${address}`,
       address,
@@ -391,11 +385,11 @@ export class UserService {
 
   /**
    * @description 更新用户信息验证码
-   * @param type 1: 邮箱注册 2: 手机注册
+   * @param type {email|phone} email: 邮箱注册 phone: 手机注册
    * @param address 邮箱或手机号
    * @returns
    */
-  public async updateCaptcha(type: number, address: string) {
+  public async updateCaptcha(type: CaptchaType, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `user_update_captcha_${address}`,
       address,

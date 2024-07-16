@@ -37,6 +37,12 @@ export const bindCaptcha = (params: CaptchaParams) => {
   return request.get(`/admin/bind-captcha`, params);
 };
 
+// 获取绑定邮箱/手机号验证码
+export const bindInfo = (data: Required<CaptchaParams>) => {
+  return request.post(`/admin/bind-info`, data);
+};
+
+
 // 分页获取角色列表
 export const getAdminRoleList = (params): Promise<Response<ResponseList>> => {
   return request.get("/admin/role", params);

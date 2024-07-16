@@ -23,6 +23,7 @@ export abstract class DefaultEntity {
     name: 'create_time',
     comment: '创建时间',
     transformer: new DateFormatTransformer(),
+    nullable: true
   })
   createTime: Date;
 }

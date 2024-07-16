@@ -61,9 +61,33 @@ export interface DeleteParams {
   ids: Key[];
 }
 
-export type CaptchaType = number
+/**
+ * CaptchaType 表示验证码的类型，可以是 'email' 或 'phone'。
+ */
+export type CaptchaType = 'email' | 'phone';
 
+/**
+ * CaptchaParams 接口用于描述验证码请求的参数。
+ */
 export interface CaptchaParams {
+  /**
+   * 验证码的类型。
+   *
+   * @type {CaptchaType}
+   */
   type: CaptchaType;
-  address: string
+
+  /**
+   * 收件地址，可以是电子邮件地址或手机号码。
+   *
+   * @type {string}
+   */
+  address: string;
+
+  /**
+   * 验证码字符串。
+   *
+   * @type {string}
+   */
+  captcha?: string;
 }

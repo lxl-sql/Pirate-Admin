@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule as NestConfigModule, ConfigService,} from '@nestjs/config';
 import {JwtModule} from '@nestjs/jwt';
@@ -25,11 +25,12 @@ import {FilesModule} from '@/modules/files/files.module';
 import {File} from '@/modules/files/entities/files.entity';
 import {AdminLogModule} from '@/modules/admin-log/admin-log.module';
 import {CustomLoggerInterceptor} from '@/interceptors/custom-logger.interceptor';
-import {AdminLog} from '@/modules/admin-log/entities/admin.log.entity';
+import {AdminLog} from '@/modules/admin-log/entities/admin-log.entity';
 import {join} from 'path';
 import {ConfigModule} from '@/modules/config/config.module';
 import {Config} from '@/modules/config/entities/config.entities';
 import {ConfigGroup} from "@/modules/config/entities/config-group.entities";
+import {RealIpMiddleware} from "@/middlewares/real-ip.middleware";
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
@@ -119,5 +120,10 @@ const envFilePath = IS_DEV
     },
   ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(RealIpMiddleware)
+      .forRoutes({path: '*', method: RequestMethod.ALL});
+  }
 }

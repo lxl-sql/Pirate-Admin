@@ -7,10 +7,10 @@ import type {IDragRect, IModalProps} from "./types";
 
 const props = withDefaults(defineProps<IModalProps>(), {
   closable: true,
-  dragModal: true,
   keyboard: true,
   mask: true,
   maskClosable: true,
+  draggable: true
 });
 
 const emits = defineEmits([

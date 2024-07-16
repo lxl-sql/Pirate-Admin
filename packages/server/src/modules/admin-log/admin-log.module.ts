@@ -3,7 +3,7 @@ import { AdminLogService } from './admin-log.service';
 import { AdminLogController } from './admin-log.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Admin } from '../admin/entities/admin.entity';
-import { AdminLog } from './entities/admin.log.entity';
+import { AdminLog } from './entities/admin-log.entity';
 
 @Global()
 @Module({

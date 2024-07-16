@@ -10,6 +10,7 @@ import {adminUpsert} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
 import BindEmailOrPhoneModal from "./components/BindEmailOrPhoneModal/index.vue";
 import {CaptchaType} from "@/types/request";
+import {setTimeoutPromise} from "@/utils/common";
 
 const {t} = useI18n()
 
@@ -24,6 +25,12 @@ const rules = reactive<Rules>({
   nickname: [{required: true, message: "请输入用户昵称"}],
 });
 const {validate, validateInfos} = Form.useForm(formState, rules);
+const isSubmitLoading = ref<boolean>(false)
+
+const refreshInfo = async () => {
+  await setTimeoutPromise(100)
+  await store.getAdminByIdRequest(store.userInfo.id)
+}
 
 const handleSubmit = async () => {
   await validate();
@@ -32,15 +39,16 @@ const handleSubmit = async () => {
     type: 2,
     avatar: formState.value.avatarPath
   }
+  isSubmitLoading.value = true
   try {
     await adminUpsert(params)
     notification.success({
       message: t('message.success'),
       description: t('success.saved successfully'),
     })
-    await store.getAdminByIdRequest(store.userInfo.id)
+    await refreshInfo()
   } finally {
-
+    isSubmitLoading.value = false
   }
   console.log("handleSubmit -->", formState.value);
 };
@@ -112,7 +120,7 @@ const openBindEmailOrPhoneModal = (type: CaptchaType) => {
             disabled
           >
             <template #enterButton>
-              <a-button @click="openBindEmailOrPhoneModal(1)">
+              <a-button @click="openBindEmailOrPhoneModal('email')">
                 <edit-outlined/>
               </a-button>
             </template>
@@ -125,7 +133,7 @@ const openBindEmailOrPhoneModal = (type: CaptchaType) => {
             disabled
           >
             <template #enterButton>
-              <a-button @click="openBindEmailOrPhoneModal(2)">
+              <a-button @click="openBindEmailOrPhoneModal('phone')">
                 <edit-outlined/>
               </a-button>
             </template>
@@ -146,11 +154,20 @@ const openBindEmailOrPhoneModal = (type: CaptchaType) => {
       </a-form>
     </div>
     <div class="edit-foot">
-      <a-button type="primary" @click="handleSubmit">保存</a-button>
+      <a-button
+        type="primary"
+        :loading="isSubmitLoading"
+        @click="handleSubmit"
+      >
+        保存
+      </a-button>
     </div>
   </div>
 
-  <bind-email-or-phone-modal ref="bindEmailOrPhoneModalRef"/>
+  <bind-email-or-phone-modal
+    ref="bindEmailOrPhoneModalRef"
+    @confirm="refreshInfo"
+  />
 </template>
 
 <style lang="less" scoped>

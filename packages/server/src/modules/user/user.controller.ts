@@ -1,26 +1,19 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Ip,
-  ParseIntPipe,
-  Post,
-  Query,
-  Session,
-} from '@nestjs/common';
-import { UserService } from './user.service';
-import { RegisterUserDto } from './dto/register-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
-import { RequireLogin, UserInfo } from 'src/decorators/custom.decorator';
-import { UpdatePasswordUserDto } from './dto/update-password-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { FrozenUserDto } from './dto/frozen-user.dto';
-import { generateParseIntPipe } from 'src/utils/tools';
-import { QueryUserDto } from './dto/query-user.dto';
+import {Body, Controller, Get, ParseIntPipe, Post, Query, Session,} from '@nestjs/common';
+import {UserService} from './user.service';
+import {RegisterUserDto} from './dto/register-user.dto';
+import {LoginUserDto} from './dto/login-user.dto';
+import {RealIp, RequireLogin, UserInfo} from 'src/decorators/custom.decorator';
+import {UpdatePasswordUserDto} from './dto/update-password-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {FrozenUserDto} from './dto/frozen-user.dto';
+import {generateParseIntPipe} from 'src/utils/tools';
+import {QueryUserDto} from './dto/query-user.dto';
+import {CaptchaType} from "@/types";
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {
+  }
 
   @Post('register')
   public async register(@Body() registerUser: RegisterUserDto) {
@@ -29,7 +22,7 @@ export class UserController {
 
   @Get('register-captcha')
   public async captcha(
-    @Query('type', ParseIntPipe) type: number, // 1: 邮箱注册 2: 手机注册
+    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return await this.userService.captcha(type, address);
@@ -39,7 +32,7 @@ export class UserController {
   public async login(
     @Body() loginUser: LoginUserDto,
     @Session() session: Record<string, any>,
-    @Ip() ip: string,
+    @RealIp() ip: string,
   ) {
     return await this.userService.login(loginUser, session, ip);
   }
@@ -77,7 +70,7 @@ export class UserController {
 
   @Get('update-password-captcha')
   public async updatePasswordCaptcha(
-    @Query('type', ParseIntPipe) type: number, // 1: 邮箱注册 2: 手机注册
+    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return await this.userService.updatePasswordCaptcha(type, address);
@@ -95,7 +88,7 @@ export class UserController {
   @Get('update-captcha')
   @RequireLogin()
   public async updateCaptcha(
-    @Query('type', ParseIntPipe) type: number, // 1: 邮箱注册 2: 手机注册
+    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return await this.userService.updateCaptcha(type, address);
@@ -111,11 +104,11 @@ export class UserController {
   @RequireLogin()
   public async list(
     @Query('page', generateParseIntPipe('page', 1))
-    page: number,
+      page: number,
     @Query('size', generateParseIntPipe('size', 10))
-    size: number,
+      size: number,
     @Query()
-    query: QueryUserDto,
+      query: QueryUserDto,
   ) {
     return await this.userService.list(page, size, query);
   }

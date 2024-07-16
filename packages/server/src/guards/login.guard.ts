@@ -7,9 +7,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
+import {Reflector} from '@nestjs/core';
+import {JwtService} from '@nestjs/jwt';
+import {Observable} from 'rxjs';
 
 export interface JwtUserData {
   userId: number;
@@ -24,6 +24,8 @@ export interface JwtUserData {
 declare module 'express' {
   interface Request {
     user: JwtUserData;
+    // 扩展 Request 类型，添加 realIp 属性
+    realIp?: string;
   }
 }
 

@@ -1,9 +1,9 @@
-export const enum LogCallTypeEnum {
+export enum LogCallTypeEnum {
   ADMIN = 'admin',
   USER = 'user',
 }
 
-export const enum CaptchaType {
-  email = 1,
-  phone
+export enum CaptchaTypeEnum {
+  EMAIL = 'email',
+  PHONE = 'phone'
 }

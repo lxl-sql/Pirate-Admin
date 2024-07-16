@@ -1,9 +1,5 @@
-import { LogCallType } from '@/types';
-import {
-  ExecutionContext,
-  SetMetadata,
-  createParamDecorator,
-} from '@nestjs/common';
+import {LogCallType} from '@/types';
+import {createParamDecorator, ExecutionContext, SetMetadata,} from '@nestjs/common';
 
 export const Custom = (...args: string[]) => SetMetadata('custom', args);
 
@@ -36,6 +32,19 @@ export const UserInfo = createParamDecorator(
     }
 
     return key ? request.user[key] : request.user;
+  },
+);
+
+/**
+ * @description 获取用户信息
+ * @param key 键 默认为 null
+ * @param ctx 上下文
+ * @returns 用户信息 或者 用户信息的某个值 如果没有用户信息则返回 null
+ */
+export const RealIp = createParamDecorator(
+  (key: string, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.realIp
   },
 );
 
