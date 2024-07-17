@@ -23,7 +23,7 @@ import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
 import {CaptchaService} from "@/common/captcha/captcha.service";
 import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
-import {CaptchaType} from "@/types";
+import {CaptchaType} from "@/types/enum";
 
 @Injectable()
 export class AdminService {

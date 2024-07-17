@@ -1,19 +1,12 @@
-import { AdminLogService } from '@/modules/admin-log/admin-log.service';
-import { LogCallType } from '@/types';
-import { LogCallTypeEnum } from '@/types/enum';
-import { trimmedIp } from '@/utils/tools';
-import {
-  CallHandler,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { Request, Response } from 'express';
-import { Observable, catchError, tap, throwError } from 'rxjs';
-import { JwtService } from '@nestjs/jwt';
-import { JwtUserData } from '@/guards/login.guard';
+import {AdminLogService} from '@/modules/admin-log/admin-log.service';
+import {LogCallType, LogCallTypeEnum} from '@/types/enum';
+import {trimmedIp} from '@/utils/tools';
+import {CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor,} from '@nestjs/common';
+import {Reflector} from '@nestjs/core';
+import {Request, Response} from 'express';
+import {catchError, Observable, tap} from 'rxjs';
+import {JwtService} from '@nestjs/jwt';
+import {JwtUserData} from '@/guards/login.guard';
 
 @Injectable()
 export class CustomLoggerInterceptor implements NestInterceptor {
@@ -71,7 +64,7 @@ export class CustomLoggerInterceptor implements NestInterceptor {
     // 没有 userId 不记录日志 token失效了 我还记录你干毛球
     if (!user.userId) return;
 
-    const { statusCode } = response;
+    const {statusCode} = response;
     // 默认参数
     const params = {
       userId: user.userId, // 登录时使用 userInfo
@@ -104,7 +97,7 @@ export class CustomLoggerInterceptor implements NestInterceptor {
    * @returns
    */
   private getParams(request: Request) {
-    const { body, params, query } = request;
+    const {body, params, query} = request;
     return body || params || query || '';
   }
 

@@ -1,6 +1,5 @@
 import {IsNotEmpty,} from 'class-validator';
-import {CaptchaTypeEnum} from "@/types/enum";
-import {CaptchaType} from "@/types";
+import {CaptchaType, CaptchaTypeEnum} from "@/types/enum";
 import {CustomType, IsCustomType} from "@/validators/is-custom-type.validator";
 
 export class VerifyCaptchaDto {

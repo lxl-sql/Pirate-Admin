@@ -17,7 +17,7 @@ import {LoginUserVo} from './vo/login-user.vo';
 import {CaptchaService} from '@/common/captcha/captcha.service';
 import {UserInfoVo} from '@/common/token/vo/user-info.vo';
 import {QueryUserDto} from './dto/query-user.dto';
-import {CaptchaType} from "@/types";
+import {CaptchaType} from "@/types/enum";
 
 @Injectable()
 export class UserService {

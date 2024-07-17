@@ -8,7 +8,7 @@ import {UpdateUserDto} from './dto/update-user.dto';
 import {FrozenUserDto} from './dto/frozen-user.dto';
 import {generateParseIntPipe} from 'src/utils/tools';
 import {QueryUserDto} from './dto/query-user.dto';
-import {CaptchaType} from "@/types";
+import {CaptchaType} from "@/types/enum";
 
 @Controller('user')
 export class UserController {

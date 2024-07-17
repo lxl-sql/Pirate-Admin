@@ -18,9 +18,6 @@ export type AnyFunction = (...args: any[]) => any;
 
 export type AnyConstructor = new (...args: any[]) => any;
 
-export type LogCallType = 'admin' | 'user';
-
-export type CaptchaType = 'email' | 'phone'
 
 /**
  * @description 分页格式

@@ -1,4 +1,4 @@
-import {CaptchaType} from "@/types";
+import {CaptchaType} from "@/types/enum";
 
 export class GenerateCaptchaDto {
   key: string;

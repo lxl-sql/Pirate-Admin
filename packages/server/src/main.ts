@@ -1,14 +1,14 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { FormatResponseInterceptor } from './interceptors/format-response.interceptor';
-import { InvokeRecordInterceptor } from './interceptors/invoke-record.interceptor';
-import { UnloginFilter } from './filters/unlogin.filter';
-import { CustomExceptionFilter } from './filters/custom-exception.filter';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from '@/app.module';
+import {ValidationPipe} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {FormatResponseInterceptor} from '@/interceptors/format-response.interceptor';
+import {InvokeRecordInterceptor} from '@/interceptors/invoke-record.interceptor';
+import {UnloginFilter} from '@/filters/unlogin.filter';
+import {CustomExceptionFilter} from '@/filters/custom-exception.filter';
 import * as session from 'express-session';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { UndefinedToNullInterceptor } from './interceptors/undefined-to-null.interceptor';
+import {NestExpressApplication} from '@nestjs/platform-express';
+import {UndefinedToNullInterceptor} from '@/interceptors/undefined-to-null.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -37,7 +37,7 @@ async function bootstrap() {
       resave: false, // 是否每次都重新保存会话，建议false
       saveUninitialized: false, // 是否自动保存未初始化的会话，建议false
       // rolling: true, // 强制在每个response上设置会话标识符cookie
-      cookie: { maxAge: 1000 * 60 * 5 },
+      cookie: {maxAge: 1000 * 60 * 5},
     }),
   );
 
@@ -52,4 +52,5 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   await app.listen(configService.get('NEST_PORT'));
 }
+
 bootstrap();

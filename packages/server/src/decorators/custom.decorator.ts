@@ -1,4 +1,4 @@
-import {LogCallType} from '@/types';
+import {LogCallType} from '@/types/enum';
 import {createParamDecorator, ExecutionContext, SetMetadata,} from '@nestjs/common';
 
 export const Custom = (...args: string[]) => SetMetadata('custom', args);

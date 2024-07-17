@@ -13,7 +13,7 @@ import {StatusPermissionDto} from './dto/status-permission.dto';
 import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
 import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
-import {CaptchaType} from "@/types";
+import {CaptchaType} from "@/types/enum";
 
 @Controller('admin')
 export class AdminController {
