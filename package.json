@@ -17,7 +17,9 @@
     "build": "pnpm -r --filter=pirate-* run build",
     "build:dev": "pnpm -r --filter=pirate-* run build:dev",
     "build:web": "pnpm -r --filter=pirate-web run build",
-    "build:server": "pnpm -r --filter=pirate-server run build"
+    "build:server": "pnpm -r --filter=pirate-server run build",
+    "install:server": "pnpm -r --filter=pirate-server install",
+    "install:web": "pnpm -r --filter=pirate-web install"
   },
   "keywords": [],
   "author": "",

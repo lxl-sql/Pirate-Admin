@@ -13,10 +13,11 @@ import {LoginUserDto} from './dto/login-user.dto';
 import {UpdatePasswordUserDto} from './dto/update-password-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {FrozenUserDto} from './dto/frozen-user.dto';
-import {LoginUserVo} from './vo/login-user.vo';
-import {CaptchaService} from '@/common/captcha/captcha.service';
-import {UserInfoVo} from '@/common/token/vo/user-info.vo';
 import {QueryUserDto} from './dto/query-user.dto';
+import {UserLoginInfoVo} from './vo/login-user.vo';
+import {UserProfileInfoVo} from "./vo/profile-info-user.vo";
+import {CaptchaService} from '@/common/captcha/captcha.service';
+import {BaseUserInfoVo} from '@/common/token/vo/user-info.vo';
 import {CaptchaType} from "@/types/enum";
 
 @Injectable()
@@ -130,7 +131,7 @@ export class UserService {
       );
     }
 
-    const vo = new LoginUserVo();
+    const vo = new UserLoginInfoVo();
     vo.userInfo.sign = user.sign;
     vo.userInfo = this.generateUserInfo(user);
 
@@ -208,7 +209,7 @@ export class UserService {
   public async info(userId: number) {
     const user = await this.findOneById(userId);
 
-    const vo = new UserInfoVo();
+    const vo = new BaseUserInfoVo();
     const userInfo = this.generateUserInfo(user);
     return Object.assign(vo, userInfo);
   }
@@ -284,7 +285,7 @@ export class UserService {
    * @param userInfo 用户信息
    * @returns
    */
-  private generateToken(userInfo: LoginUserVo['userInfo']) {
+  private generateToken(userInfo: UserProfileInfoVo) {
     // 生成 token
     const accessToken = this.jwtService.sign(
       {

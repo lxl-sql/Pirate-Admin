@@ -5,7 +5,7 @@ import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
 import {Admin} from './entities/admin.entity';
 import {EntityManager, In, Repository, TreeRepository} from 'typeorm';
 import {existsByOnFail, like, listToTree, mapTree, md5, requestHost, sortTree, trimmedIp,} from '@/utils/tools';
-import {LoginUserVo} from './vo/login-admin.vo';
+import {AdminLoginInfoVo} from './vo/login-admin.vo';
 import {JwtService} from '@nestjs/jwt';
 import {ConfigService} from '@nestjs/config';
 import {TokenService} from '@/common/token/token.service';
@@ -24,6 +24,7 @@ import {QueryRoleDto} from './dto/query-role.dto';
 import {CaptchaService} from "@/common/captcha/captcha.service";
 import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
 import {CaptchaType} from "@/types/enum";
+import {BaseUserInfoVo} from "@/common/token/vo/user-info.vo";
 
 @Injectable()
 export class AdminService {
@@ -138,11 +139,8 @@ export class AdminService {
     session: Record<string, any>,
     ip: string,
     protocolHost: string,
-  ) {
-    if (
-      session.captcha?.toLocaleLowerCase() !==
-      loginAdmin.captcha?.toLocaleLowerCase()
-    ) {
+  ): Promise<AdminLoginInfoVo> {
+    if (session.captcha?.toLocaleLowerCase() !== loginAdmin.captcha?.toLocaleLowerCase()) {
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
     }
 
@@ -166,7 +164,7 @@ export class AdminService {
       );
     }
 
-    const vo = new LoginUserVo();
+    const vo = new AdminLoginInfoVo();
     vo.userInfo = this.generateUserInfo(
       admin,
       ['roles', 'roles.permissions'],
@@ -204,9 +202,7 @@ export class AdminService {
       ...vo,
       userInfo: {
         ...vo.userInfo,
-        lastLoginTime: dayjs(vo.userInfo.lastLoginTime).format(
-          'YYYY-MM-DD HH:mm:ss',
-        ),
+        lastLoginTime: dayjs(vo.userInfo.lastLoginTime).format('YYYY-MM-DD HH:mm:ss'),
       },
     };
   }
@@ -254,7 +250,7 @@ export class AdminService {
     info: Admin,
     relations: string[],
     protocolHost: string,
-  ) {
+  ): BaseUserInfoVo {
     const userInfo = {
       id: info.id,
       username: info.username,

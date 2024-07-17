@@ -1,3 +1,4 @@
-import { UserInfoVo } from '@/common/token/vo/user-info.vo';
+import {BaseUserInfoVo} from '@/common/token/vo/user-info.vo';
 
-export class QueryUserDto extends UserInfoVo {}
+export class QueryUserDto extends BaseUserInfoVo {
+}

@@ -54,7 +54,7 @@ export class Admin extends DefaultEntity {
   motto: string;
 
   @Column({
-    comment: '状态',
+    comment: '状态 0 禁用 1 启用',
     type: 'tinyint',
     default: 1,
   })

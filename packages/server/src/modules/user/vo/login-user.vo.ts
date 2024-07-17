@@ -1,8 +1,12 @@
-import { LoginUserVo as LoginInfoVo } from '@/common/token/vo/login-user.vo';
+import {ApiProperty} from "@nestjs/swagger";
+import {BaseTokenVo} from "@/common/token/vo/base-token.vo";
+import {UserProfileInfoVo} from "@/modules/user/vo/profile-info-user.vo";
 
-interface UserInfo {
-  gender: number; // 性别
-  sign: string;
+export class UserLoginInfoVo extends BaseTokenVo {
+  @ApiProperty({
+    description: '用户资料信息',
+    type: () => UserProfileInfoVo,
+    example: () => UserProfileInfoVo
+  })
+  userInfo: UserProfileInfoVo
 }
-
-export class LoginUserVo extends LoginInfoVo<UserInfo> {}

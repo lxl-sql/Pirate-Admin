@@ -1,8 +1,8 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { UserInfoVo } from './vo/user-info.vo';
-import { LoginUserVo } from './vo/login-user.vo';
-import { ConfigService } from '@nestjs/config';
+import {Inject, Injectable, UnauthorizedException} from '@nestjs/common';
+import {JwtService} from '@nestjs/jwt';
+import {BaseUserInfoVo} from './vo/user-info.vo';
+import {ConfigService} from '@nestjs/config';
+import {BaseTokenVo} from "@/common/token/vo/base-token.vo";
 
 interface refreshToken {
   id: number;
@@ -26,7 +26,7 @@ export class TokenService {
   public async refreshToken(
     sign: string,
     refreshToken: string,
-    callback: (data: refreshToken) => Promise<UserInfoVo>,
+    callback: (data: refreshToken) => Promise<BaseUserInfoVo>,
   ) {
     try {
       const data = await this.jwtService.verify(refreshToken);
@@ -50,17 +50,13 @@ export class TokenService {
    */
   public generateToken(
     sign: string,
-    userInfo: LoginUserVo<object>['userInfo'],
+    userInfo: BaseUserInfoVo,
     remember: 0 | 1 = 1,
-  ) {
+  ): BaseTokenVo {
     const isRemember = remember === 1;
 
-    const accessExpiresIn = this.configService.get(
-      'JWT_ACCESS_TOKEN_EXPIRES_IN',
-    );
-    const refreshExpiresIn = this.configService.get(
-      'JWT_REFRESH_TOKEN_EXPIRES_IN',
-    );
+    const accessExpiresIn = this.configService.get('JWT_ACCESS_TOKEN_EXPIRES_IN',);
+    const refreshExpiresIn = this.configService.get('JWT_REFRESH_TOKEN_EXPIRES_IN',);
 
     // 生成 token
     const accessToken = this.jwtService.sign(
@@ -80,17 +76,17 @@ export class TokenService {
     // 生成 refreshToken
     const refreshToken = isRemember
       ? this.jwtService.sign(
-          {
-            sign: sign,
-            userId: userInfo.id,
-            username: userInfo.username,
-          },
-          {
-            expiresIn: refreshExpiresIn || '7d',
-          },
-        )
+        {
+          sign: sign,
+          userId: userInfo.id,
+          username: userInfo.username,
+        },
+        {
+          expiresIn: refreshExpiresIn || '7d',
+        },
+      )
       : null;
 
-    return { accessToken, refreshToken };
+    return {accessToken, refreshToken};
   }
 }

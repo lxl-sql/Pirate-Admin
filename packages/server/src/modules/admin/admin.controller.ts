@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Query, Session,} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Param, Post, Query, Session,} from '@nestjs/common';
 import {AdminService} from './admin.service';
 import {UpsertAdminDto} from './dto/upsert-admin.dto';
 import {LogCall, ProtocolHost, RealIp, RequireLogin, UserInfo,} from '@/decorators/custom.decorator';
@@ -14,12 +14,35 @@ import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
 import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
 import {CaptchaType} from "@/types/enum";
+import {ApiBody, ApiConsumes, ApiOperation, ApiProduces, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {AdminLoginInfoVo} from "@/modules/admin/vo/login-admin.vo";
 
+@ApiTags('Admin') // 将此 API 放在 'Admin' 分类下
+// @ApiBearerAuth() // 如果需要认证
+@ApiConsumes('application/json') // 指定接收的数据类型
+@ApiProduces('application/json') // 指定响应的数据类型
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {
   }
 
+  @ApiOperation({
+    summary: '管理员登录',
+    description: '管理员使用用户名和密码进行登录',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: '成功登录',
+    type: AdminLoginInfoVo
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: '认证失败',
+  })
+  @ApiBody({
+    description: '管理员登录信息',
+    type: LoginAdminDto
+  })
   @Post('login')
   @LogCall('admin', '登录')
   public async login(

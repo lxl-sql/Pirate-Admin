@@ -1,7 +1,7 @@
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
-import { UserRole } from './role-user.entity';
-import { DateFormatTransformer } from '@/utils/transformer';
-import { DefaultEntity } from '@/common/entities/default.entity';
+import {Column, Entity, JoinTable, ManyToMany} from 'typeorm';
+import {UserRole} from './role-user.entity';
+import {DateFormatTransformer} from '@/utils/transformer';
+import {DefaultEntity} from '@/common/entities/default.entity';
 
 @Entity({
   name: 'users',

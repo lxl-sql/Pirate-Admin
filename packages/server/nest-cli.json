@@ -10,6 +10,8 @@
     "webpack": true,
     "deleteOutDir": true,
     "watchAssets": true,
-    "assets": ["**/*.env"]
+    "assets": [
+      "**/*.env"
+    ]
   }
 }

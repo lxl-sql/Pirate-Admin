@@ -9,9 +9,18 @@ import {CustomExceptionFilter} from '@/filters/custom-exception.filter';
 import * as session from 'express-session';
 import {NestExpressApplication} from '@nestjs/platform-express';
 import {UndefinedToNullInterceptor} from '@/interceptors/undefined-to-null.interceptor';
+import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  const config = new DocumentBuilder()
+    .setTitle('Pirate API')
+    .setDescription('The API description')
+    .setVersion('1.0')
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('doc', app, document)
 
   app.useGlobalPipes(
     new ValidationPipe({
