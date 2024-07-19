@@ -1,9 +1,9 @@
-import { IdsDto } from '@/common/dtos/remove.dto';
-import { UpsertDto } from '@/common/dtos/upsert.dto';
-import { DefaultEntity } from '@/common/entities/default.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { validateOrReject } from 'class-validator';
-import { In, Repository, TreeRepository } from 'typeorm';
+import {IdsDto} from '@/dtos/remove.dto';
+import {UpsertDto} from '@/dtos/upsert.dto';
+import {DefaultEntity} from '@/entities/default.entity';
+import {HttpException, HttpStatus} from '@nestjs/common';
+import {validateOrReject} from 'class-validator';
+import {In, Repository, TreeRepository} from 'typeorm';
 
 /**
  * @description 删除用户
@@ -33,7 +33,7 @@ export async function treeRemovePublic<Entity = any, D = IdsDto>(
   body: D,
   key = 'ids',
 ) {
-  const condition = { parentId: In(body[key]) };
+  const condition = {parentId: In(body[key])};
   // 删除菜单的同时不能删除子菜单
   const children = await respository.findBy(condition as any);
   // 继续
@@ -42,6 +42,7 @@ export async function treeRemovePublic<Entity = any, D = IdsDto>(
   }
   await removePublic(respository, body);
 }
+
 /**
  * 异步插入或更新公共函数
  *
@@ -62,8 +63,8 @@ export async function upsertPublic<
 
   let entity: Entity;
   if (body.id) {
-    const conddition = { id: body.id };
-    entity = await repository.findOneBy(conddition as any);
+    const condition = {id: body.id};
+    entity = await repository.findOneBy(condition as any);
     if (!entity) {
       throw new HttpException('数据不存在', HttpStatus.BAD_REQUEST);
     }
@@ -75,6 +76,7 @@ export async function upsertPublic<
   await repository.save(entity);
   return body.id ? '编辑成功' : '添加成功';
 }
+
 /**
  * 异步更新或插入公开数据树结构中的实体。
  *
@@ -93,10 +95,7 @@ export async function treeUpsertPublic<
   callback?: (entity: Entity) => Promise<Entity> | Entity,
 ): Promise<string> {
   if (body.id && body.id === body.parentId) {
-    throw new HttpException(
-      '父级 ID 不能和当前 ID 相同',
-      HttpStatus.BAD_REQUEST,
-    );
+    throw new HttpException('父级 ID 不能和当前 ID 相同', HttpStatus.BAD_REQUEST,);
   }
   return await upsertPublic(repository, body, callback);
 }

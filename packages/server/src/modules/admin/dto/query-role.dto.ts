@@ -1,9 +1,9 @@
-import { PickType } from '@nestjs/mapped-types';
-import { UpsertRoleDto } from './upsert-role.dto';
-import { IsInt, IsOptional } from 'class-validator';
+import {Status} from "@/enums/status.enum";
 
 export class QueryRoleDto {
   name: string;
+
   slug: string;
-  status: number; // 1 启用 2 禁用
+
+  status: Status;
 }

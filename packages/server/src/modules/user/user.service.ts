@@ -18,7 +18,8 @@ import {UserLoginInfoVo} from './vo/login-user.vo';
 import {UserProfileInfoVo} from "./vo/profile-info-user.vo";
 import {CaptchaService} from '@/common/captcha/captcha.service';
 import {BaseUserInfoVo} from '@/common/token/vo/user-info.vo';
-import {CaptchaType} from "@/types/enum";
+import {CaptchaTypeEnum} from "@/types/enum";
+import {Status} from "@/enums/status.enum";
 
 @Injectable()
 export class UserService {
@@ -82,7 +83,7 @@ export class UserService {
    * @param address 邮箱或手机号
    * @returns
    */
-  public async captcha(type: CaptchaType, address: string) {
+  public async captcha(type: CaptchaTypeEnum, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `user_captcha_${address}`,
       address,
@@ -124,7 +125,7 @@ export class UserService {
       throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
     }
 
-    if (user.status === 0) {
+    if (user.status === Status.DISABLED) {
       throw new HttpException(
         '用户账户已被禁用，请联系管理员获取更多信息。',
         HttpStatus.BAD_REQUEST,
@@ -244,8 +245,8 @@ export class UserService {
    * @param relations 是否需要角色和权限
    * @returns
    */
-  private generateUserInfo(user: User, relations?: string[]) {
-    const userInfo = {
+  private generateUserInfo(user: User, relations?: string[]): UserProfileInfoVo {
+    const userInfo: UserProfileInfoVo = {
       id: user.id,
       username: user.username,
       nickname: user.nickname,
@@ -348,7 +349,7 @@ export class UserService {
    * @param address 邮箱或手机号
    * @returns
    */
-  public async updatePasswordCaptcha(type: CaptchaType, address: string) {
+  public async updatePasswordCaptcha(type: CaptchaTypeEnum, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `user_update_password_captcha_${address}`,
       address,
@@ -390,7 +391,7 @@ export class UserService {
    * @param address 邮箱或手机号
    * @returns
    */
-  public async updateCaptcha(type: CaptchaType, address: string) {
+  public async updateCaptcha(type: CaptchaTypeEnum, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `user_update_captcha_${address}`,
       address,
@@ -421,7 +422,7 @@ export class UserService {
    * @returns
    */
   public async list(page: number, size: number, query: QueryUserDto) {
-    const conddition = {
+    const condition = {
       nickname: like(query.nickname),
     };
 
@@ -442,7 +443,7 @@ export class UserService {
       ],
       skip: (page - 1) * size,
       take: size,
-      where: conddition,
+      where: condition,
       relations: ['roles'],
     });
     // console.log(user);

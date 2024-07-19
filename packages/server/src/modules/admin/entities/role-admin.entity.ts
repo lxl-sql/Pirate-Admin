@@ -1,15 +1,7 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  Tree,
-  TreeChildren,
-  TreeParent,
-} from 'typeorm';
-import { AdminPermission } from './permission-admin.entity';
-import { DefaultEntity } from '@/common/entities/default.entity';
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, Tree, TreeChildren, TreeParent,} from 'typeorm';
+import {AdminPermission} from './permission-admin.entity';
+import {DefaultEntity} from '@/entities/default.entity';
+import {Status} from "@/enums/status.enum";
 
 // 用户角色表
 @Entity({
@@ -47,9 +39,9 @@ export class AdminRole extends DefaultEntity {
   @Column({
     comment: '状态',
     type: 'tinyint',
-    default: 1,
+    default: Status.ENABLED,
   })
-  status: number;
+  status: Status;
 
   // 可选：如果需要 parentId，你可以添加一个字段来保存 parent 的 id
   @Column({
@@ -61,7 +53,7 @@ export class AdminRole extends DefaultEntity {
   @TreeParent({
     onDelete: 'CASCADE', // 删除父级角色时，子级角色也删除
   })
-  @JoinColumn({ name: 'parent_id', referencedColumnName: 'id' })
+  @JoinColumn({name: 'parent_id', referencedColumnName: 'id'})
   parent: AdminRole;
 
   @TreeChildren()

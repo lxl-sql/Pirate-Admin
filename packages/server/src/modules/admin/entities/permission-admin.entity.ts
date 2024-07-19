@@ -1,5 +1,6 @@
-import { DefaultEntity } from '@/common/entities/default.entity';
-import { Column, Entity } from 'typeorm';
+import {DefaultEntity} from '@/entities/default.entity';
+import {Column, Entity} from 'typeorm';
+import {Status} from '@/enums/status.enum'
 
 // 管理员权限表
 @Entity({
@@ -72,7 +73,7 @@ export class AdminPermission extends DefaultEntity {
   description: string;
 
   @Column({
-    comment: '是否外链',
+    comment: '选项卡状态',
     type: 'tinyint',
     default: 1, // 1: 选项卡 2: 外链 3: iframe
   })
@@ -81,14 +82,14 @@ export class AdminPermission extends DefaultEntity {
   @Column({
     comment: '是否缓存',
     type: 'tinyint',
-    default: 0, // 1: 启用 0: 禁用
+    default: Status.DISABLED, // 1: 启用 0: 禁用
   })
-  cache: number;
+  cache: Status;
 
   @Column({
     comment: '状态',
     type: 'tinyint',
-    default: 1, // 1: 启用 0: 禁用
+    default: Status.ENABLED, // 1: 启用 0: 禁用
   })
-  status: number;
+  status: Status;
 }

@@ -1,5 +1,5 @@
 // 快捷配置入口
-import {DefaultEntity} from '@/common/entities/default.entity';
+import {DefaultEntity} from '@/entities/default.entity';
 import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import {ConfigGroup} from "./config-group.entities";
 

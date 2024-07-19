@@ -8,5 +8,5 @@ export class AdminLoginInfoVo extends BaseTokenVo {
     type: AdminProfileInfoVo,
     example: () => AdminProfileInfoVo
   })
-  userInfo: AdminProfileInfoVo
+  userInfo?: AdminProfileInfoVo
 }

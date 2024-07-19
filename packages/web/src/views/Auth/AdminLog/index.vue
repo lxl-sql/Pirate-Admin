@@ -160,16 +160,19 @@ provide(tableSettingKey, tableSettings);
       </a-input-group>
     </template>
     <template #ip="{ value }">
-      <a-tag color="processing">
-        {{ value }}
-      </a-tag>
+      <a-tag color="processing">{{ value }}</a-tag>
     </template>
     <template #method="{ value }">
       <method-tag :method="value"/>
     </template>
-
     <template #detail-params="{ value }">
       <code-segment :text="value"/>
+    </template>
+    <template #detail-ip="{ value }">
+      <a-tag color="processing">{{ value }}</a-tag>
+    </template>
+    <template #detail-method="{ value }">
+      <method-tag :method="value"/>
     </template>
 
     <i-preview-image

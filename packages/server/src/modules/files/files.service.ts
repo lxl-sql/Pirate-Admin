@@ -18,7 +18,7 @@ import {
   requestHost,
 } from '@/utils/tools';
 import { removePublic } from '@/utils/crud';
-import { IdsDto } from '@/common/dtos/remove.dto';
+import { IdsDto } from '@/dtos/remove.dto';
 
 @Injectable()
 export class FilesService {
@@ -121,7 +121,7 @@ export class FilesService {
     query: Partial<QueryFileDto>,
     protocolHost: string,
   ) {
-    const conddition = {
+    const condition = {
       name: like(query.name),
       username: like(query.username),
       usertype: filterFalsyValues(query.usertype),
@@ -132,7 +132,7 @@ export class FilesService {
 
     const [files, total] = await this.fileRepository.findAndCount(
       findManyOption<File>(page, size, {
-        where: conddition,
+        where: condition,
       }),
     );
 

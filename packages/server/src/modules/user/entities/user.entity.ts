@@ -1,7 +1,9 @@
 import {Column, Entity, JoinTable, ManyToMany} from 'typeorm';
 import {UserRole} from './role-user.entity';
 import {DateFormatTransformer} from '@/utils/transformer';
-import {DefaultEntity} from '@/common/entities/default.entity';
+import {DefaultEntity} from '@/entities/default.entity';
+import {Status} from "@/enums/status.enum";
+import {Gender} from "@/enums/gender.enum";
 
 @Entity({
   name: 'users',
@@ -36,9 +38,9 @@ export class User extends DefaultEntity {
     type: 'tinyint',
     comment: '性别 0:保密 1:男 2:女',
     nullable: true,
-    default: 0,
+    default: Gender.UNKNOWN,
   })
-  gender: number;
+  gender: Gender;
 
   @Column({
     length: 20,
@@ -64,9 +66,9 @@ export class User extends DefaultEntity {
   @Column({
     type: 'tinyint',
     comment: '状态 0:禁用 1:启用',
-    default: 1,
+    default: Status.ENABLED,
   })
-  status: number;
+  status: Status;
 
   @Column({
     length: 50,

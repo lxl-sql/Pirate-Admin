@@ -1,3 +1,3 @@
-import { IdsDto } from '@/common/dtos/remove.dto';
+import { IdsDto } from '@/dtos/remove.dto';
 
 export class RemovePermissionDto extends IdsDto {}

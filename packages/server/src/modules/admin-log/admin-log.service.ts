@@ -10,7 +10,7 @@ export class AdminLogService {
   private readonly adminLogRepository: Repository<AdminLog>;
 
   public async list(page: number, size: number, query: QueryAdminLogDto) {
-    const conddition = {
+    const condition = {
       userId: query.userId,
     };
 
@@ -32,7 +32,7 @@ export class AdminLogService {
       order: {
         createTime: 'DESC',
       },
-      where: conddition,
+      where: condition,
     });
 
     return {

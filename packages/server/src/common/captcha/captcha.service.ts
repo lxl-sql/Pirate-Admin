@@ -6,6 +6,7 @@ import {randomString} from '@/utils/tools';
 import {SmsService} from '../sms/sms.service';
 import {GenerateCaptchaDto} from './dto/generate-captcha.dto';
 import {VerifyCaptchaDto} from './dto/verify-captcha.dto';
+import {CaptchaTypeEnum} from "@/types/enum";
 
 @Injectable()
 export class CaptchaService {
@@ -82,9 +83,9 @@ export class CaptchaService {
    */
   public async generateCaptcha(options: GenerateCaptchaDto) {
     const {key, address, type, subject, html} = options;
-    if (type === 'email') {
+    if (type === CaptchaTypeEnum.EMAIL) {
       await this.emailService.validationParameters()
-    } else if (type === 'phone') {
+    } else if (type === CaptchaTypeEnum.PHONE) {
       await this.smsService.validationParameters('aliyun')
     }
     const captcha = await this.redisService.get(key);
@@ -99,7 +100,7 @@ export class CaptchaService {
     const ttl = 1 * 60;
 
     try {
-      if (type === 'email') {
+      if (type === CaptchaTypeEnum.EMAIL) {
         await this.emailService.sendMail({
           to: address,
           subject: subject,
@@ -107,7 +108,7 @@ export class CaptchaService {
             ? html(code, ttl / 60)
             : `<p>你的${subject}是 ${code}，有效期为${ttl / 60}分钟</p>`,
         });
-      } else if (type === 'phone') {
+      } else if (type === CaptchaTypeEnum.PHONE) {
         await this.smsService.sendSMS({
           phone: address,
           type: 'aliyun', // 1：阿里云 2：腾讯云

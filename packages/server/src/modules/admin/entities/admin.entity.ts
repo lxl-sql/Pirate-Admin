@@ -1,7 +1,7 @@
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 import { AdminRole } from './role-admin.entity';
 import { DateFormatTransformer } from '@/utils/transformer';
-import { DefaultEntity } from '@/common/entities/default.entity';
+import { DefaultEntity } from '@/entities/default.entity';
 
 @Entity({
   name: 'admins',

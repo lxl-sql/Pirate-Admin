@@ -1,11 +1,11 @@
-import {CaptchaType} from "@/types/enum";
+import {CaptchaTypeEnum} from "@/types/enum";
 
 export class GenerateCaptchaDto {
   key: string;
 
   address: string;
 
-  type: CaptchaType; // email: 邮箱验证码 phone: 短信验证码
+  type: CaptchaTypeEnum; // email: 邮箱验证码 phone: 短信验证码
 
   subject: string;
 

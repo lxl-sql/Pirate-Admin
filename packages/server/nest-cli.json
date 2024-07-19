@@ -12,6 +12,9 @@
     "watchAssets": true,
     "assets": [
       "**/*.env"
+    ],
+    "plugins": [
+      "@nestjs/swagger"
     ]
   }
 }

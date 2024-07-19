@@ -19,7 +19,7 @@ import { storage } from '@/utils/multer';
 import { Request } from 'express';
 import { generateParseIntPipe } from '@/utils/tools';
 import { QueryFileDto } from './dto/query-file.dto';
-import { IdsDto } from '@/common/dtos/remove.dto';
+import { IdsDto } from '@/dtos/remove.dto';
 
 @Controller('files')
 export class FilesController {

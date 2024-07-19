@@ -1,4 +1,4 @@
-import { DefaultEntity } from '@/common/entities/default.entity';
+import { DefaultEntity } from '@/entities/default.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity({

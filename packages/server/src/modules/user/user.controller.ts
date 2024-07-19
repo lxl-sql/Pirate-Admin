@@ -8,8 +8,13 @@ import {UpdateUserDto} from './dto/update-user.dto';
 import {FrozenUserDto} from './dto/frozen-user.dto';
 import {generateParseIntPipe} from 'src/utils/tools';
 import {QueryUserDto} from './dto/query-user.dto';
-import {CaptchaType} from "@/types/enum";
+import {CaptchaTypeEnum} from "@/types/enum";
+import {ApiConsumes, ApiProduces, ApiTags} from "@nestjs/swagger";
 
+@ApiTags('User') // 将此 API 放在 'Admin' 分类下
+// @ApiBearerAuth() // 如果需要认证
+@ApiConsumes('application/json') // 指定接收的数据类型
+@ApiProduces('application/json') // 指定响应的数据类型
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {
@@ -22,7 +27,7 @@ export class UserController {
 
   @Get('register-captcha')
   public async captcha(
-    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
+    @Query('type') type: CaptchaTypeEnum, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return await this.userService.captcha(type, address);
@@ -70,7 +75,7 @@ export class UserController {
 
   @Get('update-password-captcha')
   public async updatePasswordCaptcha(
-    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
+    @Query('type') type: CaptchaTypeEnum, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return await this.userService.updatePasswordCaptcha(type, address);
@@ -88,7 +93,7 @@ export class UserController {
   @Get('update-captcha')
   @RequireLogin()
   public async updateCaptcha(
-    @Query('type') type: CaptchaType, // email: 邮箱注册 phone: 手机注册
+    @Query('type') type: CaptchaTypeEnum, // email: 邮箱注册 phone: 手机注册
     @Query('address') address: string, // 邮箱或手机号
   ) {
     return await this.userService.updateCaptcha(type, address);

@@ -17,14 +17,17 @@ import {UpsertPermissionDto} from './dto/upsert-permission.dto';
 import {RemovePermissionDto} from './dto/remove-permission.dto';
 import {removePublic, treeRemovePublic, treeUpsertPublic} from '@/utils/crud';
 import * as dayjs from 'dayjs';
-import {IdsDto} from '@/common/dtos/remove.dto';
+import {IdsDto} from '@/dtos/remove.dto';
 import {StatusPermissionDto} from './dto/status-permission.dto';
 import {UpsertRoleDto} from './dto/upsert-role.dto';
 import {QueryRoleDto} from './dto/query-role.dto';
 import {CaptchaService} from "@/common/captcha/captcha.service";
 import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
-import {CaptchaType} from "@/types/enum";
-import {BaseUserInfoVo} from "@/common/token/vo/user-info.vo";
+import {CaptchaTypeEnum} from "@/types/enum";
+import {AdminProfileInfoVo} from "@/modules/admin/vo/profile-info-admin.vo";
+import {NotPaginationVo, PaginationVo} from "@/vos/response.vo";
+import {AdminRoleVo} from "@/modules/admin/vo/role-admin.vo";
+import {AdminPermissionVo} from "@/modules/admin/vo/permission-admin.vo";
 
 @Injectable()
 export class AdminService {
@@ -190,21 +193,17 @@ export class AdminService {
     vo.refreshToken = refreshToken;
     session.captcha = null;
 
+    const date = new Date()
+
     vo.userInfo.lastLoginIp = trimmedIp(ip);
-    vo.userInfo.lastLoginTime = new Date();
+    vo.userInfo.lastLoginTime = dayjs(date).format('YYYY-MM-DD HH:mm:ss')
 
     this.adminRepository.update(admin.id, {
       lastLoginIp: vo.userInfo.lastLoginIp,
-      lastLoginTime: vo.userInfo.lastLoginTime,
+      lastLoginTime: date,
     });
 
-    return {
-      ...vo,
-      userInfo: {
-        ...vo.userInfo,
-        lastLoginTime: dayjs(vo.userInfo.lastLoginTime).format('YYYY-MM-DD HH:mm:ss'),
-      },
-    };
+    return vo
   }
 
   /**
@@ -250,8 +249,8 @@ export class AdminService {
     info: Admin,
     relations: string[],
     protocolHost: string,
-  ): BaseUserInfoVo {
-    const userInfo = {
+  ): AdminProfileInfoVo {
+    const userInfo: AdminProfileInfoVo = {
       id: info.id,
       username: info.username,
       nickname: info.nickname,
@@ -261,8 +260,8 @@ export class AdminService {
       status: info.status,
       lastLoginIp: info.lastLoginIp,
       lastLoginTime: info.lastLoginTime,
-      updateTime: info.updateTime,
       createTime: info.createTime,
+      updateTime: info.updateTime,
     };
 
     if (!relations) return userInfo;
@@ -299,8 +298,8 @@ export class AdminService {
     query: QueryAdminDto,
     protocolHost: string,
     userId: number,
-  ) {
-    const conddition = {
+  ): Promise<PaginationVo<AdminProfileInfoVo>> {
+    const condition = {
       nickname: like(query.nickname),
     };
 
@@ -319,7 +318,7 @@ export class AdminService {
       ],
       skip: (page - 1) * size,
       take: size,
-      where: conddition,
+      where: condition,
       relations: ['roles'],
       order: {
         createTime: 'DESC',
@@ -410,7 +409,7 @@ export class AdminService {
    * @param id
    * @returns
    */
-  public async roleDetail(id: number) {
+  public async roleDetail(id: number): Promise<AdminRoleVo> {
     const found_role = await this.roleRepository.findOne({
       where: {
         id,
@@ -420,12 +419,18 @@ export class AdminService {
     if (!found_role) {
       throw new HttpException('角色不存在', HttpStatus.NOT_FOUND);
     }
-    const permissionIds = found_role.permissions.map(
-      (permission) => permission.id,
-    );
+    const permissionIds = found_role.permissions.map((permission) => permission.id);
     return {
-      ...found_role,
-      permissions: undefined,
+      id: found_role.id,
+      name: found_role.name,
+      slug: found_role.slug,
+      description: found_role.description,
+      sort: found_role.sort,
+      status: found_role.status,
+      children: found_role.children,
+      parentId: found_role.parent.id,
+      createTime: found_role.createTime,
+      updateTime: found_role.updateTime,
       permissionIds,
     };
   }
@@ -494,7 +499,7 @@ export class AdminService {
    * @param type
    * @param address
    */
-  public async bindCaptcha(type: CaptchaType, address: string) {
+  public async bindCaptcha(type: CaptchaTypeEnum, address: string) {
     return await this.captchaService.generateCaptcha({
       key: `admin_bind_captcha_${address}`,
       type,
@@ -519,7 +524,7 @@ export class AdminService {
    * @description 获取用户菜单规则
    * @returns
    */
-  public async menus() {
+  public async menus(): Promise<NotPaginationVo<AdminPermissionVo>> {
     const permissions = await this.permissionRepository.find({
       select: [
         'id',
@@ -533,6 +538,7 @@ export class AdminService {
         'type',
         'cache',
         'status',
+        'createTime',
         'updateTime',
       ],
       order: {
@@ -542,7 +548,7 @@ export class AdminService {
 
     return {
       records: listToTree(permissions),
-      remarks: '',
+      remark: '',
     };
   }
 
@@ -590,7 +596,7 @@ export class AdminService {
    * @param id
    * @returns
    */
-  public async menuDetail(id: number) {
+  public async menuDetail(id: number): Promise<AdminPermissionVo> {
     const found_permission = await this.permissionRepository.findOneBy({
       id,
     });

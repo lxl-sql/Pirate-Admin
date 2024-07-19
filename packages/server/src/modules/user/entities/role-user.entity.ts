@@ -9,7 +9,7 @@ import {
   TreeParent,
 } from 'typeorm';
 import { UserPermission } from './permission-user.entity';
-import { DefaultEntity } from '@/common/entities/default.entity';
+import { DefaultEntity } from '@/entities/default.entity';
 
 // 用户角色表
 @Entity({
