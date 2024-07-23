@@ -99,7 +99,7 @@ watch(
  * @param key
  */
 const handleMenuOrSearchRadio = (key: OperationRadioType) => {
-  operationRadio.value = operationRadio.value === key ? undefined : key;
+  // operationRadio.value = operationRadio.value === key ? undefined : key;
   if (key === "search") {
     isOpenSearch.value = !isOpenSearch.value;
   }
@@ -275,7 +275,7 @@ defineOptions({
       <close-alert :message="remark"/>
       <!-- queryForm -->
       <transition name="zoom-in">
-        <!-- z-0 层级低于 table-header -->
+        <!-- z-0 层级低于 i-table-header -->
         <div
           v-if="isOpenSearch && formColumns.length"
           class="i-table-form relative z-0 pb-0 origin-bottom overflow-hidden"
@@ -300,7 +300,7 @@ defineOptions({
           </slot>
         </div>
       </transition>
-      <div class="table-header">
+      <div class="i-table-header">
         <!-- 左侧按钮 可自定义左侧按钮内容 -->
         <a-space>
           <slot name="leftActions"></slot>
@@ -312,10 +312,10 @@ defineOptions({
             v-model:value="keyword"
             :placeholder="keywordPlaceholder || $t('placeholder.keyword')"
             allow-clear
-            class="table-header_search"
+            class="i-table-header_search"
             @blur="handleSearchBlur"
           />
-          <a-radio-group v-model:value="operationRadio" class="flex">
+          <a-radio-group class="flex">
             <a-popover
               trigger="click"
               placement="bottomRight"
@@ -370,30 +370,41 @@ defineOptions({
           </a-radio-group>
         </a-space>
       </div>
-      <a-table
-        v-model:expanded-row-keys="expandedRowKeys"
-        :row-key="rowKey"
-        :row-selection="rowSelection"
-        :data-source="dataSource"
-        :loading="{ spinning: loading, tip: $t('title.loading') }"
-        :columns="columnsComputed"
-        :children-column-name="childrenColumnName"
-        :size="size"
-        :pagination="pagination"
-        bordered
-        @resize-column="handleResizeColumn"
-        @change="handlePageSizeChange"
-        v-bind="$attrs"
-      >
-        <template #headerCell="{ column,...resetScope }">
-          <slot name="headerCell" :column="column" v-bind="resetScope">
-            {{ getHeaderCellName(column) }}
-          </slot>
-        </template>
-        <template #bodyCell="score">
-          <slot name="bodyCell" v-bind="score"/>
-        </template>
-      </a-table>
+      <div class="i-table-main">
+        <slot
+          name="table"
+          :columns="columnsComputed"
+          :loading="{ spinning: loading, tip: $t('title.loading') }"
+          :data-source="dataSource"
+          :row-key="rowKey"
+          :pagination="pagination"
+        >
+          <a-table
+            v-model:expanded-row-keys="expandedRowKeys"
+            :row-key="rowKey"
+            :row-selection="rowSelection"
+            :data-source="dataSource"
+            :loading="{ spinning: loading, tip: $t('title.loading') }"
+            :columns="columnsComputed"
+            :children-column-name="childrenColumnName"
+            :size="size"
+            :pagination="pagination"
+            bordered
+            @resize-column="handleResizeColumn"
+            @change="handlePageSizeChange"
+            v-bind="$attrs"
+          >
+            <template #headerCell="{ column,...resetScope }">
+              <slot name="headerCell" :column="column" v-bind="resetScope">
+                {{ getHeaderCellName(column) }}
+              </slot>
+            </template>
+            <template #bodyCell="score">
+              <slot name="bodyCell" v-bind="score"/>
+            </template>
+          </a-table>
+        </slot>
+      </div>
     </div>
   </div>
 </template>

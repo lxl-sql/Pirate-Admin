@@ -15,8 +15,9 @@
     ],
     "skipLibCheck": true,
     "noEmit": true,
-    "baseUrl": "./",
-    "rootDir": "./src",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "rootDir": "src",
     "paths": {
       "@/*": [
         "src/*"
@@ -44,6 +45,9 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
   ],
   "references": [
     {

@@ -91,6 +91,8 @@ declare module 'vue' {
     MethodTag: typeof import('./src/components/IComponents/IOther/MethodTag/index.vue')['default']
     MoonOutlined: typeof import('./src/components/IComponents/IIcon/MoonOutlined/index.vue')['default']
     PageCard: typeof import('./src/components/PageCard/index.vue')['default']
+    PreviewFile: typeof import('./src/components/PreviewFile/index.vue')['default']
+    PreviewFileGroup: typeof import('./src/components/PreviewFileGroup/index.vue')['default']
     ProcessingTag: typeof import('./src/components/IComponents/IOther/ProcessingTag/index.vue')['default']
     QueryForm: typeof import('./src/components/IComponents/ITable/components/QueryForm/index.vue')['default']
     QueryFormItem: typeof import('./src/components/IComponents/ITable/components/QueryFormItem/index.vue')['default']

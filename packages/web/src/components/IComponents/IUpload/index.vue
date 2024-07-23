@@ -17,12 +17,14 @@ const props = withDefaults(defineProps<IUploadProps>(), {
   name: "files",
   listType: 'picture-card',
   multiple: true,
+  openFileDialogOnClick: true
 });
 const emits = defineEmits([
   "update:fileList", // 文件列表
   "change",
   "confirm", // 点击确定回调
   "cancel", // 点击遮罩层或右上角叉或取消按钮的回调
+  "success"
 ]);
 
 const fileList = ref<any[]>([]);
@@ -58,6 +60,7 @@ const customRequest = async (originObject: any) => {
       status: 'done'
     }
     onSuccess?.(response, file);
+    emits('success', response, file)
     notification.success({
       message: t('message.success'),
       description: t('success.upload'),
@@ -68,7 +71,7 @@ const customRequest = async (originObject: any) => {
 };
 
 const handleUploadChange = (info: UploadChangeParam) => {
-  console.log("info.file", info);
+  // console.log("info.file", info);
   if (info.file.status === "uploading") {
     isUploadLoading.value = true;
     return
@@ -157,7 +160,7 @@ const onFileModalConfirm = () => {
 <template>
   <div class="i-upload relative inline-block rounded-md transition-all">
     <a-upload
-      v-bind="{...$attrs,...props}"
+      v-bind="props"
       v-model:file-list="fileList"
       :custom-request="customRequest"
       :before-upload="beforeUpload"
@@ -165,7 +168,7 @@ const onFileModalConfirm = () => {
       @preview="handleUploadPreview"
     >
       <slot>
-        <template v-if="!maxCount || fileList.length < maxCount">
+        <template v-if="listType==='picture-card' && (!maxCount || fileList.length < maxCount)">
           <div class="select-text" @click.stop="openFileModal">选择</div>
           <div class="h-[100%] flex flex-col justify-center items-center">
             <loading-outlined v-if="isUploadLoading" class="i-upload-icon"/>
@@ -175,6 +178,13 @@ const onFileModalConfirm = () => {
             </div>
           </div>
         </template>
+        <a-button
+          v-else-if="listType==='text'"
+          type="primary"
+          :loading="isUploadLoading"
+        >
+          {{ placeholder }}
+        </a-button>
       </slot>
     </a-upload>
   </div>

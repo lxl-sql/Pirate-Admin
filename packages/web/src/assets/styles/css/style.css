@@ -362,6 +362,7 @@ button.drag-row-item {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+  word-break: break-all;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--ellipsis-clamp);
 }

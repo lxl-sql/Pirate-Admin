@@ -11,13 +11,13 @@ const router = useRouter();
 const open = ref(false); // 个人资料
 
 // 注销
-const onLogout = () => {
+const handleLogout = () => {
   open.value = false;
   const lang = localStorage.getItem("lang") || "zh";
   localStorage.clear();
   localStorage.setItem("lang", lang);
   router.push("/admin/login");
-  console.log("onLogout");
+  console.log("handleLogout");
 };
 
 defineOptions({
@@ -34,8 +34,8 @@ defineOptions({
     <template #content>
       <div class="admin-info-base">
         <a-avatar :size="70" :src="adminStore.rawUserInfo.avatar" class="mb-4 avatar-turn">
-          <template #icon v-if="!adminStore.rawUserInfo.avatar">
-            <user-outlined style="font-size: 70px"/>
+          <template #icon>
+            <user-outlined class="text-[60px] translate-y-3"/>
           </template>
         </a-avatar>
         <div class="mb-4  admin-info-other">
@@ -47,7 +47,7 @@ defineOptions({
         <a-button class="mr-1.5" type="primary" ghost @click="open = false">
           <router-link to="/routine/info">个人资料</router-link>
         </a-button>
-        <a-button class="ml-1.5" type="primary" danger ghost @click="onLogout">
+        <a-button class="ml-1.5" type="primary" danger ghost @click="handleLogout">
           <template #icon>
             <poweroff-outlined/>
           </template>

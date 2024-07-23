@@ -8,7 +8,7 @@ import {storeToRefs} from "pinia";
 import {Rules} from "@/types/form";
 import {adminUpsert} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
-import BindEmailOrPhoneModal from "./components/BindEmailOrPhoneModal/index.vue";
+import BindInfoModal from "./components/BindInfoModal/index.vue";
 import {CaptchaType} from "@/types/request";
 import {setTimeoutPromise} from "@/utils/common";
 
@@ -18,7 +18,7 @@ const store = useAdminStore();
 const {formState} = storeToRefs(store);
 
 const formRef = ref<FormInstance>();
-const bindEmailOrPhoneModalRef = ref()
+const bindInfoModalRef = ref()
 
 // 校验规则
 const rules = reactive<Rules>({
@@ -59,8 +59,8 @@ const handleUploadSuccess = (file) => {
   formState.value.avatarPath = file.path
 }
 
-const openBindEmailOrPhoneModal = (type: CaptchaType) => {
-  bindEmailOrPhoneModalRef.value.init(type)
+const openBindInfoModal = (type: CaptchaType) => {
+  bindInfoModalRef.value.init(type)
 }
 </script>
 
@@ -120,7 +120,7 @@ const openBindEmailOrPhoneModal = (type: CaptchaType) => {
             disabled
           >
             <template #enterButton>
-              <a-button @click="openBindEmailOrPhoneModal('email')">
+              <a-button @click="openBindInfoModal('email')">
                 <edit-outlined/>
               </a-button>
             </template>
@@ -133,7 +133,7 @@ const openBindEmailOrPhoneModal = (type: CaptchaType) => {
             disabled
           >
             <template #enterButton>
-              <a-button @click="openBindEmailOrPhoneModal('phone')">
+              <a-button @click="openBindInfoModal('phone')">
                 <edit-outlined/>
               </a-button>
             </template>
@@ -164,8 +164,8 @@ const openBindEmailOrPhoneModal = (type: CaptchaType) => {
     </div>
   </div>
 
-  <bind-email-or-phone-modal
-    ref="bindEmailOrPhoneModalRef"
+  <bind-info-modal
+    ref="bindInfoModalRef"
     @confirm="refreshInfo"
   />
 </template>

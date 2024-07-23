@@ -5,6 +5,7 @@ import {cloneDeep, isArray, keys, round, values} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
 import {DateRangeTuple, RuleType} from "@/types/form";
 import {RuleObject} from "ant-design-vue/es/form";
+import {useFetch} from "@vueuse/core";
 
 export const getTimeState = () => {
   // 获取当前时间
@@ -502,4 +503,32 @@ export function getRules<T>(types?: RuleType[], label?: string) {
   });
 
   return rules
+}
+
+/**
+ * Downloads a file from the given URL and saves it with the specified filename.
+ * @param {string} [fileUrl] - The URL of the file to download.
+ * @param {string} [filename='text.txt'] - The name to save the downloaded file as.
+ * @returns {Promise<void>} A promise that resolves when the file is downloaded.
+ */
+export async function downloadFile(fileUrl?: string, filename = 'test.txt'): Promise<void> {
+  if (!fileUrl) {
+    throw new Error('fileUrl is not defined')
+  }
+  const {data, execute} = useFetch(fileUrl, {immediate: false}).blob();
+  try {
+    await execute()
+    if (data.value) {
+      const url = window.URL.createObjectURL(data.value);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename; // 你想要的文件名
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url); // 释放 URL 对象
+    }
+  } catch (error) {
+    console.error('Failed to download file:', error);
+  }
 }

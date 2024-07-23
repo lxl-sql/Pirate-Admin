@@ -1,9 +1,10 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
-import {provide} from "vue";
+import {provide, ref} from "vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {getFileList, removeFile} from "@/api/routine/files";
-import {formatFileSize} from "@/utils/common";
+import {formatFileSize, setTimeoutPromise} from "@/utils/common";
+import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons-vue'
 
 const tableSettings = new TableSettings({
   api: {
@@ -107,10 +108,41 @@ const tableSettings = new TableSettings({
 })
 
 provide(tableSettingKey, tableSettings)
+
+const layout = ref('default')
+
+const onUploadSuccess = async () => {
+  await setTimeoutPromise(100)
+  await tableSettings.queryAll()
+}
 </script>
 
 <template>
   <custom-table>
+    <template #afterActionRefresh>
+      <i-upload
+        :show-upload-list="false"
+        list-type="text"
+        placeholder="点击上传"
+        @success="onUploadSuccess"
+      />
+    </template>
+    <template #afterLeftAction>
+      <a-radio-group v-model:value="layout">
+        <a-radio-button value="default">
+          <bars-outlined/>
+        </a-radio-button>
+        <a-radio-button value="thumbnailGrid">
+          <appstore-outlined/>
+        </a-radio-button>
+      </a-radio-group>
+    </template>
+
+    <template #table="score">
+      <div v-if="layout === 'thumbnailGrid'">
+        <preview-file-group @pages-change="tableSettings?.pagesChange" v-bind="score"/>
+      </div>
+    </template>
     <template #usertype="{value}">
       <processing-tag :value="value === 1 ? '管理员' : '普通用户'"/>
     </template>
@@ -118,7 +150,7 @@ provide(tableSettingKey, tableSettings)
       {{ formatFileSize(value) }}
     </template>
     <template #url="{value}">
-      <a-image :src="value" class="max-h-[100px]"/>
+      <a-image :src="value" class="max-h-[60px]"/>
     </template>
   </custom-table>
 </template>

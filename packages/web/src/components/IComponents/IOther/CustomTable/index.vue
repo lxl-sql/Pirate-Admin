@@ -47,6 +47,7 @@ defineOptions({
       @pages-change="tableSettings?.pagesChange"
     >
       <template #leftActions>
+        <slot name="beforeLeftAction"></slot>
         <i-tooltip
           v-if="operations.includes('refresh')"
           :title="$t('title.refresh')"
@@ -57,6 +58,7 @@ defineOptions({
             <reload-outlined :spin="tableSettings.table.loading"/>
           </template>
         </i-tooltip>
+        <slot name="afterActionRefresh"></slot>
         <i-tooltip
           v-if="operations.includes('create')"
           :title="$t('title.create')"
@@ -84,6 +86,7 @@ defineOptions({
           v-model:expand="table.defaultExpandAllRows"
           :disabled="!expandAllRowsDisabled"
         />
+        <slot name="afterLeftAction"></slot>
       </template>
       <template #bodyCell="score">
         <slot v-if="score.column.dataIndex === 'number'" name="number" v-bind="score">
@@ -132,12 +135,16 @@ defineOptions({
             >
               <delete-popconfirm
                 size="small"
+                placement="leftTop"
                 @confirm="tableSettings?.deleteByIds('row-delete', [score.record.id])"
               />
             </i-tooltip>
           </a-space>
         </slot>
         <slot v-else :name="score.column.dataIndex" v-bind="score"></slot>
+      </template>
+      <template #table="scope">
+        <slot name="table" v-bind="scope"></slot>
       </template>
     </i-table>
 

@@ -133,6 +133,9 @@ export class FilesService {
     const [files, total] = await this.fileRepository.findAndCount(
       findManyOption<File>(page, size, {
         where: condition,
+        order: {
+          updateTime: "DESC"
+        }
       }),
     );
 

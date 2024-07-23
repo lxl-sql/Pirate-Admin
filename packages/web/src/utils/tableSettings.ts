@@ -248,6 +248,7 @@ export default class TableSettings<
   };
 
   public pagesChange = async (pages: IPages) => {
+    console.log(pages)
     this.table.pages = pages;
     await this.queryAll();
   };

@@ -61,9 +61,9 @@ defineOptions({
       @click="store.toggleMenuState"
     >
       <!-- 展开 -->
-      <menu-unfold-outlined v-show="!isSidebarOpen" v-if="!isAsideMenu"/>
+      <menu-unfold-outlined v-show="isSidebarOpen" v-if="!isAsideMenu"/>
       <!-- 收起 -->
-      <menu-fold-outlined v-show="isSidebarOpen"/>
+      <menu-fold-outlined v-show="!isSidebarOpen"/>
     </div>
   </div>
   <div class="i-menu-content">
