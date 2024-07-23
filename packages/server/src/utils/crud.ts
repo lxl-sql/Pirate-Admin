@@ -15,11 +15,17 @@ export async function removePublic<Entity = any, D = IdsDto>(
   body: D,
   key = 'ids',
 ) {
+  const ids = body[key]?.filter(Boolean)
+
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new HttpException('Invalid or empty IDs array.', HttpStatus.BAD_REQUEST);
+  }
+
   try {
     await respository.delete(body[key]);
     return '删除成功';
   } catch (error) {
-    throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
+    throw new HttpException(`删除失败: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 

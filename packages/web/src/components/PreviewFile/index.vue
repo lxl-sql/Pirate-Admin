@@ -1,6 +1,6 @@
 <!-- 预览文件项 -->
 <script setup lang="ts">
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {
   DeleteOutlined,
   DownloadOutlined,
@@ -41,6 +41,9 @@ const props = withDefaults(defineProps<PreviewFileItemProps>(), {
 })
 const emits = defineEmits(['download', 'deleteOk', 'deleteCancel'])
 
+// 预览图片
+const imageVisible = ref<boolean>(false);
+
 //# region Methods
 /**
  * 判断 showUploadList 是 `boolean` 还是 `ShowUploadList`
@@ -52,6 +55,14 @@ const typeOfUploadList = (name: keyof ShowUploadListInterface): boolean => {
 }
 
 const handlePreview = () => {
+  const _suffix = suffix.value
+  if (regData.image.test(_suffix)) {
+    imageVisible.value = true
+  }
+}
+
+const setImageVisibleChange = (value: boolean) => {
+  imageVisible.value = value;
 }
 
 const handleDownload = () => {
@@ -87,6 +98,16 @@ const bgData = {
   forestGreen: '#107C41'
 }
 
+const regData = {
+  image: /(p?jpe?g?|jfif|a?png|webp|gif|bmp|svg|avif|ico|cur)$/i,
+  doc: /(docx?)$/i,
+  zip: /(rar|zip|gz)$/i,
+  pdf: /(pdf)$/i,
+  ppt: /(pptx?)$/i,
+  yml: /(ya?ml)$/i,
+  xls: /(xlsx?)$/i
+}
+
 const suffix = computed<string>(() => {
   return props.name?.split('.').at(-1) || ''
 })
@@ -96,25 +117,25 @@ const name = computed<string>(() => {
 
 const tagBg = computed(() => {
   const _suffix = suffix.value
-  if (/(docx?)$/i.test(_suffix)) {
-    return bgData.skyBlue
-  }
-  if (/(jpe?g|webp|png|gif)$/i.test(_suffix)) {
+  if (regData.image.test(_suffix)) {
     return bgData.freshGreen
   }
-  if (/(rar|zip|gz)$/i.test(_suffix)) {
+  if (regData.doc.test(_suffix)) {
+    return bgData.skyBlue
+  }
+  if (regData.zip.test(_suffix)) {
     return bgData.sunsetOrange
   }
-  if (/(pdf)$/i.test(_suffix)) {
+  if (regData.pdf.test(_suffix)) {
     return bgData.deepRed
   }
-  if (/(pptx?)$/i.test(_suffix)) {
+  if (regData.ppt.test(_suffix)) {
     return bgData.alertRed
   }
-  if (/(ya?ml)$/i.test(_suffix)) {
+  if (regData.yml.test(_suffix)) {
     return bgData.lavenderPurple
   }
-  if (/(xlsx?)$/i.test(_suffix)) {
+  if (regData.xls.test(_suffix)) {
     return bgData.forestGreen
   }
   return bgData.neutralGray
@@ -155,25 +176,25 @@ defineOptions({
       {{ suffix }}
     </span>
     <img
-      v-if="/(jpe?g|webp|png|gif)$/gi.test(suffix)"
+      v-if="regData.image.test(suffix)"
       :src="url"
       :alt="name"
       class="text-xs w-full h-full select-none"
     />
     <template v-else>
       <div class="absolute top-0 right-0 pt-2 pb-3 px-2 rounded-bl-[8px] text-6xl text-white bg-black/5">
-        <file-word-outlined v-if="/docx?/i.test(suffix)"/>
+        <file-word-outlined v-if="regData.doc.test(suffix)"/>
+        <file-pdf-outlined v-else-if="regData.pdf.test(suffix)"/>
+        <file-ppt-outlined v-else-if="regData.ppt.test(suffix)"/>
+        <file-zip-outlined v-else-if="regData.zip.test(suffix)"/>
+        <file-exclamation-outlined v-else-if="regData.yml.test(suffix)"/>
+        <file-excel-outlined v-else-if="regData.xls.test(suffix)"/>
         <file-jpg-outlined v-else-if="/jpe?g/i.test(suffix)"/>
         <file-image-outlined v-else-if="/png|webp/i.test(suffix)"/>
         <file-gif-outlined v-else-if="/gif/i.test(suffix)"/>
-        <file-pdf-outlined v-else-if="/pdf/i.test(suffix)"/>
         <file-markdown-outlined v-else-if="/md|markdown/i.test(suffix)"/>
-        <file-ppt-outlined v-else-if="/pptx?/i.test(suffix)"/>
         <file-text-outlined v-else-if="/te?xt/i.test(suffix)"/>
-        <file-zip-outlined v-else-if="/zip|gz|rar/i.test(suffix)"/>
         <file-exclamation-outlined v-else-if="/json/i.test(suffix)"/>
-        <file-exclamation-outlined v-else-if="/(ya?ml)$/i.test(suffix)"/>
-        <file-excel-outlined v-else-if="/(xlsx?)$/i.test(suffix)"/>
         <file-unknown-outlined v-else/>
       </div>
       <div class="text-xs leading-[16px] px-2 h-10 mt-auto">
@@ -182,6 +203,16 @@ defineOptions({
         </div>
       </div>
     </template>
+
+    <a-image
+      v-if="regData.image.test(suffix)"
+      class="hidden"
+      :preview="{
+        visible: imageVisible,
+        onVisibleChange: setImageVisibleChange,
+      }"
+      :src="url"
+    />
   </div>
 </template>
 

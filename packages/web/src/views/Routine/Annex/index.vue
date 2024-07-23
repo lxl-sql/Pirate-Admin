@@ -115,6 +115,7 @@ const onUploadSuccess = async () => {
   await setTimeoutPromise(100)
   await tableSettings.queryAll()
 }
+
 </script>
 
 <template>
@@ -140,7 +141,11 @@ const onUploadSuccess = async () => {
 
     <template #table="score">
       <div v-if="layout === 'thumbnailGrid'">
-        <preview-file-group @pages-change="tableSettings?.pagesChange" v-bind="score"/>
+        <preview-file-group
+          v-bind="score"
+          @pages-change="tableSettings?.pagesChange"
+          @delete-ok="item => tableSettings?.deleteByIds('row-delete',[item[score.rowKey]])"
+        />
       </div>
     </template>
     <template #usertype="{value}">

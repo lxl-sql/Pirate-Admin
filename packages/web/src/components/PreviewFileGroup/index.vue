@@ -19,7 +19,7 @@ const props = withDefaults(defineProps<PreviewFileProps>(), {
   rowKey: 'id',
   dataSource: () => [],
 })
-const emits = defineEmits(['pagesChange'])
+const emits = defineEmits(['pagesChange', 'deleteOk', 'deleteCancel'])
 
 /**
  * 分页
@@ -43,7 +43,13 @@ defineOptions({
 <template>
   <div class="preview-file-group">
     <div class="flex flex-wrap">
-      <preview-file v-for="item in dataSource" :key="item[rowKey]" v-bind="item"/>
+      <preview-file
+        v-for="item in dataSource"
+        :key="item[rowKey]"
+        v-bind="item"
+        @delete-ok="() => emits('deleteOk',item)"
+        @delete-cancel="() => emits('deleteCancel',item)"
+      />
     </div>
     <a-pagination
       size="small"
