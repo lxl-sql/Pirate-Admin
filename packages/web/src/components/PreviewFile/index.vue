@@ -1,6 +1,6 @@
 <!-- 预览文件项 -->
 <script setup lang="ts">
-import {computed, ref} from "vue";
+import {computed, ref, shallowRef} from "vue";
 import {
   DeleteOutlined,
   DownloadOutlined,
@@ -17,15 +17,26 @@ import {
   FileUnknownOutlined,
   FileWordOutlined,
   FileZipOutlined,
+  PauseCircleOutlined,
+  PlayCircleOutlined
 } from '@ant-design/icons-vue'
 import {Modal} from "ant-design-vue";
 import {downloadFile} from "@/utils/common";
 import {ShowUploadListInterface} from "ant-design-vue/es/upload/interface";
+import FileViewModal from "@/components/IComponents/IModal/components/FileViewModal/index.vue";
+import {useMediaPlay} from '@/hooks/useMediaPlay'
+import {openWindow} from "@/utils/dom";
+import FileMusicOutlined from "@/components/IComponents/IIcon/FileMusicOutlined/index.vue";
 
 interface PreviewFileItemProps {
   name?: string;
   url?: string;
   rowKey?: string;
+  /**
+   * normal 正常模式
+   * thumbnail 缩略图模式
+   */
+  fileType?: 'thumbnail' | 'normal'
   /**
    * 是否展示 uploadList, 可设为一个对象，用于单独设定 showPreviewIcon, showRemoveIcon 和 showDownloadIcon
    */
@@ -37,12 +48,18 @@ interface PreviewFileItemProps {
 }
 
 const props = withDefaults(defineProps<PreviewFileItemProps>(), {
-  showUploadList: true
+  showUploadList: () => ({
+    showPreviewIcon: true,
+  }),
+  fileType: 'normal'
 })
 const emits = defineEmits(['download', 'deleteOk', 'deleteCancel'])
 
+const {mediaRef, isPlaying, toggleMediaStatus} = useMediaPlay();
+
+const fileViewModalRef = ref()
 // 预览图片
-const imageVisible = ref<boolean>(false);
+const imageVisible = shallowRef<boolean>(false);
 
 //# region Methods
 /**
@@ -58,6 +75,10 @@ const handlePreview = () => {
   const _suffix = suffix.value
   if (regData.image.test(_suffix)) {
     imageVisible.value = true
+  } else if (['doc', 'ppt', 'md', 'pdf', 'xls', 'yml', 'zip', 'txt', 'otherAudio', 'xmind'].some(key => regData[key].test(_suffix))) {
+    fileViewModalRef.value.init(props.url)
+  } else {
+    openWindow(props.url)
   }
 }
 
@@ -95,9 +116,10 @@ const bgData = {
   deepRed: '#8f3500',
   alertRed: '#f56c6c',
   lavenderPurple: '#9068B0',
-  forestGreen: '#107C41'
+  forestGreen: '#107C41',
+  softPurple: '#826aec',
+  tomatoRed: '#DE4A23'
 }
-
 const regData = {
   image: /(p?jpe?g?|jfif|a?png|webp|gif|bmp|svg|avif|ico|cur)$/i,
   doc: /(docx?)$/i,
@@ -105,8 +127,27 @@ const regData = {
   pdf: /(pdf)$/i,
   ppt: /(pptx?)$/i,
   yml: /(ya?ml)$/i,
-  xls: /(xlsx?)$/i
+  xls: /(xlsx?)$/i,
+  md: /(md|markdown)$/i,
+  txt: /(te?xt)$/i,
+  audio: /(mp3)$/i,
+  video: /(mp4)$/i,
+  otherAudio: /(wav|flv)$/i,
+  xmind: /(xmind)$/i,
 }
+// 颜色对应
+const suffixToBgColorMap = {
+  image: bgData.freshGreen,
+  doc: bgData.skyBlue,
+  zip: bgData.sunsetOrange,
+  pdf: bgData.deepRed,
+  ppt: bgData.alertRed,
+  yml: bgData.lavenderPurple,
+  xls: bgData.forestGreen,
+  audio: bgData.softPurple,
+  video: bgData.softPurple,
+  xmind: bgData.tomatoRed
+};
 
 const suffix = computed<string>(() => {
   return props.name?.split('.').at(-1) || ''
@@ -114,33 +155,15 @@ const suffix = computed<string>(() => {
 const name = computed<string>(() => {
   return props.name?.replace(/(.*\/)*([^.]+).*/ig, "$2") || '';
 })
-
 const tagBg = computed(() => {
-  const _suffix = suffix.value
-  if (regData.image.test(_suffix)) {
-    return bgData.freshGreen
+  const _suffix = suffix.value;
+  for (const [key, color] of Object.entries(suffixToBgColorMap)) {
+    if (regData[key].test(_suffix)) {
+      return color;
+    }
   }
-  if (regData.doc.test(_suffix)) {
-    return bgData.skyBlue
-  }
-  if (regData.zip.test(_suffix)) {
-    return bgData.sunsetOrange
-  }
-  if (regData.pdf.test(_suffix)) {
-    return bgData.deepRed
-  }
-  if (regData.ppt.test(_suffix)) {
-    return bgData.alertRed
-  }
-  if (regData.yml.test(_suffix)) {
-    return bgData.lavenderPurple
-  }
-  if (regData.xls.test(_suffix)) {
-    return bgData.forestGreen
-  }
-  return bgData.neutralGray
+  return bgData.neutralGray;
 })
-
 //# endregion
 
 defineOptions({
@@ -149,12 +172,27 @@ defineOptions({
 </script>
 
 <template>
-  <div class="group preview-file-item relative">
-    <!--    group-hover:opacity-100 opacity-0-->
+  <div
+    class="group preview-file relative z-1"
+    :class="[`preview-file-${fileType}`, $attrs.class]"
+    :style="$attrs.style"
+  >
     <div class="group-hover:opacity-100 opacity-0 mark-full transition-opacity duration-200 cursor-pointer text-white">
       <div v-if="showUploadList" class="absolute-center text-xl w-4/5 text-center">
+        <template v-if="/mp3|mp4/i.test(suffix)">
+          <pause-circle-outlined
+            v-if="isPlaying"
+            class="hover-icon"
+            @click="toggleMediaStatus ('pause')"
+          />
+          <play-circle-outlined
+            v-else
+            class="hover-icon"
+            @click="toggleMediaStatus ('play')"
+          />
+        </template>
         <eye-outlined
-          v-if="typeOfUploadList('showPreviewIcon')"
+          v-if="typeOfUploadList('showPreviewIcon') && !/mp3|mp4/i.test(suffix)"
           class="hover-icon"
           @click="handlePreview"
         />
@@ -171,7 +209,7 @@ defineOptions({
       </div>
     </div>
     <span
-      class="preview-file-item__tag absolute top-1.5 left-1.5 px-1 py-0.5 rounded-[2px]"
+      class="preview-file__tag ellipsis absolute z-1 top-1.5 left-1.5 px-1 py-0.5 rounded-[2px]"
     >
       {{ suffix }}
     </span>
@@ -179,16 +217,28 @@ defineOptions({
       v-if="regData.image.test(suffix)"
       :src="url"
       :alt="name"
-      class="text-xs w-full h-full select-none"
+      class="text-xs select-none image-auto-center"
     />
+    <video
+      v-else-if="regData.video.test(suffix)"
+      ref="mediaRef"
+      :src="url"
+      class="text-xs select-none image-auto-center"
+    >
+      {{ $t('other.Your browser does not support playing this video!') }}
+    </video>
     <template v-else>
-      <div class="absolute top-0 right-0 pt-2 pb-3 px-2 rounded-bl-[8px] text-6xl text-white bg-black/5">
+      <div
+        class="absolute -z-1 top-0 right-0 pt-2 pb-3 px-2 rounded-bl-[8px] text-6xl text-white bg-black/5 preview-file-other"
+      >
         <file-word-outlined v-if="regData.doc.test(suffix)"/>
         <file-pdf-outlined v-else-if="regData.pdf.test(suffix)"/>
         <file-ppt-outlined v-else-if="regData.ppt.test(suffix)"/>
         <file-zip-outlined v-else-if="regData.zip.test(suffix)"/>
         <file-exclamation-outlined v-else-if="regData.yml.test(suffix)"/>
         <file-excel-outlined v-else-if="regData.xls.test(suffix)"/>
+        <file-music-outlined v-else-if="regData.audio.test(suffix)"/>
+        <file-xmind-outlined v-else-if="regData.xmind.test(suffix)"/>
         <file-jpg-outlined v-else-if="/jpe?g/i.test(suffix)"/>
         <file-image-outlined v-else-if="/png|webp/i.test(suffix)"/>
         <file-gif-outlined v-else-if="/gif/i.test(suffix)"/>
@@ -197,12 +247,23 @@ defineOptions({
         <file-exclamation-outlined v-else-if="/json/i.test(suffix)"/>
         <file-unknown-outlined v-else/>
       </div>
-      <div class="text-xs leading-[16px] px-2 h-10 mt-auto">
+      <div
+        v-if="['normal'].includes(fileType)"
+        class="text-xs leading-[16px] px-2 h-10 mt-auto"
+      >
         <div class="ellipsis_more">
           {{ name }}
         </div>
       </div>
     </template>
+    <audio
+      v-if="regData.audio.test(suffix)"
+      ref="mediaRef"
+      :src="url"
+      class="text-xs select-none image-auto-center"
+    >
+      {{ $t('other.Your browser does not support playing this audio!') }}
+    </audio>
 
     <a-image
       v-if="regData.image.test(suffix)"
@@ -213,6 +274,8 @@ defineOptions({
       }"
       :src="url"
     />
+
+    <file-view-modal ref="fileViewModalRef"/>
   </div>
 </template>
 

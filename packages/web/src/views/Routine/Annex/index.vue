@@ -5,6 +5,25 @@ import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {getFileList, removeFile} from "@/api/routine/files";
 import {formatFileSize, setTimeoutPromise} from "@/utils/common";
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons-vue'
+import {useDragAndDropUpload} from '@/hooks/useDragAndDropUpload'
+
+/**
+ * 处理文件上传的回调函数
+ * @param {FileList} files - 上传的文件列表
+ */
+const handleUpload = (files: FileList) => {
+  // 处理文件上传逻辑
+  console.log(files);
+};
+
+/**
+ * 上传进度回调函数
+ * @param {ProgressEvent} progressEvent - 上传进度事件
+ */
+const handleUploadProgress = (progressEvent: ProgressEvent) => {
+  console.log(`Upload progress: ${progressEvent.percent}%`);
+};
+
 
 const tableSettings = new TableSettings({
   api: {
@@ -15,7 +34,7 @@ const tableSettings = new TableSettings({
     operations: ['refresh', 'delete', 'row-delete'],
     columns: [
       {
-        title: "序号",
+        title: "#",
         dataIndex: "number",
         align: "center",
         width: 80,
@@ -25,7 +44,7 @@ const tableSettings = new TableSettings({
         dataIndex: "name",
         align: "center",
         ellipsis: true,
-        width: 100,
+        width: 120,
         search: true,
       },
       {
@@ -63,7 +82,7 @@ const tableSettings = new TableSettings({
         title: "文件类型",
         dataIndex: "mimetype",
         align: "center",
-        width: 100,
+        width: 120,
         search: true
       },
       {
@@ -116,47 +135,54 @@ const onUploadSuccess = async () => {
   await tableSettings.queryAll()
 }
 
+const {dropZoneRef, isDragging} = useDragAndDropUpload({
+  onProgress: handleUploadProgress,
+  onSuccess: onUploadSuccess,
+});
+
 </script>
 
 <template>
-  <custom-table>
-    <template #afterActionRefresh>
-      <i-upload
-        :show-upload-list="false"
-        list-type="text"
-        placeholder="点击上传"
-        @success="onUploadSuccess"
-      />
-    </template>
-    <template #afterLeftAction>
-      <a-radio-group v-model:value="layout">
-        <a-radio-button value="default">
-          <bars-outlined/>
-        </a-radio-button>
-        <a-radio-button value="thumbnailGrid">
-          <appstore-outlined/>
-        </a-radio-button>
-      </a-radio-group>
-    </template>
-
-    <template #table="score">
-      <div v-if="layout === 'thumbnailGrid'">
-        <preview-file-group
-          v-bind="score"
-          @pages-change="tableSettings?.pagesChange"
-          @delete-ok="item => tableSettings?.deleteByIds('row-delete',[item[score.rowKey]])"
+  <div class="min-h-full" ref="dropZoneRef">
+    <custom-table>
+      <template #afterActionRefresh>
+        <i-upload
+          :show-upload-list="false"
+          list-type="text"
+          :placeholder="$t('title.Click Upload')"
+          @success="onUploadSuccess"
         />
-      </div>
-    </template>
-    <template #usertype="{value}">
-      <processing-tag :value="value === 1 ? '管理员' : '普通用户'"/>
-    </template>
-    <template #size="{value}">
-      {{ formatFileSize(value) }}
-    </template>
-    <template #url="{value}">
-      <a-image :src="value" class="max-h-[60px]"/>
-    </template>
-  </custom-table>
+      </template>
+      <template #afterLeftAction>
+        <a-radio-group v-model:value="layout">
+          <a-radio-button value="default">
+            <bars-outlined/>
+          </a-radio-button>
+          <a-radio-button value="thumbnailGrid">
+            <appstore-outlined/>
+          </a-radio-button>
+        </a-radio-group>
+      </template>
+
+      <template #table="score">
+        <div v-if="layout === 'thumbnailGrid'">
+          <preview-file-group
+            v-bind="score"
+            @pages-change="tableSettings?.pagesChange"
+            @delete-ok="item => tableSettings?.deleteByIds('row-delete',[item[score.rowKey]])"
+          />
+        </div>
+      </template>
+      <template #usertype="{value}">
+        <processing-tag :value="value === 1 ? '管理员' : '普通用户'"/>
+      </template>
+      <template #size="{value}">
+        {{ formatFileSize(value) }}
+      </template>
+      <template #url="{value,record}">
+        <preview-file file-type="thumbnail" :name="record.name" :url="value"/>
+      </template>
+    </custom-table>
+  </div>
 </template>
 

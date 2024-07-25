@@ -68,7 +68,9 @@
     "remove_selected_row": "删除选中行",
     "loading": "加载中...",
     "cancel": "取消",
-    "confirm": "确定"
+    "confirm": "确定",
+    "preview": "预览",
+    "Click Upload": "点击上传"
   },
   "login": {
     "login": "登 录",
@@ -91,6 +93,10 @@
     "copy": "复制",
     "copied": "已复制",
     "The moving position is beyond the movable range!": "移动位置超出了可移动范围！",
-    "Test email sent successfully!": "测试邮件发送成功！"
+    "Test email sent successfully!": "测试邮件发送成功！",
+    "Click or drag file to this area to upload": "将文件拖到此处，或点击按钮上传",
+    "Your browser does not support playing this video!": "您的浏览器不支持播放该视频！",
+    "Your browser does not support playing this audio!": "您的浏览器不支持播放该音频！",
+    "Open in new tab": "在新的标签页打开"
   }
 }

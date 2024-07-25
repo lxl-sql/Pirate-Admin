@@ -1,13 +1,16 @@
 .i-modal {
   .ant-modal-content {
-    @apply flex flex-col overflow-hidden max-h-65vh;
+    @apply flex flex-col overflow-hidden;
     .ant-modal-header {
       .ant-modal-expand {
         @apply right-14;
       }
     }
     .ant-modal-body {
-      @apply flex-1 overflow-auto;
+      @apply flex-1 overflow-auto max-h-70vh;
+      iframe {
+        height: calc(70vh - 71px);
+      }
     }
   }
 }
@@ -15,9 +18,14 @@
 .full-modal {
   .i-modal {
     @apply max-w-full top-0 pb-0 m-0;
-
     .ant-modal-content {
-      @apply flex flex-col w-screen h-screen max-h-screen;
+      @apply flex flex-col w-screen h-screen;
+      .ant-modal-body {
+        @apply max-h-screen;
+        iframe {
+          height: calc(100vh - 71px);
+        }
+      }
     }
   }
 }

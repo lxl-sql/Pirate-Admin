@@ -49,9 +49,14 @@ const customRequest = async (originObject: any) => {
   const formData = new FormData();
   formData.append('files', file);
   formData.append('uid', file.uid);
-  onProgress?.({percent: 50});
+  onProgress?.({percent: 0});
   try {
-    const {data} = await upload(formData);
+    const {data} = await upload(formData, {
+      onUploadProgress: (progressEvent) => {
+        const percent = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+        onProgress?.({percent: percent});
+      },
+    });
     onProgress?.({percent: 100});
     const [_data] = data || [];
     const response = {

@@ -72,7 +72,9 @@
     "remove_selected_row": "Remove selected rows",
     "loading": "Loading...",
     "cancel": "Cancel",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "preview": "Preview",
+    "Click Upload": "Click Upload"
   },
   "login": {
     "login": "Login",
@@ -94,6 +96,10 @@
     "copy": "Copy",
     "copied": "Copied",
     "The moving position is beyond the movable range!": "The moving position is beyond the movable range!",
-    "Test email sent successfully!": "Test email sent successfully!"
+    "Test email sent successfully!": "Test email sent successfully!",
+    "Click or drag file to this area to upload": "Click or drag file to this area to upload",
+    "Your browser does not support playing this video!": "Your browser does not support playing this video!",
+    "Your browser does not support playing this audio!": "Your browser does not support playing this audio!",
+    "Open in new tab": "Open in new tab"
   }
 }

@@ -13,7 +13,8 @@ export default {
         1: '1'
       },
       maxHeight: {
-        '65vh': '65vh'
+        '65vh': '65vh',
+        '70vh': '70vh'
       }
     },
     screens: {

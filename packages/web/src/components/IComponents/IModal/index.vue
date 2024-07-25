@@ -10,7 +10,8 @@ const props = withDefaults(defineProps<IModalProps>(), {
   keyboard: true,
   mask: true,
   maskClosable: true,
-  draggable: true
+  draggable: true,
+  getContainer: () => document.body
 });
 
 const emits = defineEmits([
@@ -41,6 +42,11 @@ watch(() => props.open, (open) => {
     props.init?.();
   }
 });
+
+const handleToggleFullScreen = () => {
+  initDrag()
+  fullScreen.value = !fullScreen.value
+}
 
 const initDrag = () => {
   transformX.value = 0;
@@ -113,7 +119,8 @@ const warpClassName = computed(() => {
         :style="{ cursor: draggable ? 'move' : 'auto' }"
       >
         {{ title }}
-        <button class="ant-modal-close ant-modal-expand" @click="fullScreen = !fullScreen">
+        <slot name="headerIcon"></slot>
+        <button class="ant-modal-close ant-modal-expand" @click="handleToggleFullScreen">
           <line-outlined v-if="fullScreen"/>
           <expand-outlined v-else/>
         </button>

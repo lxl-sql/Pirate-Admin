@@ -1,9 +1,10 @@
 import request from "@/utils/request";
 import {DeleteParams} from "@/types/request";
+import {AxiosRequestConfig} from "axios";
 
 // 上传附件
-export const upload = (data: any) => {
-  return request.post("/files/upload", data);
+export const upload = (data: any, options?: AxiosRequestConfig) => {
+  return request.post("/files/upload", data, options);
 };
 
 // 分页获取附件列表

@@ -1,8 +1,20 @@
-.preview-file-item {
-  @apply mr-3 mb-3 flex flex-col w-40 h-40 rounded-[@border-radius] border border-solid overflow-hidden;
+.preview-file {
+  @apply mr-3 mb-3 flex flex-col rounded-[@border-radius] border border-solid overflow-hidden;
+  &.preview-file-normal {
+    @apply w-40 h-40;
+  }
+  &.preview-file-thumbnail {
+    @apply w-20 h-20 my-0 mx-auto;
+    .preview-file__tag {
+      @apply scale-75 top-1 left-0;
+    }
+    .preview-file-other {
+      @apply top-0 left-0 right-0 bottom-0;
+    }
+  }
   background-color: @colorBgLayoutContainer;
   border-color: @border-inline-color;
-  .preview-file-item__tag {
+  .preview-file__tag {
     @apply box-border uppercase text-xs text-white leading-3 select-none bg-[@tagBg];
   }
 }

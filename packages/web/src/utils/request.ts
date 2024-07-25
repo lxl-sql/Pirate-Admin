@@ -207,13 +207,13 @@ class AxiosUtils {
   }
 
   // 封装一个request方法
-  private request(url: string, method: string, data: any = {}, ...args: any[]) {
+  private request(url: string, method: string, data: any = {}, options: AxiosRequestConfig) {
     return this.http({
       url,
       method,
       params: method == "get" ? data : undefined,
       data: method == "post" ? data : undefined,
-      ...args,
+      ...options,
     });
   }
 
@@ -223,8 +223,8 @@ class AxiosUtils {
   }
 
   // 封装post方法
-  public post(url: string, data: any, ...args: any[]) {
-    return this.request(url, "post", data, ...args);
+  public post(url: string, data: any, ...options: AxiosRequestConfig) {
+    return this.request(url, "post", data, ...options);
   }
 }
 
