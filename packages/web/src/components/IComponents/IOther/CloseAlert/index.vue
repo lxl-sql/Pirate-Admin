@@ -6,7 +6,7 @@ import {useTheme} from "@/store/hooks";
 const theme = useTheme() // TODO 勿动
 
 interface CloseAlertProps extends AlertProps {
-  type?: AlertProps['type'] | 'default'
+  type?: "error" | "success" | "warning" | "info" | 'default'
 }
 
 const props = withDefaults(defineProps<CloseAlertProps>(), {

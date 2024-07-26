@@ -207,7 +207,7 @@ const progressMarkOpacityClass = computed(() => {
 
 const countScale = {
   1: 100,
-  2: 85,
+  2: 90,
   3: 75
 }
 const countClass = computed(() => {
@@ -242,7 +242,7 @@ defineExpose({
       <span
         class="absolute top-2 right-2 rounded-full w-5 h-5 leading-5 text-center text-xs bg-[var(--colorPrimary)] overflow-hidden"
       >
-        <span class="block scale-75" :class="countClass">{{ count }}</span>
+        <span class="block" :class="countClass">{{ count }}</span>
       </span>
     </div>
     <div
@@ -265,28 +265,28 @@ defineExpose({
           <pause-circle-outlined
             v-if="isPlaying"
             class="hover-icon"
-            @click="toggleMediaStatus ('pause')"
+            @click.stop="toggleMediaStatus ('pause')"
           />
           <play-circle-outlined
             v-else
             class="hover-icon"
-            @click="toggleMediaStatus ('play')"
+            @click.stop="toggleMediaStatus ('play')"
           />
         </template>
         <eye-outlined
           v-if="typeOfUploadList('showPreviewIcon') && !/mp3|mp4/i.test(suffix)"
           class="hover-icon"
-          @click="handlePreview"
+          @click.stop="handlePreview"
         />
         <download-outlined
           v-if="typeOfUploadList('showDownloadIcon')"
           class="hover-icon"
-          @click="handleDownload"
+          @click.stop="handleDownload"
         />
         <delete-outlined
           v-if="typeOfUploadList('showRemoveIcon')"
           class="hover-icon"
-          @click="handleDelete"
+          @click.stop="handleDelete"
         />
       </div>
     </div>

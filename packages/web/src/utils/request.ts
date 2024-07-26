@@ -207,7 +207,7 @@ class AxiosUtils {
   }
 
   // 封装一个request方法
-  private request(url: string, method: string, data: any = {}, options: AxiosRequestConfig) {
+  private request(url: string, method: string, data: any = {}, options?: AxiosRequestConfig) {
     return this.http({
       url,
       method,

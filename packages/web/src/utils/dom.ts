@@ -50,10 +50,12 @@ export const openWindow = (url: string, windowName: string = '_blank', windowFea
   // If window.open failed, try using a more compatible method
   if (!newWindow) {
     try {
-      newWindow = document.createElement('a');
-      newWindow.href = url;
-      newWindow.target = windowName;
-      newWindow.click();
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.target = windowName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
       newWindow = null; // As we used anchor, reset it to null
     } catch (e) {
       // Fallback to using a popup window with document.write

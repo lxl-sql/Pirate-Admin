@@ -29,17 +29,17 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <a-spin :spinning="loading" :indicator="props.indicator || defaultIndicator">
-    <div v-if="!isFullscreen" class="loading-container">
-      <slot></slot>
-      <a-progress v-if="progress > 0" :percent="progress"/>
-    </div>
-  </a-spin>
-  <div v-if="isFullscreen" class="loading-fullscreen">
-    <a-spin :spinning="loading" :indicator="props.indicator || defaultIndicator">
-      <a-progress v-if="progress > 0" :percent="progress"/>
-    </a-spin>
-  </div>
+  <!--  <a-spin :spinning="loading" :indicator="props.indicator || defaultIndicator">-->
+  <!--    <div v-if="!isFullscreen" class="loading-container">-->
+  <!--      <slot></slot>-->
+  <!--      <a-progress v-if="progress > 0" :percent="progress"/>-->
+  <!--    </div>-->
+  <!--  </a-spin>-->
+  <!--  <div v-if="isFullscreen" class="loading-fullscreen">-->
+  <!--    <a-spin :spinning="loading" :indicator="props.indicator || defaultIndicator">-->
+  <!--      <a-progress v-if="progress > 0" :percent="progress"/>-->
+  <!--    </a-spin>-->
+  <!--  </div>-->
 </template>
 
 <style scoped lang="less">

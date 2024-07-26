@@ -137,7 +137,9 @@ const handlePreviewFileClick = (item) => {
 const getCount = (key: Key) => {
   const index = props.selectedRowKeys?.findIndex(k => k === key)
   if (index !== undefined && index > -1) {
-    return index + 1
+    const count = index + 1
+    if (count > 99) return '99+'
+    return count
   }
   return undefined
 }

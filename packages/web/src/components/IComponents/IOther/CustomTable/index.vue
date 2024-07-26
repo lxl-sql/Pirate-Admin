@@ -38,9 +38,9 @@ defineOptions({
   <div class="box-border p-4">
     <i-table
       v-bind="table"
-      :model="table.queryForm"
+      :model="table?.queryForm"
       :row-selection="rowSelection"
-      :default-span="table.defaultSpan"
+      :default-span="table?.defaultSpan"
       @refresh="tableSettings?.queryAll"
       @query="tableSettings?.queryAll"
       @reset="tableSettings?.queryAll"

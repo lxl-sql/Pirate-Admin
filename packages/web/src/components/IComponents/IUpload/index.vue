@@ -53,7 +53,7 @@ const customRequest = async (originObject: any) => {
   try {
     const {data} = await upload(formData, {
       onUploadProgress: (progressEvent) => {
-        const percent = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
+        const percent = Math.floor((progressEvent.loaded * 100) / (progressEvent.total || 0));
         onProgress?.({percent: percent});
       },
     });
