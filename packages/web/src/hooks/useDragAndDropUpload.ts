@@ -1,19 +1,12 @@
 import {onBeforeUnmount, onMounted, ref, shallowRef} from 'vue';
-import {upload} from "@/api/routine/files";
 
 /**
  * 配置项类型定义
  * @interface UseDragAndDropUploadOptions
- * @property {Function} [customRequest] - 自定义上传函数
- * @property {Function} [onSuccess] - 上传成功回调函数
- * @property {Function} [onError] - 上传失败回调函数
- * @property {Function} [onProgress] - 上传进度回调函数
+ * @property {Function} [onUpload] - 自定义上传函数
  */
 interface UseDragAndDropUploadOptions {
-  customRequest?: (files: FileList) => Promise<void>;
-  onSuccess?: (response: any) => void;
-  onError?: (error: any) => void;
-  onProgress?: (progressEvent: ProgressEvent) => void;
+  onUpload?: (files: FileList) => Promise<void> | void;
 }
 
 /**
@@ -26,10 +19,9 @@ interface UseDragAndDropUploadOptions {
  * - isDragging: 一个布尔值，表示当前是否处于拖拽状态。
  * - uploadLoading: 一个布尔值，表示当前是否处于上传状态。
  */
-export function useDragAndDropUpload(options: UseDragAndDropUploadOptions) {
+export function useDragAndDropUpload(options?: UseDragAndDropUploadOptions) {
   const dropZoneRef = ref<HTMLElement | null>(null);
   const isDragging = shallowRef<boolean>(false);
-  const uploadLoading = shallowRef<boolean>(false);
 
   const handleDragEnter = (event: DragEvent) => {
     event.preventDefault();
@@ -51,36 +43,9 @@ export function useDragAndDropUpload(options: UseDragAndDropUploadOptions) {
 
     if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
       try {
-        await onUpload(event.dataTransfer.files);
+        await options?.onUpload?.(event.dataTransfer.files);
       } finally {
         event.dataTransfer.clearData();
-      }
-    }
-  };
-
-  const onUpload = async (files: FileList) => {
-    if (options.customRequest) {
-      await options.customRequest(files);
-    } else {
-      const formData = new FormData();
-      Array.from(files).forEach((file) => {
-        formData.append('files', file);
-      });
-      uploadLoading.value = true;
-      if (options.onProgress) options.onProgress({percent: 0});
-      try {
-        const {data} = await upload(formData, {
-          onUploadProgress: (progressEvent) => {
-            progressEvent.percent = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-            if (options.onProgress) options.onProgress(progressEvent);
-          },
-        });
-        if (options.onProgress) options.onProgress({percent: 100});
-        if (options.onSuccess) options.onSuccess(data);
-      } catch (error) {
-        if (options.onError) options.onError(error);
-      } finally {
-        uploadLoading.value = false;
       }
     }
   };
@@ -106,6 +71,5 @@ export function useDragAndDropUpload(options: UseDragAndDropUploadOptions) {
   return {
     dropZoneRef,
     isDragging,
-    uploadLoading,
   };
 }

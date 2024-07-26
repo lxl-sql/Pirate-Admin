@@ -378,6 +378,7 @@ defineOptions({
           :data-source="dataSource"
           :row-key="rowKey"
           :pagination="pagination"
+          v-bind="$attrs"
         >
           <a-table
             v-model:expanded-row-keys="expandedRowKeys"

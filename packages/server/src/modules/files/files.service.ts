@@ -1,24 +1,17 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { File } from './entities/files.entity';
-import { Repository } from 'typeorm';
-import { createHash } from 'crypto';
-import { createReadStream, unlinkSync } from 'fs';
-import { Request } from 'express';
-import * as path from 'path';
+import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {File} from './entities/files.entity';
+import {Repository} from 'typeorm';
+import {createHash} from 'crypto';
 import * as fs from 'fs';
-import { QueryFileDto } from './dto/query-file.dto';
-import { ConfigService } from '@nestjs/config';
-import {
-  between,
-  filterFalsyValues,
-  findManyOption,
-  like,
-  pageFormat,
-  requestHost,
-} from '@/utils/tools';
-import { removePublic } from '@/utils/crud';
-import { IdsDto } from '@/dtos/remove.dto';
+import {createReadStream, unlinkSync} from 'fs';
+import {Request} from 'express';
+import * as path from 'path';
+import {QueryFileDto} from './dto/query-file.dto';
+import {ConfigService} from '@nestjs/config';
+import {between, filterFalsyValues, findManyOption, like, pageFormat, requestHost,} from '@/utils/tools';
+import {removePublic} from '@/utils/crud';
+import {IdsDto} from '@/dtos/remove.dto';
 
 @Injectable()
 export class FilesService {
@@ -35,7 +28,7 @@ export class FilesService {
    * @returns
    */
   public async upload(files: Array<Express.Multer.File>, request: Request) {
-    console.log('files', files);
+    // console.log('files', files);
     if (!files) {
       throw new HttpException('文件上传失败', HttpStatus.BAD_REQUEST);
     }
@@ -60,6 +53,7 @@ export class FilesService {
             mimetype: found_file.mimetype,
             size: found_file.size,
             hash: hash,
+            id: found_file.id,
           };
         }
 
@@ -85,13 +79,13 @@ export class FilesService {
           [this.configService.get('JWT_REFRESH_SIGN_USER')]: 2,
         };
 
-        await this.save({
+        const new_result = await this.save({
           ...result,
           username: request.user.username,
           usertype: usertypeEmun[request.user.sign],
         });
 
-        return result;
+        return Object.assign(new_result, result);
       }),
     );
   }
@@ -105,8 +99,8 @@ export class FilesService {
     try {
       const new_file = this.fileRepository.create(file);
 
-      await this.fileRepository.save(new_file);
-      return '上传成功';
+      return await this.fileRepository.save(new_file);
+      // return '上传成功';
     } catch (e) {
       throw new HttpException('上传失败', HttpStatus.BAD_REQUEST);
     }

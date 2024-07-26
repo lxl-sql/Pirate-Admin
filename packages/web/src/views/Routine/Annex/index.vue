@@ -1,28 +1,17 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
-import {provide, ref} from "vue";
+import {provide, ref, shallowRef} from "vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {getFileList, removeFile} from "@/api/routine/files";
 import {formatFileSize, setTimeoutPromise} from "@/utils/common";
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons-vue'
 import {useDragAndDropUpload} from '@/hooks/useDragAndDropUpload'
+import {useUpload} from "@/hooks/useUpload";
 
-/**
- * 处理文件上传的回调函数
- * @param {FileList} files - 上传的文件列表
- */
-const handleUpload = (files: FileList) => {
-  // 处理文件上传逻辑
-  console.log(files);
-};
+type LayoutType = 'default' | 'thumbnailGrid'
 
-/**
- * 上传进度回调函数
- * @param {ProgressEvent} progressEvent - 上传进度事件
- */
-const handleUploadProgress = (progressEvent: ProgressEvent) => {
-  console.log(`Upload progress: ${progressEvent.percent}%`);
-};
+const previewFileGroupRef = ref()
+const layout = shallowRef<LayoutType>('default')
 
 
 const tableSettings = new TableSettings({
@@ -128,22 +117,40 @@ const tableSettings = new TableSettings({
 
 provide(tableSettingKey, tableSettings)
 
-const layout = ref('default')
-
 const onUploadSuccess = async () => {
-  await setTimeoutPromise(100)
-  await tableSettings.queryAll()
+  if (layout.value === 'thumbnailGrid') {
+    if (tableSettings.table.pages) {
+      // 处理上传成功后的分页
+      tableSettings.table.pages.total++
+    }
+  } else {
+    await setTimeoutPromise(50)
+    await tableSettings.queryAll()
+  }
 }
 
-const {dropZoneRef, isDragging} = useDragAndDropUpload({
-  onProgress: handleUploadProgress,
+const onUploadChange = async (files: FileList) => {
+  if (layout.value === 'thumbnailGrid') {
+    previewFileGroupRef.value.upload(files)
+  } else {
+    onUpload(files)
+  }
+}
+
+const {onUpload} = useUpload({
   onSuccess: onUploadSuccess,
+})
+
+
+const {dropZoneRef} = useDragAndDropUpload({
+  onUpload: onUploadChange
 });
+
 
 </script>
 
 <template>
-  <div class="min-h-full" ref="dropZoneRef">
+  <div class="min-h-full !p-0" ref="dropZoneRef">
     <custom-table>
       <template #afterActionRefresh>
         <i-upload
@@ -167,9 +174,13 @@ const {dropZoneRef, isDragging} = useDragAndDropUpload({
       <template #table="score">
         <div v-if="layout === 'thumbnailGrid'">
           <preview-file-group
+            ref="previewFileGroupRef"
             v-bind="score"
+            v-model:data-source="tableSettings.table.dataSource"
             @pages-change="tableSettings?.pagesChange"
             @delete-ok="item => tableSettings?.deleteByIds('row-delete',[item[score.rowKey]])"
+            @upload-success="onUploadSuccess"
+            @select-change="tableSettings?.selectChange"
           />
         </div>
       </template>
@@ -185,4 +196,3 @@ const {dropZoneRef, isDragging} = useDragAndDropUpload({
     </custom-table>
   </div>
 </template>
-

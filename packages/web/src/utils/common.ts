@@ -532,3 +532,18 @@ export async function downloadFile(fileUrl?: string, filename = 'test.txt'): Pro
     console.error('Failed to download file:', error);
   }
 }
+
+/**
+ * 检查文件后缀是否匹配给定的正则表达式
+ * @param {string} suffix - 文件后缀
+ * @param {Object} fileTypePatterns - 包含正则表达式的对象
+ * @param {Array<string>} keys - 要测试的键列表
+ * @returns {boolean} 如果文件后缀匹配任意一个正则表达式则返回 true，否则返回 false
+ */
+export const isSuffixMatch = (suffix: string, fileTypePatterns: Record<string, RegExp>, keys: string[]) => {
+  return keys.some(key => fileTypePatterns[key]?.test(suffix));
+}
+
+export const base64Encode = (str: string): string => {
+  return btoa(unescape(encodeURIComponent(str)));
+}

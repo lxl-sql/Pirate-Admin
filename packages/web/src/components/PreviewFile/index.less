@@ -1,7 +1,10 @@
 .preview-file {
   @apply mr-3 mb-3 flex flex-col rounded-[@border-radius] border border-solid overflow-hidden;
   &.preview-file-normal {
-    @apply w-40 h-40;
+    @apply w-full h-96 md:w-40 md:h-40;
+    .show-outlined {
+      @apply md:text-xl text-2xl;
+    }
   }
   &.preview-file-thumbnail {
     @apply w-20 h-20 my-0 mx-auto;
@@ -16,5 +19,8 @@
   border-color: @border-inline-color;
   .preview-file__tag {
     @apply box-border uppercase text-xs text-white leading-3 select-none bg-[@tagBg];
+  }
+  :deep(.ant-progress-text) {
+    @apply text-white;
   }
 }
