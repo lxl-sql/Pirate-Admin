@@ -4,7 +4,7 @@ import {Form, notification} from "ant-design-vue";
 import {FormTypeEnum, Rules, RuleTypeEnum} from "@/types/form.d";
 import {merge} from "lodash-es";
 import {useI18n} from "vue-i18n";
-import {ConfigItem} from "@/views/Routine/Config";
+import {ConfigItem} from "@/views/routine/config";
 import {configCreate} from "@/api/config";
 import {enumToOptions} from "@/utils/common";
 
@@ -82,7 +82,7 @@ defineExpose({
   <i-modal
     v-model:open="open"
     title="添加配置项"
-    draggable
+    width="960px"
     :loading="loading"
     :mask-closable="false"
     @cancel="handleCancel"
@@ -135,14 +135,14 @@ defineExpose({
           placeholder="一行一个，无需引号，比如：key1=value1"
         />
       </a-form-item>
-<!--      <a-form-item v-if="formState.type" label="默认值" name="value">-->
-<!--        <a-textarea-->
-<!--          v-model:value="formState.value"-->
-<!--          allow-clear-->
-<!--          rows="3"-->
-<!--          placeholder="基本数据类型填写对应值，比如 true&#13对象数据类型请规范格式，比如 [{example: '示例'}]"-->
-<!--        />-->
-<!--      </a-form-item>-->
+      <!--      <a-form-item v-if="formState.type" label="默认值" name="value">-->
+      <!--        <a-textarea-->
+      <!--          v-model:value="formState.value"-->
+      <!--          allow-clear-->
+      <!--          rows="3"-->
+      <!--          placeholder="基本数据类型填写对应值，比如 true&#13对象数据类型请规范格式，比如 [{example: '示例'}]"-->
+      <!--        />-->
+      <!--      </a-form-item>-->
       <a-form-item label="提示信息" name="tip">
         <a-input
           v-model:value="formState.tip"

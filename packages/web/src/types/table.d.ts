@@ -113,12 +113,12 @@ export type IPagination = PaginationProps;
 /**
  * 默认表格字段
  */
-export interface RecordType {
+export interface RecordType<T = any> {
   id?: number;
   key?: string | number;
   updateTime?: string;
   createTime?: string;
-  children?: RecordType[];
+  children?: RecordType<T>[];
 }
 
 interface I18nPrefix {

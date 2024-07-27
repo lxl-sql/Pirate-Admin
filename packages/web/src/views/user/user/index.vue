@@ -1,42 +1,17 @@
-<!-- 管理员管理 -->
+<!-- 用户列表 -->
 <script setup lang="ts">
-import {provide, ref, watch} from "vue";
-import {adminUpsert, getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
-import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
-import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
+import {UserOutlined} from "@ant-design/icons-vue";
+import {provide} from "vue";
+import {getUserList} from "@/api/user";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {useI18n} from "vue-i18n";
-import {AdminTableSettingsType} from "@/views/Auth/Admin/types";
-import {useRoleStore} from "@/store";
-import {storeToRefs} from "pinia";
-import {UserOutlined} from "@ant-design/icons-vue";
+import {UserFields} from "@/views/user/user/types";
 
-const {t} = useI18n();
+const {t} = useI18n()
 
-const roleStore = useRoleStore()
-const {dataSource: roleOptions} = storeToRefs(roleStore)
-
-const {getRoleListRequest} = roleStore
-
-const avatarPreviewSrc = ref("");
-const isAvatarPreviewSrcOpen = ref<boolean>(false);
-
-const onInit = async () => {
-  await getRoleListRequest();
-};
-// 显示预览图片
-const openAvatarPreviewImage = (src: string) => {
-  if (!src) return;
-  isAvatarPreviewSrcOpen.value = true;
-  avatarPreviewSrc.value = src;
-};
-
-const tableSettings: AdminTableSettingsType = new TableSettings({
+const tableSettings = new TableSettings({
   api: {
-    find: getAdminList,
-    findById: getAdminById,
-    delete: removeAdmin,
-    upsert: adminUpsert,
+    find: getUserList,
   },
   table: {
     operations: ["refresh", "create", "delete", "row-update", "row-delete"],
@@ -69,7 +44,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         type: 'tree-select',
         form: true,
         formValueProp: "roleIds",
-        options: roleOptions,
+        // options: roleOptions,
         formFieldConfig: {
           fieldNames: {label: 'name', value: 'id'},
           multiple: true,
@@ -91,6 +66,12 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         }
       },
       {
+        title: "性别",
+        dataIndex: "gender",
+        align: "center",
+        width: 100
+      },
+      {
         title: "邮箱",
         dataIndex: "email",
         align: "center",
@@ -110,7 +91,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         type: 'input-password',
         hide: true,
         form: true,
-        placeholder(fields: AdminTableSettingsType['form']['fields']) {
+        placeholder(fields: UserFields) {
           return t(fields.id
             ? 'user.placeholder.edit_password'
             : 'user.placeholder.password'
@@ -152,7 +133,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         dataIndex: "operation",
         align: "center",
         fixed: "right",
-        width: 100,
+        width: 60,
       },
     ],
     i18nPrefix: "user",
@@ -181,9 +162,9 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       roleIds: [{required: true, message: t("user.error.roles")}],
     }
   },
-  modal: {
-    init: onInit
-  },
+  // modal: {
+  //   init: onInit
+  // },
   customParams: {
     confirmForm(params: any) {
       const [response] = params.fileList || [];
@@ -197,42 +178,43 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
 });
 
 provide(tableSettingKey, tableSettings);
-
-
-watch(
-  () => tableSettings.form.fields?.id,
-  (id) => {
-    tableSettings.form.rules!.password = [{required: !id, message: t("user.error.password")}]
-  }
-)
 </script>
 
 <template>
   <i-crud>
     <template #roles="{ value }">
-      <processing-tag v-for="text in value" :key="text" :value="text"/>
+      <a-tag v-for="text in value" :key="value" color="processing" class="table-tag">
+        {{ text }}
+      </a-tag>
+    </template>
+    <template #gender="{ value }">
+      <a-tag color="success" class="table-tag">
+        {{ $t(`user.table.enum.gender.${value}`) }}
+      </a-tag>
+    </template>
+    <template #lastLoginIp="{value}">
+      <a-tag v-if="value" color="processing" class="table-tag">
+        {{ value }}
+      </a-tag>
+    </template>
+    <template #status="{ value }">
+      <a-tag
+        :color="value === 1 ? 'success' : 'error'"
+        class="table-tag"
+      >
+        {{ $t(`user.table.enum.status.${value}`) }}
+      </a-tag>
     </template>
     <template #avatar="{ value }">
-      <a-avatar
-        size="large"
-        :src="value"
-        @click="openAvatarPreviewImage(value)"
-      >
+      <a-avatar size="large" :src="value">
         <template #icon>
           <user-outlined/>
         </template>
       </a-avatar>
     </template>
-    <template #lastLoginIp="{ value }">
-      <processing-tag :value="value"/>
-    </template>
-    <template #status="{ value }">
-      <status-tag :value="value"/>
-    </template>
-
-    <i-preview-image
-      v-model:open="isAvatarPreviewSrcOpen"
-      :src="avatarPreviewSrc"
-    />
   </i-crud>
 </template>
+
+<style lang="less" scoped>
+@import "./index.less";
+</style>

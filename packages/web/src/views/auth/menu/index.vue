@@ -8,7 +8,7 @@ import {notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import type {AdminMenuDataSource} from "@/store/auth/menu/types";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
-import {AdminRoleFields, AdminRoleTableSettingsType} from "@/views/Auth/Group/types";
+import {AdminRoleFields, AdminRoleTableSettingsType} from "@/views/auth/group/types";
 import {
   adminMenuSortable,
   adminMenuUpsert,

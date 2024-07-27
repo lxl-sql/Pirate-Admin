@@ -1,7 +1,7 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
 import {SearchOutlined, TableOutlined,} from "@ant-design/icons-vue";
-import {computed, onMounted, ref, toRaw, watch, withDefaults} from "vue";
+import {computed, onMounted, ref, shallowRef, toRaw, watch, withDefaults} from "vue";
 import {IColumns, IPagination, RecordType} from "@/types";
 import {useI18n} from "vue-i18n";
 import {cloneDeep} from "lodash-es";
@@ -10,6 +10,7 @@ import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
 import QueryFormItem from "./components/QueryFormItem/index.vue";
 import useFormInstance from "@/hooks/useFormInstance";
+import {formatUnit} from "@/utils/common";
 
 // 国际化
 const {locale, te, t} = useI18n();
@@ -63,11 +64,10 @@ const columnsCache: any[] = cloneDeep(props.columns).filter(column => !column.hi
 const menuChecked = ref<string[]>([]); // 选中显示隐藏表头
 const menuCheckList = ref<any[]>([]); // 表头的数据列
 const expandedRowKeys = ref<string[]>([]);
-const oldKeyword = ref<string>(""); // 旧的 搜索内容 防止重复调用接口
-const keyword = ref<string>(""); // 搜索
-const operationRadio = ref<OperationRadioType | undefined>();
-const isOpenSearch = ref<boolean>(false); // 展开搜索栏区域
-const menuCheckAll = ref<boolean>(true); // 全选
+const oldKeyword = shallowRef<string>(""); // 旧的 搜索内容 防止重复调用接口
+const keyword = shallowRef<string>(""); // 搜索
+const isOpenSearch = shallowRef<boolean>(false); // 展开搜索栏区域
+const menuCheckAll = shallowRef<boolean>(true); // 全选
 
 onMounted(() => {
   // 修改 columns
@@ -390,6 +390,7 @@ defineOptions({
             :children-column-name="childrenColumnName"
             :size="size"
             :pagination="pagination"
+            :scroll="scroll"
             bordered
             @resize-column="handleResizeColumn"
             @change="handlePageSizeChange"
@@ -397,7 +398,9 @@ defineOptions({
           >
             <template #headerCell="{ column,...resetScope }">
               <slot name="headerCell" :column="column" v-bind="resetScope">
-                {{ getHeaderCellName(column) }}
+                <div :style="{minWidth: formatUnit(column.width)}">
+                  {{ getHeaderCellName(column) }}
+                </div>
               </slot>
             </template>
             <template #bodyCell="score">

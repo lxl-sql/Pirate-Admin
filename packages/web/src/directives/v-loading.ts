@@ -26,8 +26,8 @@ interface LoadingBinding extends DirectiveBinding {
 
 // Extend the HTMLElement interface to include custom properties
 interface LoadingHTMLElement extends HTMLElement {
-  _loadingInstance?: ReturnType<typeof createApp>;
-  _loadingWrapper?: HTMLDivElement;
+  _loadingInstance?: ReturnType<typeof createApp> | null;
+  _loadingWrapper?: HTMLDivElement | null;
 }
 
 // Helper function to extract options from binding.value
@@ -72,7 +72,6 @@ const createLoadingApp = (visible: boolean, restProps: Omit<LoadingOptions, 'vis
           tip: text,
           indicator: icon ? h(icon) : undefined,
         } as any,// Cast as any to avoid type error
-        null
       );
     },
   });
@@ -86,7 +85,7 @@ const vLoading = {
     // 通过解构赋值来获取相关参数
     const {visible, ...restProps} = getLoadingOptions(binding.value)
 
-    const app = createLoadingApp(binding.value?.visible, restProps);
+    const app = createLoadingApp(visible, restProps);
 
     app.mount(spinWrapper);
     el.appendChild(spinWrapper);
@@ -95,6 +94,7 @@ const vLoading = {
     el._loadingWrapper = spinWrapper;
   },
   updated(el: LoadingHTMLElement, binding: LoadingBinding) {
+    if (!el._loadingWrapper || !el._loadingInstance) return
     const spinWrapper = el._loadingWrapper;
     const {visible, ...restProps} = getLoadingOptions(binding.value)
 

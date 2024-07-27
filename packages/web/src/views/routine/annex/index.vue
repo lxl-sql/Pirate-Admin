@@ -7,14 +7,14 @@ import {formatFileSize, setTimeoutPromise} from "@/utils/common";
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons-vue'
 import {useDragAndDropUpload} from '@/hooks/useDragAndDropUpload'
 import {useUpload} from "@/hooks/useUpload";
+import {AnnexTableSettingsType} from "./types";
 
 type LayoutType = 'default' | 'thumbnailGrid'
 
 const previewFileGroupRef = ref()
 const layout = shallowRef<LayoutType>('default')
 
-
-const tableSettings = new TableSettings({
+const tableSettings: AnnexTableSettingsType = new TableSettings({
   api: {
     find: getFileList,
     delete: removeFile
@@ -193,7 +193,7 @@ const {dropZoneRef} = useDragAndDropUpload({
         </div>
       </template>
       <template #usertype="{value}">
-        <processing-tag :value="value === 1 ? '管理员' : '普通用户'"/>
+        <processing-tag :value="$t(`enum.usertype.${value}`)"/>
       </template>
       <template #size="{value}">
         {{ formatFileSize(value) }}

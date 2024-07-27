@@ -3,7 +3,7 @@ import {createRouter, createWebHistory} from "vue-router";
 import {routes} from "./routes";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; // nprogress 样式文件
-import GlobalLoading from "@/views/Common/Loading";
+import GlobalLoading from "@/views/common/loading";
 import http from "@/utils/request";
 
 let timer: null | NodeJS.Timeout;

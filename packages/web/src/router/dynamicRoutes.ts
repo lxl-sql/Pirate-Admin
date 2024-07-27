@@ -1,7 +1,7 @@
 // 动态路由
 import {RouteRecordRaw} from "vue-router";
 
-export const dynamicRouter: Array<RouteRecordRaw> = [
+export const dynamicRouter: RouteRecordRaw[] = [
   {
     path: "/home",
     name: "home",
@@ -10,7 +10,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
       title: "首页",
       showNav: true,
     },
-    component: () => import("@/views/Home/Index/index.vue"),
+    component: () => import("@/views/home/index.vue"),
   },
   {
     path: "/auth",
@@ -29,7 +29,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "角色组管理",
           showNav: true,
         },
-        component: () => import("@/views/Auth/Group/index.vue"),
+        component: () => import("@/views/auth/group/index.vue"),
       },
       {
         path: "/auth/admin",
@@ -39,7 +39,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "管理员管理",
           showNav: true,
         },
-        component: () => import("@/views/Auth/Admin/index.vue"),
+        component: () => import("@/views/auth/admin/index.vue"),
       },
       {
         path: "/auth/menuRules",
@@ -49,7 +49,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "菜单规则管理",
           showNav: true,
         },
-        component: () => import("@/views/Auth/Menu/index.vue"),
+        component: () => import("@/views/auth/menu/index.vue"),
       },
       {
         path: "/auth/adminLog",
@@ -59,13 +59,13 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "管理员日志管理",
           showNav: true,
         },
-        component: () => import("@/views/Auth/AdminLog/index.vue"),
+        component: () => import("@/views/auth/adminLog/index.vue"),
       },
     ],
   },
   {
     path: "/user",
-    redirect: "/user/index",
+    redirect: "/user/user",
     meta: {
       name: "userIndex",
       title: "会员管理",
@@ -73,7 +73,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
     },
     children: [
       {
-        path: "/user/index",
+        path: "/user/user",
         name: "userIndex",
         meta: {
           name: "user_index",
@@ -81,7 +81,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "会员管理",
           showNav: true,
         },
-        component: () => import("@/views/User/Index/index.vue"),
+        component: () => import("@/views/user/user/index.vue"),
       },
       {
         path: "/user/group",
@@ -91,7 +91,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "会员分组管理",
           showNav: true,
         },
-        component: () => import("@/views/User/Group/index.vue"),
+        component: () => import("@/views/user/group/index.vue"),
       },
       {
         path: "/user/rule",
@@ -101,7 +101,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "会员规则管理",
           showNav: true,
         },
-        component: () => import("@/views/User/UserRule/index.vue"),
+        component: () => import("@/views/user/userRule/index.vue"),
       },
       {
         path: "/user/log",
@@ -111,7 +111,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "会员日志管理",
           showNav: true,
         },
-        component: () => import("@/views/User/UserLog/index.vue"),
+        component: () => import("@/views/user/userLog/index.vue"),
       },
     ],
   },
@@ -132,7 +132,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "系统配置",
           showNav: true,
         },
-        component: () => import("@/views/Routine/Config/index.vue"),
+        component: () => import("@/views/routine/config/index.vue"),
       },
       {
         path: "/routine/annex",
@@ -142,7 +142,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "附件管理",
           showNav: true,
         },
-        component: () => import("@/views/Routine/Annex/index.vue"),
+        component: () => import("@/views/routine/annex/index.vue"),
       },
       {
         path: "/routine/info",
@@ -152,7 +152,7 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
           title: "个人资料",
           showNav: true,
         },
-        component: () => import("@/views/Routine/Info/index.vue"),
+        component: () => import("@/views/routine/info/index.vue"),
       },
     ],
   },
@@ -163,6 +163,6 @@ export const dynamicRouter: Array<RouteRecordRaw> = [
       title: "模块市场",
       showNav: true,
     },
-    component: () => import("@/views/Module/Index/index.vue"),
+    component: () => import("@/views/module/index.vue"),
   },
 ];

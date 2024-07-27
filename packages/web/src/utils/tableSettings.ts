@@ -58,6 +58,9 @@ export default class TableSettings<
     },
     queryForm: {} as QueryForm,
     scroll: {x: true},
+    rowSelection: {
+      fixed: true, // 把选择框列固定在左边
+    },
     rowKey: "id",
     dragClassname: '.drag-row-item',
     parentKey: 'parentId',
@@ -148,7 +151,6 @@ export default class TableSettings<
 
   /**
    * 给formRefs赋值
-   * @param isEditing {boolean} 是否编辑
    */
   private initFormRefs = () => {
     this.formRefs = Form.useForm(
@@ -248,7 +250,6 @@ export default class TableSettings<
   };
 
   public pagesChange = async (pages: IPages) => {
-    console.log(pages)
     this.table.pages = pages;
     await this.queryAll();
   };
@@ -408,7 +409,7 @@ export default class TableSettings<
           })
           return
         }
-        console.log('moveRow', moveRow, replaceRow)
+        // console.log('moveRow', moveRow, replaceRow)
         await this.sortable(moveRow.id, replaceRow.id)
         await this.queryAll()
       },

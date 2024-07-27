@@ -7,6 +7,7 @@ import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/use
 import type {RuleError} from "ant-design-vue/lib/form/interface";
 import {FormType, Rules} from "@/types/form";
 import {IModalProps} from "@/components/IComponents/IModal/types";
+import type {TableRowSelection} from "ant-design-vue/es/table/interface";
 
 /**
  * 表示操作按钮或操作类型的枚举。
@@ -134,6 +135,8 @@ export interface TableReactive<
   queryForm?: QueryForm;
   /** 国际化前缀 */
   i18nPrefix?: ITableProps["i18nPrefix"];
+  /** 列表项是否可选择，[配置项](https://next.antdv.com/components/table-cn#rowselection) */
+  rowSelection?: Omit<TableRowSelection<RecordType>, 'selectedRowKeys' | 'onChange'>
   /** 表格行 key 的取值 */
   rowKey?: string;
   /** 表格备注 */

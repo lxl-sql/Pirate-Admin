@@ -23,6 +23,7 @@ const selectedRowKeys = computed(
 const rowSelection = computed(() => ({
   selectedRowKeys: table.value?.selectedRowKeys,
   onChange: tableSettings?.selectChange,
+  ...table.value?.rowSelection,
 }));
 
 /** @param hasTableChild {boolean} 列表数据是否有 children */

@@ -90,6 +90,10 @@
     "status": {
       "0": "Disable",
       "1": "Enable"
+    },
+    "usertype": {
+      "1": "Admin",
+      "2": "User"
     }
   },
   "tip": {

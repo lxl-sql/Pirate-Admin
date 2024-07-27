@@ -13,7 +13,7 @@ export const routes: Array<RouteRecordRaw> = [
       name: "login",
       title: "登录页",
     },
-    component: () => import("@/views/Login/index.vue"),
+    component: () => import("@/views/login/index.vue"),
   },
   {
     path: "/admin/config",
@@ -21,7 +21,7 @@ export const routes: Array<RouteRecordRaw> = [
       name: "config",
       title: "数据库配置",
     },
-    component: () => import("@/views/Config/index.vue"),
+    component: () => import("@/views/config/index.vue"),
   },
   {
     path: "/home",
@@ -37,7 +37,7 @@ export const routes: Array<RouteRecordRaw> = [
     // 404
     path: "/404",
     name: "notFound",
-    component: () => import("@/views/Common/Error/404/404.vue"),
+    component: () => import("@/views/common/error/404/404.vue"),
     meta: {
       name: "notFound",
       title: "404 Not Found", // 页面不存在

@@ -3,8 +3,6 @@
 import {computed, inject} from "vue";
 import {tableSettingKey} from "@/utils/tableSettings";
 import {TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
-import ICrudForm from "@/components/IComponents/ICrud/components/ICrudForm/index.vue";
-import ICrudFormItem from "@/components/IComponents/ICrud/components/ICrudFormItem/index.vue";
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
@@ -93,7 +91,7 @@ defineOptions({
     v-bind="modalProps"
   >
     <slot>
-      <i-crud-form
+      <custom-form
         :name="form.name"
         :columns="formColumns"
         :label-col="{ span: 4 }"
@@ -102,7 +100,7 @@ defineOptions({
         v-bind="form.formConfig"
       >
         <template #col="{column}">
-          <i-crud-form-item
+          <custom-form-item
             :column="column"
             :options="getOptions(column)"
             :i18n-prefix="tableSettings.table.i18nPrefix"
@@ -113,9 +111,9 @@ defineOptions({
             <template #default="scope">
               <slot name="field" v-bind="scope"></slot>
             </template>
-          </i-crud-form-item>
+          </custom-form-item>
         </template>
-      </i-crud-form>
+      </custom-form>
     </slot>
   </i-modal>
 </template>
