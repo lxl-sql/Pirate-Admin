@@ -1,4 +1,4 @@
-<!-- 通用表格 -->
+<!-- CRUD -->
 <script setup lang="ts">
 import {computed, inject} from "vue";
 import {DragOutlined, EditOutlined, PlusOutlined, ReloadOutlined, ZoomInOutlined} from "@ant-design/icons-vue";
@@ -6,6 +6,8 @@ import {sortNumber} from "@/utils/common";
 import {TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
 import ITooltip from "@/components/IComponents/ITooltip/index.vue";
+import ICrudFormModal from "./components/ICrudFormModal/index.vue";
+import ICrudDetailModal from "./components/ICrudDetailModal/index.vue";
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
@@ -30,7 +32,7 @@ const hasTableChild = computed(() => operations.value.includes('expand') && tabl
 const expandAllRowsDisabled = computed(() => operations.value.includes('expand') && table.value?.dataSource?.length && hasTableChild.value)
 
 defineOptions({
-  name: "CustomTable",
+  name: "ICrud",
 });
 </script>
 
@@ -149,21 +151,21 @@ defineOptions({
     </i-table>
 
     <!--  表单自定义 需要带上 form 前缀  -->
-    <custom-form-modal v-if="table?.displayFormModal">
+    <i-crud-form-modal v-if="table?.displayFormModal">
       <template #field="score">
         <template v-if="score.column.formSlot !== false">
           <slot :name="`form-${score.column.dataIndex}`" v-bind="score"/>
         </template>
       </template>
-    </custom-form-modal>
+    </i-crud-form-modal>
 
     <!--  详情自定义 需要带上 detail 前缀  -->
-    <custom-detail-modal v-if="table?.displayDetailModal">
+    <i-crud-detail-modal v-if="table?.displayDetailModal">
       <template #field="score">
         <template v-if="score.column.detailSlot !== false">
           <slot :name="`detail-${score.column.dataIndex}`" v-bind="score"/>
         </template>
       </template>
-    </custom-detail-modal>
+    </i-crud-detail-modal>
   </div>
 </template>

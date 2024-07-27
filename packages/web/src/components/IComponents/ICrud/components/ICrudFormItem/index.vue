@@ -51,7 +51,7 @@ const placeholderProp = computed(() => {
 const typeProp = computed(() => (props.typeProp && column[props.typeProp]) || column.type || 'input');
 
 defineOptions({
-  name: 'CustomFormItem'
+  name: 'ICrudFormItem'
 })
 </script>
 

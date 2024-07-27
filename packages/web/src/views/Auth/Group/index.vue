@@ -160,7 +160,7 @@ provide(tableSettingKey, tableSettings);
 </script>
 
 <template>
-  <custom-table>
+  <i-crud>
     <template #status="{ value }">
       <status-tag :value="value"/>
     </template>
@@ -177,5 +177,5 @@ provide(tableSettingKey, tableSettings);
         :placeholder="placeholder"
       />
     </template>
-  </custom-table>
+  </i-crud>
 </template>

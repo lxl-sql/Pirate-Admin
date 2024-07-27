@@ -208,7 +208,7 @@ watch(
 </script>
 
 <template>
-  <custom-table>
+  <i-crud>
     <template #roles="{ value }">
       <processing-tag v-for="text in value" :key="text" :value="text"/>
     </template>
@@ -234,5 +234,5 @@ watch(
       v-model:open="isAvatarPreviewSrcOpen"
       :src="avatarPreviewSrc"
     />
-  </custom-table>
+  </i-crud>
 </template>

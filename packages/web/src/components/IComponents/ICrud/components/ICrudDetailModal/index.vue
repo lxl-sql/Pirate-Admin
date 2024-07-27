@@ -57,7 +57,7 @@ const getSpan = (column: Columns) => {
 }
 
 defineOptions({
-  name: 'CustomInfoModal'
+  name: 'ICrudDetailModal'
 })
 </script>
 
@@ -87,7 +87,3 @@ defineOptions({
     </a-descriptions>
   </i-modal>
 </template>
-
-<style scoped lang="less">
-
-</style>

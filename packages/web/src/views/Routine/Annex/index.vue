@@ -159,7 +159,7 @@ const {dropZoneRef} = useDragAndDropUpload({
     v-loading="{ visible: loading, text: $t('tip.uploading'), global: true }"
     class="min-h-full !p-0"
   >
-    <custom-table>
+    <i-crud>
       <template #afterActionRefresh>
         <i-upload
           :show-upload-list="false"
@@ -201,6 +201,6 @@ const {dropZoneRef} = useDragAndDropUpload({
       <template #url="{value,record}">
         <preview-file file-type="thumbnail" :name="record.name" :url="value"/>
       </template>
-    </custom-table>
+    </i-crud>
   </div>
 </template>

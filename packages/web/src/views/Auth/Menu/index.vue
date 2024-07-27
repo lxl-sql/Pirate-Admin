@@ -272,7 +272,7 @@ const test = (record) => {
 </script>
 
 <template>
-  <custom-table>
+  <i-crud>
     <template #icon="{value}">
       <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
     </template>
@@ -296,6 +296,6 @@ const test = (record) => {
         @click="handleStatusChange(record)"
       />
     </template>
-  </custom-table>
+  </i-crud>
 </template>
 

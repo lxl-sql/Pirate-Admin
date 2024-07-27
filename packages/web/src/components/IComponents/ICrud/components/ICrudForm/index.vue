@@ -23,7 +23,7 @@ provide('model', props.model)
 defineExpose(formInstance)
 
 defineOptions({
-  name: 'CustomForm'
+  name: 'ICrudForm'
 })
 </script>
 

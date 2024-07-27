@@ -143,7 +143,7 @@ provide(tableSettingKey, tableSettings);
 </script>
 
 <template>
-  <custom-table>
+  <i-crud>
     <template #url="{ value }">
       <a-input-group compact class="!flex">
         <a-input
@@ -179,5 +179,5 @@ provide(tableSettingKey, tableSettings);
       :src="avatarPreviewSrc"
       v-model:open="isAvatarPreviewSrc"
     />
-  </custom-table>
+  </i-crud>
 </template>

@@ -1,26 +1,44 @@
 import {createApp, DirectiveBinding, h} from 'vue';
 import {Spin} from 'ant-design-vue';
 
-interface LoadingBinding extends DirectiveBinding {
-  value: boolean | {
-    /**
-     * 加载状态
-     */
-    visible: boolean;
-    /**
-     * 是否全局loading
-     */
-    global?: boolean;
-    /**
-     * 加载中的值
-     */
-    text?: string;
-    /**
-     * 加载自定义图标
-     */
-    icon?: any;
-  };
+interface LoadingOptions {
+  /**
+   * 加载状态
+   */
+  visible: boolean;
+  /**
+   * 是否全局loading
+   */
+  global?: boolean;
+  /**
+   * 加载中的值
+   */
+  text?: string;
+  /**
+   * 加载自定义图标
+   */
+  icon?: any;
 }
+
+interface LoadingBinding extends DirectiveBinding {
+  value: boolean | LoadingOptions
+}
+
+// Extend the HTMLElement interface to include custom properties
+interface LoadingHTMLElement extends HTMLElement {
+  _loadingInstance?: ReturnType<typeof createApp>;
+  _loadingWrapper?: HTMLDivElement;
+}
+
+// Helper function to extract options from binding.value
+const getLoadingOptions = (bindingValue: boolean | LoadingOptions): LoadingOptions => {
+  if (typeof bindingValue === 'boolean') {
+    return {
+      visible: bindingValue,
+    };
+  }
+  return bindingValue;
+};
 
 // 创建全局 spin 层
 const createSpinWrapper = (binding: LoadingBinding) => {
@@ -43,7 +61,7 @@ const createSpinWrapper = (binding: LoadingBinding) => {
 };
 
 // 创建加载动画的 Vue 应用
-const createLoadingApp = (visible: boolean, restProps: Omit<LoadingBinding['value'], 'visible'>) => {
+const createLoadingApp = (visible: boolean, restProps: Omit<LoadingOptions, 'visible'>) => {
   const {text, icon} = restProps || {}
   return createApp({
     render() {
@@ -53,7 +71,7 @@ const createLoadingApp = (visible: boolean, restProps: Omit<LoadingBinding['valu
           spinning: true,
           tip: text,
           indicator: icon ? h(icon) : undefined,
-        },
+        } as any,// Cast as any to avoid type error
         null
       );
     },
@@ -61,14 +79,12 @@ const createLoadingApp = (visible: boolean, restProps: Omit<LoadingBinding['valu
 };
 
 const vLoading = {
-  mounted(el: HTMLElement, binding: LoadingBinding) {
+  mounted(el: LoadingHTMLElement, binding: LoadingBinding) {
     const spinWrapper = createSpinWrapper(binding);
     el.style.position = 'relative';
 
     // 通过解构赋值来获取相关参数
-    const {visible, ...restProps} = typeof binding.value === 'boolean'
-      ? {visible: binding.value}
-      : binding.value || {}
+    const {visible, ...restProps} = getLoadingOptions(binding.value)
 
     const app = createLoadingApp(binding.value?.visible, restProps);
 
@@ -78,11 +94,9 @@ const vLoading = {
     el._loadingInstance = app;
     el._loadingWrapper = spinWrapper;
   },
-  updated(el: HTMLElement, binding: LoadingBinding) {
+  updated(el: LoadingHTMLElement, binding: LoadingBinding) {
     const spinWrapper = el._loadingWrapper;
-    const {visible, ...resetProps} = typeof binding.value === 'boolean'
-      ? {visible: binding.value}
-      : binding.value || {}
+    const {visible, ...restProps} = getLoadingOptions(binding.value)
 
     // 更新显示状态
     spinWrapper.style.display = visible ? 'flex' : 'none';
@@ -92,17 +106,17 @@ const vLoading = {
     // const spinInstance = el._loadingInstance._instance;
     // if (spinInstance) {
     //   spinInstance.props.spinning = visible;
-    //   spinInstance.props.tip = text || i18n.global.t('tip.loading');
+    //   spinInstance.props.tip = text;
     //   spinInstance.props.indicator = customIcon ? h(customIcon) : undefined;
     // }
     // TODO International configuration is required, although it consumes a lot of performance
     // Destroy the previous Vue instance and create a new one with updated text
     el._loadingInstance.unmount();
-    const newApp = createLoadingApp(visible, resetProps);
+    const newApp = createLoadingApp(visible, restProps);
     newApp.mount(spinWrapper);
     el._loadingInstance = newApp;
   },
-  unmounted(el: HTMLElement) {
+  unmounted(el: LoadingHTMLElement) {
     if (el._loadingInstance && el._loadingWrapper) {
       el._loadingInstance.unmount();
       el.removeChild(el._loadingWrapper);
