@@ -26,15 +26,15 @@ const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
   const typeObj = {
     1: {
       color: "success",
-      name: "菜单目录",
+      name: t('admin_permission.enum.type.1'),
     },
     2: {
       color: "processing",
-      name: "菜单项",
+      name: t('admin_permission.enum.type.2'),
     },
     3: {
       color: "warning",
-      name: "页面按钮",
+      name: t('admin_permission.enum.type.3'),
     },
   }
   if (type && typeObj[type]) {
@@ -202,7 +202,7 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         dataIndex: "operation",
         align: "center",
         fixed: "right",
-        width: 100,
+        width: 80,
       },
     ],
     i18nPrefix: "admin_permission",
@@ -277,7 +277,7 @@ const test = (record) => {
       <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
     </template>
     <template #type="{ value }">
-      <a-tag :color="typeEnum(value,'color')" style="margin-right: 0">
+      <a-tag :color="typeEnum(value,'color')" class="mr-0">
         {{ typeEnum(value, 'name') }}
       </a-tag>
     </template>

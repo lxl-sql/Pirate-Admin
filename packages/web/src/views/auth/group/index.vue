@@ -125,7 +125,7 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         dataIndex: "operation",
         align: "center",
         fixed: "right",
-        width: 100,
+        width: 60,
       },
     ],
     i18nPrefix: "admin_role",

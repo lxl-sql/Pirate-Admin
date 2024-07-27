@@ -16,17 +16,6 @@
       "operation": "Operation"
     }
   },
-  "enum": {
-    "gender": {
-      "0": "Unknown",
-      "1": "Male",
-      "2": "Female"
-    },
-    "status": {
-      "0": "Disable",
-      "1": "Enable"
-    }
-  },
   "label": {
     "username": "Username",
     "nickname": "Nickname",

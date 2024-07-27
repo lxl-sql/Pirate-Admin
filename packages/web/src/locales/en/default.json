@@ -94,6 +94,11 @@
     "usertype": {
       "1": "Admin",
       "2": "User"
+    },
+    "gender": {
+      "0": "Unknown",
+      "1": "Male",
+      "2": "Female"
     }
   },
   "tip": {

@@ -17,6 +17,13 @@
       "permissionIds": "Please input the permissions"
     }
   },
+  "enum": {
+    "type": {
+      "1": "Menu Directory",
+      "2": "Menu Item",
+      "3": "Page Button"
+    }
+  },
   "error": {
     "path": "Please input the path",
     "name": "Please input the name",

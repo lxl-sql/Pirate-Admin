@@ -69,7 +69,14 @@ const tableSettings = new TableSettings({
         title: "性别",
         dataIndex: "gender",
         align: "center",
-        width: 100
+        width: 100,
+        form: true,
+        type: 'radio',
+        options: [
+          {label: t('enum.gender.0'), value: 0},
+          {label: t('enum.gender.1'), value: 1},
+          {label: t('enum.gender.2'), value: 2},
+        ]
       },
       {
         title: "邮箱",
@@ -97,6 +104,16 @@ const tableSettings = new TableSettings({
             : 'user.placeholder.password'
           )
         },
+        formFieldConfig: {
+          autocomplete: "new-password"
+        }
+      },
+      {
+        title: "个性签名",
+        dataIndex: "sign",
+        type: 'textarea',
+        hide: true,
+        form: true,
       },
       {
         title: "最后登录IP",
@@ -153,6 +170,8 @@ const tableSettings = new TableSettings({
       motto: undefined,
       password: undefined,
       checkPassword: undefined,
+      sign: undefined,
+      gender: 0,
       status: 1,
       fileList: [],
     },
@@ -189,7 +208,7 @@ provide(tableSettingKey, tableSettings);
     </template>
     <template #gender="{ value }">
       <a-tag color="success" class="table-tag">
-        {{ $t(`user.table.enum.gender.${value}`) }}
+        {{ $t(`enum.gender.${value}`) }}
       </a-tag>
     </template>
     <template #lastLoginIp="{value}">
@@ -202,7 +221,7 @@ provide(tableSettingKey, tableSettings);
         :color="value === 1 ? 'success' : 'error'"
         class="table-tag"
       >
-        {{ $t(`user.table.enum.status.${value}`) }}
+        {{ $t(`enum.status.${value}`) }}
       </a-tag>
     </template>
     <template #avatar="{ value }">

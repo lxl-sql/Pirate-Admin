@@ -96,68 +96,6 @@ const handleCancel = (): void => {
         :label-col="{ span: 4 }"
     >
       <a-form-item
-          label="用户名"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
-      >
-        <a-input
-            v-model:value="formState.username"
-            allow-clear
-            placeholder="请输入管理员用户名"
-        />
-      </a-form-item>
-      <a-form-item
-          label="昵称"
-          :rules="[{ required: true, message: 'Please input your username!' }]"
-      >
-        <a-input
-            v-model:value="formState.nickName"
-            allow-clear
-            placeholder="请输入昵称"
-        />
-      </a-form-item>
-      <a-form-item
-          label="角色组"
-          :rules="[{ required: true, message: 'Please select roles!' }]"
-      >
-        <i-tree-select
-            v-model:value="formState.roleIds"
-            :tree-data="roleOptions"
-            :field-names="{ label: 'name', value: 'id' }"
-            :placeholder="$t('placeholder.role')"
-            multiple
-            spliceParentTitle
-            tree-default-expand-all
-        />
-      </a-form-item>
-      <a-form-item label="头像" name="avatar">
-        <i-upload v-model:file-list="formState.avatar"/>
-      </a-form-item>
-      <a-form-item label="电子邮箱" name="email">
-        <a-input
-            v-model:value="formState.email"
-            type="email"
-            allow-clear
-            placeholder="请输入电子邮箱"
-        />
-      </a-form-item>
-      <a-form-item
-          label="手机号"
-          name="phone"
-      >
-        <a-input
-            v-model:value="formState.phone"
-            allow-clear
-            placeholder="请输入手机号"
-        />
-      </a-form-item>
-      <a-form-item label="性别" name="sex">
-        <a-radio-group v-model:value="formState.gender">
-          <a-radio :value="0">{{ $t('user.rows.gender.0') }}</a-radio>
-          <a-radio :value="1">{{ $t('user.rows.gender.1') }}</a-radio>
-          <a-radio :value="2">{{ $t('user.rows.gender.2') }}</a-radio>
-        </a-radio-group>
-      </a-form-item>
-      <a-form-item
           label="密码"
           :rules="[{ required: true, message: 'Please input your password!' }]"
       >

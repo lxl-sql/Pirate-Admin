@@ -117,6 +117,9 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
             : 'user.placeholder.password'
           )
         },
+        formFieldConfig: {
+          autocomplete: "new-password"
+        }
       },
       {
         title: "最后登录IP",
