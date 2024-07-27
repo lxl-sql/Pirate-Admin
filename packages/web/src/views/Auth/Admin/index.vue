@@ -9,6 +9,7 @@ import {useI18n} from "vue-i18n";
 import {AdminTableSettingsType} from "@/views/Auth/Admin/types";
 import {useRoleStore} from "@/store";
 import {storeToRefs} from "pinia";
+import {UserOutlined} from "@ant-design/icons-vue";
 
 const {t} = useI18n();
 

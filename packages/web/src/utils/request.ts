@@ -223,8 +223,8 @@ class AxiosUtils {
   }
 
   // 封装post方法
-  public post(url: string, data: any, ...options: AxiosRequestConfig) {
-    return this.request(url, "post", data, ...options);
+  public post(url: string, data: any, options: AxiosRequestConfig) {
+    return this.request(url, "post", data, options);
   }
 }
 

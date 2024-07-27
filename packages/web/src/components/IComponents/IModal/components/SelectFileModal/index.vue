@@ -3,14 +3,13 @@
 import {onMounted, reactive, ref, toRaw, withDefaults,} from "vue";
 import {IColumns, IPages} from "@/types";
 
-interface IPropsModal {
-  title: string; // modal 标题
-  open: boolean; // 控制 modal 开关
+interface SelectFileModalProps {
+  title?: string; // modal 标题
+  open?: boolean; // 控制 modal 开关
   maxFileNum?: string | number; // 选择文件数 默认 只能选择一个
 }
 
-const props = withDefaults(defineProps<IPropsModal>(), {
-  title: "",
+const props = withDefaults(defineProps<SelectFileModalProps>(), {
   open: false,
   maxFileNum: 1,
 });
