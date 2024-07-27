@@ -86,6 +86,13 @@ const tableSettings: any = new TableSettings({
         detail: true,
         detailSort: 7,
         detailSpan: 2,
+        customCell() {
+          return {
+            style: {
+              maxWidth: '200px'
+            }
+          }
+        }
       },
       {
         title: "创建时间",
@@ -124,7 +131,7 @@ const tableSettings: any = new TableSettings({
         dataIndex: "operation",
         align: "center",
         fixed: "right",
-        width: 80,
+        width: 40,
       },
     ],
     i18nPrefix: "admin_log",

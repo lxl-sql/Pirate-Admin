@@ -7,6 +7,7 @@ import {
   SelectProps,
   TableProps,
   TextAreaProps,
+  TooltipProps,
   TreeSelectProps,
   UploadProps,
 } from "ant-design-vue";
@@ -88,6 +89,11 @@ export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<Rec
   querySort?: number;
   /** 搜索框配置项 */
   queryFieldConfig?: any;
+  /**
+   * 超过宽度将自动省略，暂不支持和排序筛选一起使用。
+   * 设置为 true 或 { showTitle?: boolean } 时，表格布局将变成 tableLayout="fixed"。
+   */
+  ellipsis?: ColumnType<RecordType>['ellipsis'] & TooltipProps
 
   /** 设置头部单元格属性 */
   customHeaderCell?(column: IColumns): CustomHeaderCellType;

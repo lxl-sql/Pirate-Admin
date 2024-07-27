@@ -35,6 +35,13 @@ const tableSettings: AnnexTableSettingsType = new TableSettings({
         ellipsis: true,
         width: 120,
         search: true,
+        customCell() {
+          return {
+            style: {
+              maxWidth: '120px'
+            }
+          }
+        }
       },
       {
         title: "用户名",

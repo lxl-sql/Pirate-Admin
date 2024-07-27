@@ -221,11 +221,10 @@ const formColumns = computed(() => {
  */
 const columnsComputed = computed(() => {
   return cloneDeep(columnsCache)
-    .filter((column: any) =>
-      [...menuChecked.value, props.operationKey].includes(
-        column.key || column.dataIndex
-      )
-    );
+    .filter((column: IColumns) => {
+      const key = column.key || column.dataIndex
+      return [...menuChecked.value, props.operationKey].includes(key as string)
+    })
 });
 
 /**
@@ -252,6 +251,13 @@ const getHeaderCellName = (column: IColumns) => {
   const title = [props.i18nPrefix, "table.columns", il8nName].filter(Boolean).join(".")
   return te(title) ? t(title) : title;
 };
+/**
+ * 获取溢出省略的 `props`
+ * @param ellipsis
+ */
+const getEllipsisProps = (ellipsis: IColumns['ellipsis']) => {
+  return typeof ellipsis === 'boolean' ? undefined : ellipsis
+}
 
 /**
  * @description 显示总条数
@@ -398,13 +404,23 @@ defineOptions({
           >
             <template #headerCell="{ column,...resetScope }">
               <slot name="headerCell" :column="column" v-bind="resetScope">
-                <div :style="{minWidth: formatUnit(column.width)}">
+                <div :style="{
+                  minWidth: column.minWidth ? formatUnit(column.minWidth) : formatUnit(column.width),
+                }">
                   {{ getHeaderCellName(column) }}
                 </div>
               </slot>
             </template>
             <template #bodyCell="score">
-              <slot name="bodyCell" v-bind="score"/>
+              <slot name="bodyCell" v-bind="score">
+                <ellipsis
+                  v-if="score.column.ellipsis"
+                  :value="score.value"
+                  :width="score.column.width"
+                  tooltip
+                  v-bind="getEllipsisProps(score.column.ellipsis)"
+                />
+              </slot>
             </template>
           </a-table>
         </slot>
