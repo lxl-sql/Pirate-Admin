@@ -117,16 +117,20 @@ const tableSettings = new TableSettings({
 
 provide(tableSettingKey, tableSettings)
 
-const onUploadSuccess = async () => {
+const onPreviewFileGroupUploadSuccess = async () => {
   if (layout.value === 'thumbnailGrid') {
     if (tableSettings.table.pages) {
       // 处理上传成功后的分页
       tableSettings.table.pages.total++
     }
   } else {
-    await setTimeoutPromise(50)
-    await tableSettings.queryAll()
+    await onUploadSuccess()
   }
+}
+
+const onUploadSuccess = async () => {
+  await setTimeoutPromise(100)
+  await tableSettings.queryAll()
 }
 
 const onUploadChange = async (files: FileList) => {
@@ -137,7 +141,7 @@ const onUploadChange = async (files: FileList) => {
   }
 }
 
-const {onUpload} = useUpload({
+const {loading, onUpload} = useUpload({
   onSuccess: onUploadSuccess,
 })
 
@@ -150,7 +154,11 @@ const {dropZoneRef} = useDragAndDropUpload({
 </script>
 
 <template>
-  <div class="min-h-full !p-0" ref="dropZoneRef">
+  <div
+    ref="dropZoneRef"
+    v-loading="{ visible: loading, text: $t('tip.uploading'), global: true }"
+    class="min-h-full !p-0"
+  >
     <custom-table>
       <template #afterActionRefresh>
         <i-upload
@@ -179,7 +187,7 @@ const {dropZoneRef} = useDragAndDropUpload({
             v-model:data-source="tableSettings.table.dataSource"
             @pages-change="tableSettings?.pagesChange"
             @delete-ok="item => tableSettings?.deleteByIds('row-delete',[item[score.rowKey]])"
-            @upload-success="onUploadSuccess"
+            @upload-success="onPreviewFileGroupUploadSuccess"
             @select-change="tableSettings?.selectChange"
           />
         </div>

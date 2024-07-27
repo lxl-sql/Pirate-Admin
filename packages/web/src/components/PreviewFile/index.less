@@ -1,5 +1,6 @@
 .preview-file {
-  @apply mr-3 mb-3 flex flex-col rounded-[@border-radius] border border-solid overflow-hidden;
+  @apply mr-3 mb-3 flex flex-col rounded-[@border-radius] border border-solid overflow-hidden transition duration-300 ease-linear;
+  //transform-origin: center center;
   &.preview-file-normal {
     @apply w-full h-96 md:w-40 md:h-40;
     .show-outlined {

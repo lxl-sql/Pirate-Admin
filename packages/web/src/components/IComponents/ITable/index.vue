@@ -274,7 +274,7 @@ defineOptions({
     <div class="container-table">
       <close-alert :message="remark"/>
       <!-- queryForm -->
-      <transition name="zoom-in">
+      <transition name="rotate-in">
         <!-- z-0 层级低于 i-table-header -->
         <div
           v-if="isOpenSearch && formColumns.length"

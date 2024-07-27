@@ -1,0 +1,50 @@
+/* rotate-in */
+.rotate-in-enter-active,
+.rotate-in-leave-active {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+.rotate-in-enter-from,
+.rotate-in-leave-to {
+  @apply opacity-0 rotate-x-180;
+}
+
+/* zoom */
+.zoom-enter-active, .zoom-leave-active {
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.zoom-enter-from {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+.zoom-enter-to {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.zoom-leave-from {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.zoom-leave-to {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+/* list */
+.list-enter-active, .list-leave-active {
+  transition: all 0.3s;
+}
+
+.list-enter-from, .list-leave-to {
+  transform: translateY(30px);
+  opacity: 0;
+}
+
+.list-enter-to, .list-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}

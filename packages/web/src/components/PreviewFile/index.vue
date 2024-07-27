@@ -299,6 +299,7 @@ defineExpose({
       v-if="!progressLoading && isSuffixMatch(suffix, regData, ['image', 'jpg'])"
       :src="url"
       :alt="name"
+      loading="lazy"
       class="text-xs select-none image-auto-center"
     />
     <video

@@ -92,6 +92,10 @@
       "1": "Enable"
     }
   },
+  "tip": {
+    "loading": "Loading...",
+    "uploading": "Uploading..."
+  },
   "other": {
     "copy": "Copy",
     "copied": "Copied",

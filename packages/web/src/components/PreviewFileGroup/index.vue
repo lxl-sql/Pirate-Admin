@@ -148,14 +148,15 @@ defineOptions({
   name: 'PreviewFileGroup'
 })
 defineExpose({
-  upload
+  upload,
+  uploadSuccess: onUploadSuccess
 })
 </script>
 
 <template>
   <div class="preview-file-group">
     <template v-if="dataSource.length !== 0">
-      <div class="flex flex-wrap">
+      <transition-group name="list" tag="div" mode="in-out" class="flex flex-wrap">
         <preview-file
           v-for="item in dataSource"
           :key="item[rowKey]"
@@ -170,7 +171,7 @@ defineExpose({
           @delete-cancel="() => emits('deleteCancel',item)"
           @click="handlePreviewFileClick(item)"
         />
-      </div>
+      </transition-group>
       <a-pagination
         size="small"
         class="text-center mt-4"

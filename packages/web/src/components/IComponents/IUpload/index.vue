@@ -50,6 +50,7 @@ const customRequest = async (originObject: any) => {
   formData.append('files', file);
   formData.append('uid', file.uid);
   onProgress?.({percent: 0});
+  isUploadLoading.value = true;
   try {
     const {data} = await upload(formData, {
       onUploadProgress: (progressEvent) => {
@@ -72,19 +73,17 @@ const customRequest = async (originObject: any) => {
     })
   } catch (error) {
     onError?.(error)
+  } finally {
+    isUploadLoading.value = false;
   }
 };
 
 const handleUploadChange = (info: UploadChangeParam) => {
   // console.log("info.file", info);
   if (info.file.status === "uploading") {
-    isUploadLoading.value = true;
     return
   }
-  if (info.file.status === "done") {
-    isUploadLoading.value = false;
-  } else if (info.file.status === "error") {
-    isUploadLoading.value = false;
+  if (info.file.status === "error") {
     notification.error({
       message: t('message.fail'),
       description: t('error.upload'),
