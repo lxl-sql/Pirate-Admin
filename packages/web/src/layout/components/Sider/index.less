@@ -1,25 +1,3 @@
-.ant-layout-sider.i-menu {
-  @apply pb-0 bg-[@colorBgContainer];
-
-  & .ant-layout-sider-trigger {
-    @apply hidden;
-  }
-}
-
-.ant-layout-sider.i-menu {
-  @apply ml-[@margin-left] h-[calc(100vh-32px)] shadow-lg border border-solid rounded-[@border-radius];
-  //box-shadow: var(--box-shadow-light);
-  border-color: @border-inline-color;
-}
-
-.menu-logo {
-  & + .i-menu-content {
-    .ant-menu-inline {
-      @apply border-none;
-    }
-  }
-}
-
 .ant-drawer.i-menu-mobile {
   .ant-drawer-body {
     @apply p-0 bg-[@colorBgContainer] border border-solid;
@@ -27,5 +5,19 @@
     .menu-logo {
       @apply text-[@colorText];
     }
+  }
+}
+// sider-base
+.i-sider {
+  @apply m-4 mr-0 shadow-lg border border-solid rounded-[@border-radius];
+  border-color: @border-inline-color;
+  .ant-menu-inline {
+    @apply !border-none;
+  }
+}
+
+.container-classic {
+  .i-sider {
+    @apply m-0 rounded-none;
   }
 }

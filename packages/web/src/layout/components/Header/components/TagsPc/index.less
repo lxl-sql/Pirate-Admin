@@ -22,6 +22,9 @@
       white-space: nowrap;
       color: @colorText;
       transition: all calc(var(--motionUnit) * 1s);
+      border-style: solid;
+      border-width: 1px;
+      border-color: transparent;
 
       &.active,
       &:hover {
@@ -35,8 +38,7 @@
         border-radius: 4px;
         background-color: @colorBgContainer;
         box-shadow: @boxShadow;
-        transition: none;
-        border: 1px solid @border-inline-color;
+        border-color: @border-inline-color;
 
         .nav-tag-close {
           padding: 2px;
@@ -57,6 +59,25 @@
 
         &:hover {
           color: @error-color;
+        }
+      }
+    }
+  }
+}
+
+.container-classic {
+  .nav {
+    .nav-tags {
+      .nav-tag-item {
+        height: 100%;
+        border: none;
+
+        &.active {
+          border-radius: 0;
+          background-color: @colorBgTextHover;
+        }
+        &:hover {
+          background-color: @colorBgTextHover;
         }
       }
     }

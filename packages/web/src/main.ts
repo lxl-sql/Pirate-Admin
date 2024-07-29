@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "@/router";
 import {createPinia} from "pinia";
 import 'ant-design-vue/dist/reset.css';
+import "@/assets/styles/css/animation.css"
 import "@/assets/styles/css/transition.css";
 import "@/assets/styles/css/style.css";
 import '@/assets/styles/less/variables.less';

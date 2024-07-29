@@ -15,7 +15,7 @@ defineOptions({
 </script>
 
 <template>
-  <a-tag :color="methodTagColor(props.method)">
+  <a-tag :color="methodTagColor(props.method)" class="last-of-type:mr-0">
     {{ props.method }}
   </a-tag>
 </template>

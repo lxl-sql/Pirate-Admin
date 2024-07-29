@@ -1,25 +1,21 @@
-header.nav-bar {
-  padding: 0 16px;
-  height: 50px;
-  min-height: 50px;
-
-  .nav-menus {
-    min-width: 300px;
-    justify-content: space-around;
-    height: 100%;
+.i-header {
+  margin: 16px 16px 0;
+  .i-header-menus {
     box-shadow: @boxShadowSecondary;
     border-radius: 8px;
-    overflow: hidden;
     font-size: 18px;
+    height: 50px;
     color: @colorText;
     background-color: @colorBgContainer;
     border: 1px solid @border-inline-color;
+    overflow: hidden;
 
     .nav-menu-item {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 40px;
+      min-width: 40px;
       height: 100%;
       cursor: pointer;
 
@@ -39,6 +35,21 @@ header.nav-bar {
           animation: smallToLast 0.3s ease-out forwards;
         }
       }
+    }
+  }
+}
+
+.container-classic {
+  .i-header {
+    box-sizing: border-box;
+    margin: 0;
+    background-color: @colorBgContainer;
+    border-bottom: 1px solid @border-inline-color;
+    .i-header-menus {
+      border-radius: 0;
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
     }
   }
 }

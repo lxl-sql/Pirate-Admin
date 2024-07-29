@@ -130,6 +130,19 @@ export class AdminService {
   }
 
   /**
+   * @description 获取管理员头像
+   * @param username 管理员
+   * @returns
+   */
+  public async avatar(username: string, protocolHost: string) {
+    const found_admin = await this.adminRepository.findOneBy({
+      username,
+    });
+
+    return requestHost(protocolHost, found_admin.avatar);
+  }
+
+  /**
    * @description 管理员登录
    * @param loginAdmin
    * @param session
@@ -455,6 +468,7 @@ export class AdminService {
       ...found_admin,
       avatarPath: found_admin.avatar,
       avatar: requestHost(protocolHost, found_admin.avatar),
+      avatarFull: requestHost(protocolHost, found_admin.avatar),
       password: null,
       roles: undefined,
       roleIds: found_admin.roles.map((role) => role.id),

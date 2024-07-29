@@ -38,7 +38,7 @@ defineOptions({
 </script>
 
 <template>
-  <div class="box-border p-4">
+  <div>
     <i-table
       v-bind="table"
       :model="table?.queryForm"

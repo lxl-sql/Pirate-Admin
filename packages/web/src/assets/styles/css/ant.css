@@ -102,24 +102,6 @@ button.ant-btn {
   /* padding: 10px !important; */
 }
 
-/* 头部个人信息样式 */
-
-.admin-info-base {
-  width: 260px;
-  display: flex;
-  flex-flow: column;
-  align-items: center;
-}
-
-.admin-info-other {
-  padding: 10px 0;
-  text-align: center;
-}
-
-.admin-info-name {
-  font-size: 18px;
-}
-
 /* card 卡片 */
 
 .ant-card-head {

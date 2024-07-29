@@ -3,6 +3,7 @@
 import {defineOptions, ref} from "vue";
 import {TranslationOutlined} from "@ant-design/icons-vue";
 import {useI18n} from "vue-i18n";
+import {$local} from "@/utils/storage";
 
 const {locale} = useI18n();
 
@@ -12,7 +13,7 @@ const open = ref(false); // 语言
 const putLanguage = (lang: string) => {
   open.value = false;
   locale.value = lang;
-  localStorage.setItem("lang", lang);
+  $local.set("lang", lang);
 };
 
 defineOptions({

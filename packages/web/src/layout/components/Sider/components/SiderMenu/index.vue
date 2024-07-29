@@ -40,6 +40,7 @@ const getExpandMenuItem = () => {
     openKeys.value = (route.meta.parentName as string).split(",");
   }
   selectedKeys.value = [route.name as string];
+  // isSidebarOpen.value = false
 };
 
 defineOptions({

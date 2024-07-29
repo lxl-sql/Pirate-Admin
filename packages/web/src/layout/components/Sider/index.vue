@@ -37,9 +37,8 @@ defineOptions({
   <a-layout-sider
     v-else
     v-model:collapsed="isSidebarOpen"
-    class="i-menu"
-    collapsedWidth="64"
-    collapsible
+    class="i-sider"
+    theme="light"
   >
     <sider-menu/>
   </a-layout-sider>

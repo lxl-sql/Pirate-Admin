@@ -68,7 +68,7 @@ const handleUserNameInput = debounce(async () => {
           class="head img-placeholder"
           style="--img-placeholder-rate: 35.11%"
         >
-          <img src="@/assets/images/login-header.png" alt="avatar" v-cloak/>
+          <div class="h-[150px] bg-cover bg-no-repeat bg-[url(@/assets/images/login-header.png)]"></div>
         </div>
         <div class="form">
           <a-avatar

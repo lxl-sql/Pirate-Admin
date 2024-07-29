@@ -1,19 +1,18 @@
 <script setup lang="ts">
 
-import {TagProps} from "ant-design-vue/es/tag";
-import {toRefs} from "vue";
+import {ITagProps} from "@/types/tag";
 
-interface ProcessingTag extends /* @vue-ignore */ TagProps {
+interface ProcessingTag extends ITagProps {
   value?: string;
 }
 
-const props = defineProps<ProcessingTag>()
-
 const {
   value,
-  color = 'processing',
   ...resetProps
-} = toRefs(props)
+} = withDefaults(defineProps<ProcessingTag>(), {
+  color: "processing"
+})
+
 
 defineOptions({
   name: "ProcessingTag",
@@ -21,7 +20,10 @@ defineOptions({
 </script>
 
 <template>
-  <a-tag v-if="value" color="processing" class="table-tag" v-bind="resetProps">
+  <a-tag
+    class="last-of-type:mr-0"
+    v-bind="resetProps"
+  >
     {{ value }}
   </a-tag>
 </template>

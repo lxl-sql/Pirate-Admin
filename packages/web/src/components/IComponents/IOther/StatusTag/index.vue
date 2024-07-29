@@ -27,7 +27,7 @@ defineOptions({
   <a-tag
     v-if="isNumber(value) && value >= 0"
     :color="color || (value === 1 ? 'success' : 'error')"
-    class="table-tag"
+    class="last-of-type:mr-0"
     v-bind="resetProps"
   >
     {{ $t(`enum.status.${value}`) }}

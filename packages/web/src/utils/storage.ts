@@ -19,18 +19,24 @@ export interface LocalInterFace {
 // 定义localStorage封装
 class LocalUtil implements LocalInterFace {
   // 获取
-  get<T>(key: string): T | any {
+  get<T>(key: string, value?: T): T | any {
     // ts类型推断时不能将null赋值给JSON.parse()的参数
     let str = window.localStorage.getItem(key) || "";
     if (str) {
       return JSON.parse(str);
     }
-    return str;
+    return str || value;
   }
 
   // 设置
   set<T>(key: string, value: T): void {
     window.localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  updateKey<T>(key: string, valueKey: string, value: T): void {
+    const _value = this.get(key)
+    _value[valueKey] = value
+    window.localStorage.setItem(key, JSON.stringify(_value));
   }
 
   // 移除

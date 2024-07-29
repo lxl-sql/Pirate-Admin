@@ -19,7 +19,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <a-layout class="pirate-container xl:pt-4">
+  <a-layout class="pirate-container container-classic">
     <Sider v-show="!isLayoutFullScreen"/>
 
     <a-layout class="layout">

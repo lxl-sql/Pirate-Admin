@@ -167,7 +167,7 @@ provide(tableSettingKey, tableSettings);
       </a-input-group>
     </template>
     <template #ip="{ value }">
-      <a-tag color="processing">{{ value }}</a-tag>
+      <a-tag color="processing" class="last-of-type:mr-0">{{ value }}</a-tag>
     </template>
     <template #method="{ value }">
       <method-tag :method="value"/>
@@ -176,7 +176,7 @@ provide(tableSettingKey, tableSettings);
       <code-segment :text="value"/>
     </template>
     <template #detail-ip="{ value }">
-      <a-tag color="processing">{{ value }}</a-tag>
+      <a-tag color="processing" class="last-of-type:mr-0">{{ value }}</a-tag>
     </template>
     <template #detail-method="{ value }">
       <method-tag :method="value"/>

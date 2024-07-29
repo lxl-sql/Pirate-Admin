@@ -31,6 +31,18 @@ export class AdminController {
   }
 
   @ApiOperation({
+    summary: '根据用户名获取管理员头像',
+    description: '管理员使用用户名和密码进行登录',
+  })
+  @Get('avatar')
+  public async avatar(
+    @Query('username') username: string,
+    @ProtocolHost() protocolHost: string
+  ) {
+    return await this.adminService.avatar(username, protocolHost);
+  }
+
+  @ApiOperation({
     summary: '管理员登录',
     description: '管理员使用用户名和密码进行登录',
   })

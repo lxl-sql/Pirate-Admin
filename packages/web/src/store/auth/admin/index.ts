@@ -81,8 +81,12 @@ export const useAdminStore = defineStore("adminStore", {
      * @param username
      */
     async getAdminAvatarRequest(username?: string) {
+      if (!username) {
+        this.avatar = undefined
+        return
+      }
       try {
-        const {data} = await getAdminAvatar({username: username});
+        const {data} = await getAdminAvatar({username});
         this.avatar = data;
       } catch (error) {
         this.avatar = undefined;
