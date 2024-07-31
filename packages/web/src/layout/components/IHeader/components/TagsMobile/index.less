@@ -4,6 +4,11 @@
     @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
     ol {
       @apply flex-nowrap;
+      li:last-of-type {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
   }
 }

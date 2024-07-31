@@ -17,7 +17,8 @@
     "captcha": "验证码",
     "keyword": "请输入关键字",
     "role": "请选择角色",
-    "roles": "请选择角色组"
+    "roles": "请选择角色组",
+    "Not Found": "暂无数据"
   },
   "success": {
     "login": "登录成功！",

@@ -3,6 +3,8 @@ export type {FormType, IOptions} from "./form";
 export type {CSSPropertiesType} from "./style";
 export type {TButtonType} from "./button";
 
+export type Key = string | number
+
 export type DefaultTreeRecordType<RecordType> = {
   level?: number
   children?: RecordType[]

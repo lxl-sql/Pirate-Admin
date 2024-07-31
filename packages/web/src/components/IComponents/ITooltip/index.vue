@@ -2,12 +2,10 @@
 <script setup lang="ts">
 import {type CSSProperties, defineOptions} from "vue";
 import {ButtonProps} from "ant-design-vue";
-import {storeToRefs} from "pinia";
-import {useLayoutStore} from "@/store";
 import {TButtonType} from "@/types";
+import {useTheme} from "@/store/hooks";
 
-const store = useLayoutStore();
-const {terminalType} = storeToRefs(store);
+const theme = useTheme()
 
 interface ITooltipProps {
   title?: string;
@@ -36,7 +34,7 @@ defineOptions({
 
 <template>
   <a-tooltip
-    :title="!disabled && terminalType === 'pc' && title"
+    :title="!disabled && theme.terminalType === 'pc' && title"
     v-bind="$attrs"
   >
     <template #title>

@@ -1,5 +1,6 @@
 .i-header {
   margin: 16px 16px 0;
+
   .i-header-menus {
     box-shadow: @boxShadowSecondary;
     border-radius: 8px;
@@ -39,12 +40,20 @@
   }
 }
 
-.container-classic {
+:deep(.ant-dropdown-menu-item) {
+  text-align: center;
+}
+
+.container-mobile,
+.container-classic,
+.container-single-column,
+.container-double-column {
   .i-header {
     box-sizing: border-box;
     margin: 0;
     background-color: @colorBgContainer;
     border-bottom: 1px solid @border-inline-color;
+
     .i-header-menus {
       border-radius: 0;
       border: none;
@@ -54,9 +63,6 @@
   }
 }
 
-:deep(.ant-dropdown-menu-item) {
-  text-align: center;
-}
 
 // 铃铛晃动动画
 @keyframes upAnimation {

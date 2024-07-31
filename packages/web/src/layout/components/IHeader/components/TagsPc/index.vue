@@ -4,16 +4,13 @@ import * as antIcons from "@ant-design/icons-vue";
 import {CloseOutlined, DownOutlined} from "@ant-design/icons-vue";
 import {defineOptions, nextTick, onMounted, reactive, ref,} from "vue";
 import {onBeforeRouteUpdate, RouteLocationNormalized, useRouter} from "vue-router";
-import {storeToRefs} from "pinia";
-import {useLayoutStore} from "@/store";
 import {fullScreen} from "@/utils/dom";
 import TagOverlay from "./components/Overlay/index.vue";
 import {type OverlayType} from './components/Overlay/interface'
-import {useNavTabs} from '@/store/hooks'
+import {useNavTabs, useTheme} from '@/store/hooks'
 
-const layoutStore = useLayoutStore();
-const {isLayoutFullScreen, isPageRefreshing, isAsideMenu} = storeToRefs(layoutStore);
 const navTabs = useNavTabs()
+const theme = useTheme()
 
 const router = useRouter();
 
@@ -93,15 +90,15 @@ const onMouseRight = (index: number, data: any) => {
  */
 const onMouseRightMenu = (status: number) => {
   if (status === 1) {
-    isPageRefreshing.value = true;
+    theme.isPageRefreshing = true;
     nextTick(() => {
-      isPageRefreshing.value = false;
+      theme.isPageRefreshing = false;
     });
   } else if (status === 2) {
     closeTab(contextMenuState.activeIndex);
   } else if (status === 3) {
     fullScreen();
-    isLayoutFullScreen.value = true;
+    theme.isLayoutFullScreen = true;
     router.push(contextMenuState.route.path);
   } else if (status === 4) {
     const tabs = navTabs.tabList.filter((_tab: RouteLocationNormalized, index) => index === contextMenuState.activeIndex);
@@ -194,7 +191,7 @@ defineOptions({
 
 <template>
   <!-- isLayoutFullScreen 点击全屏时 去除加载动画-->
-  <nav class="nav flex" v-if="!isLayoutFullScreen">
+  <nav class="nav flex" v-if="!theme.isLayoutFullScreen">
     <a-dropdown :trigger="['contextmenu']">
       <div
         ref="tabsRefs"
@@ -232,7 +229,7 @@ defineOptions({
         />
       </template>
     </a-dropdown>
-    <a-dropdown v-if="isAsideMenu">
+    <a-dropdown v-if="theme.isDrawerMenu">
       <div class="more c-pointer d-flex-center">
         <span class="more-txt">更多</span>
         <down-outlined/>

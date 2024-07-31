@@ -7,7 +7,7 @@ import Log from "./components/Log/index.vue";
 <template>
   <a-row class="default-main" :gutter="[16, 16]">
     <a-col :lg="12" :xs="24" class="default-main-col">
-      <edit class="is-always-shadow" />
+      <edit />
     </a-col>
     <a-col :lg="12" :xs="24" class="default-main-col">
       <a-card

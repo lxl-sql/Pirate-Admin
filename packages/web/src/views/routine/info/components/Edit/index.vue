@@ -65,7 +65,7 @@ const openBindInfoModal = (type: CaptchaType) => {
 </script>
 
 <template>
-  <div class="edit-info">
+  <div class="edit-info is-always-shadow">
     <div class="edit-head mb-4">
       <i-upload
         accept="image/*"

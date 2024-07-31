@@ -29,7 +29,8 @@
     "nickname": "Please input the nickname",
     "roles": "Please select the roles",
     "status": "Please select the status",
-    "role": "Please input the role"
+    "role": "Please input the role",
+    "Not Found": "Not Found"
   },
   "success": {
     "login": "Login success!",

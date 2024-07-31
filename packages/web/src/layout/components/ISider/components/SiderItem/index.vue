@@ -2,51 +2,45 @@
 <script setup lang="ts">
 import {defineOptions, withDefaults} from "vue";
 import {useRouter} from "vue-router";
-import {storeToRefs} from 'pinia';
-import {useLayoutStore} from "@/store";
 import SiderItem from './index.vue'
-import data from "../../data.json";
 import * as antIcons from "@ant-design/icons-vue";
+import {Menu} from "@/store/hooks/useTheme/types";
 
-const store = useLayoutStore();
-const {isSidebarOpen} = storeToRefs(store);
-
-interface IPropsMenuItem {
-  menu: typeof data.data;
+interface SiderItemProps {
+  menus?: Menu[] | null
 }
 
-const props = withDefaults(defineProps<IPropsMenuItem>(), {
-  menu: () => [],
+const props = withDefaults(defineProps<SiderItemProps>(), {
+  menus: () => [],
 });
 
 const router = useRouter();
 
 // 跳转
-const toRouter = (item: Record<string, any>) => {
-  // console.log(item, "item");
+const toRouter = (menu: Menu) => {
   router.push({
-    name: item.name,
+    name: menu.name,
   });
 };
 
 defineOptions({
-  name: "SideItem",
+  name: "SiderItem",
 });
 </script>
 
 <template>
-  <template v-for="item in props.menu" :key="item.name">
+  <template v-for="item in menus" :key="item.name">
     <!-- 当存在子集 -->
     <template v-if="item.children && item.children.length">
-      <a-sub-menu :key="item.name" :title="item.title">
+      <a-sub-menu :key="item.name" :title="item.title" @click="toRouter(item.children?.[0])">
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon"/>
         </template>
-        <sider-item :menu="item.children"/>
+        <sider-item :menus="item.children"/>
       </a-sub-menu>
     </template>
     <template v-else>
-      <a-menu-item :key="item.name" @click="toRouter(item)" :title="item.title">
+      <a-menu-item :key="item.name" :title="item.title" @click="toRouter(item)">
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon"/>
         </template>

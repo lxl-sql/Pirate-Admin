@@ -1,10 +1,10 @@
 <!-- 全屏/取消全屏 -->
 <script setup lang="ts">
-import {defineOptions, onBeforeUnmount, onMounted,} from "vue";
+import {defineOptions,} from "vue";
 import {CompressOutlined, ExpandOutlined} from "@ant-design/icons-vue";
-import {useLayoutStore} from "@/store";
+import {useTheme} from "@/store/hooks";
 
-const store = useLayoutStore();
+const theme = useTheme()
 
 defineOptions({
   name: "NavFullScreen",
@@ -14,14 +14,14 @@ defineOptions({
 <template>
   <div
     class="nav-menu-item"
-    @click="store.toggleFullScreen"
-    :title="store.isFullScreen ? '取消全屏' : '全屏'"
+    @click="theme.toggleFullScreen"
+    :title="theme.isFullScreen ? '取消全屏' : '全屏'"
   >
     <div class="d-flex-center c-pointer user-select">
       <!-- 全屏 -->
-      <compress-outlined v-show="store.isFullScreen"/>
+      <compress-outlined v-show="theme.isFullScreen"/>
       <!-- 取消全屏 -->
-      <expand-outlined v-show="!store.isFullScreen"/>
+      <expand-outlined v-show="!theme.isFullScreen"/>
     </div>
   </div>
 </template>

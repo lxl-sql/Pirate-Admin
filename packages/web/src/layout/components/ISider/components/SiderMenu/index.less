@@ -1,0 +1,54 @@
+.i-menu-logo {
+  width: 100%;
+  height: 50px;
+  padding: 10px;
+  overflow: hidden;
+  min-height: 50px;
+}
+
+.i-menu-content {
+  overflow: auto;
+  //height: calc(100vh - 52px);
+}
+
+.logo-img {
+  width: 36px;
+}
+
+.logo-name {
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.website-name {
+  padding-left: 4px;
+  font-size: 18px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.container-single-column,
+.container-double-column {
+  .i-header {
+    .i-menu-logo {
+      width: 168px;
+      justify-content: flex-start;
+
+      .fold {
+        display: none;
+      }
+    }
+
+    .i-menu-content {
+      flex: 1;
+      height: auto;
+
+      .ant-menu-horizontal {
+        border-bottom: none;
+        line-height: 50px;
+        overflow-y: hidden;
+      }
+    }
+  }
+}
