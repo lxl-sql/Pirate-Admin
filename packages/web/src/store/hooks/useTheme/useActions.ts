@@ -199,14 +199,14 @@ export const useActions = (state: ThemeState) => {
         siderMenus.value = []
       } else {
         const key = _route.name
-        let newSiderMenus: Menu | null = null
+        let newSiderMenus: Menu = null
         treeForEach(_cacheMenus, (menu, _index, _arr, parent) => {
           if (menu.name === key) {
             newSiderMenus = parent ? parent : menu
           }
         })
         // console.log('route', key, newSiderMenus)
-        if (!newSiderMenus) return
+        if (newSiderMenus === null) return
         if (newSiderMenus.children?.length) {
           siderMenus.value = newSiderMenus.children
         } else {
