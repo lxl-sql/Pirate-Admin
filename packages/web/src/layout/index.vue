@@ -5,16 +5,24 @@ import IHeader from './components/IHeader/index.vue'
 import {computed, onBeforeMount, onBeforeUnmount, onMounted} from "vue";
 import {useTheme} from "@/store/hooks";
 import {onBeforeRouteUpdate} from "vue-router";
+import {useAdminStore} from "@/store";
 
+const adminStore = useAdminStore();
 const theme = useTheme()
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   theme.initSiderState()
+
+  if (adminStore.userInfo.id) {
+    await adminStore.getAdminByIdRequest(adminStore.userInfo.id)
+  }
 })
-onMounted(() => {
+
+onMounted(async () => {
   theme.listenerChange(true);
-  theme.initMenus()
+  await theme.initMenus()
 });
+
 onBeforeUnmount(() => {
   theme.listenerChange(false);
 });

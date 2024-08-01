@@ -9,16 +9,11 @@ import {useI18n} from "vue-i18n";
 import {debounce} from "lodash-es";
 import {notification} from "ant-design-vue";
 import router from "@/router";
-import {storeToRefs} from "pinia";
 import {useAdminStore, useCaptchaStore} from "@/store";
 
 const {t} = useI18n();
 const captchaStore = useCaptchaStore();
 const adminStore = useAdminStore();
-const {svgCaptchaRequest} = captchaStore;
-const {getAdminAvatarRequest, adminLoginRequest} = adminStore;
-const {svgCaptcha} = storeToRefs(captchaStore);
-const {avatar, loginFormState, isLoginFormLoading} = storeToRefs(adminStore);
 
 const rules = reactive({
   username: [{required: true, message: t("error.userName")}],
@@ -26,10 +21,9 @@ const rules = reactive({
   captcha: [{required: true, message: t("error.captcha")}],
 });
 
-
 onMounted(async () => {
   pageBubble.init();
-  await svgCaptchaRequest();
+  await captchaStore.svgCaptchaRequest();
 });
 
 onBeforeUnmount(() => {
@@ -39,7 +33,7 @@ onBeforeUnmount(() => {
 // 登录
 const handleLogin = async () => {
   try {
-    const data = await adminLoginRequest();
+    const data = await adminStore.adminLoginRequest(captchaStore.uuid);
     await router.push("/");
     await setTimeoutPromise(500);
     notification.success({
@@ -47,14 +41,15 @@ const handleLogin = async () => {
       description: data.userInfo.username + " " + t("success.welcome"),
     });
   } catch (error) {
-    await svgCaptchaRequest();
+    await captchaStore.svgCaptchaRequest();
   }
 };
 
 // 根据用户名搜索头像
 const handleUserNameInput = debounce(async () => {
-  await getAdminAvatarRequest(loginFormState.value.username);
+  await adminStore.getAdminAvatarRequest(adminStore.loginFormState.username);
 }, 500);
+
 </script>
 
 <template>
@@ -63,7 +58,7 @@ const handleUserNameInput = debounce(async () => {
   </div>
   <div class="login">
     <div class="login-box">
-      <a-spin :spinning="isLoginFormLoading">
+      <a-spin :spinning="adminStore.isLoginFormLoading">
         <div
           class="head img-placeholder"
           style="--img-placeholder-rate: 35.11%"
@@ -74,18 +69,18 @@ const handleUserNameInput = debounce(async () => {
           <a-avatar
             :size="100"
             class="profile-avatar"
-            :src="avatar || avatar_default"
+            :src="adminStore.avatar || avatar_default"
           />
           <div class="content">
             <a-form
-              :model="loginFormState"
+              :model="adminStore.loginFormState"
               :rules="rules"
               name="basic"
               @finish="handleLogin"
             >
               <a-form-item name="username">
                 <a-input
-                  v-model:value="loginFormState.username"
+                  v-model:value="adminStore.loginFormState.username"
                   allow-clear
                   :placeholder="$t('placeholder.username')"
                   @input="handleUserNameInput"
@@ -97,7 +92,7 @@ const handleUserNameInput = debounce(async () => {
               </a-form-item>
               <a-form-item name="password">
                 <a-input-password
-                  v-model:value="loginFormState.password"
+                  v-model:value="adminStore.loginFormState.password"
                   allow-clear
                   autocomplete="new-password"
                   :placeholder="$t('placeholder.password')"
@@ -110,7 +105,7 @@ const handleUserNameInput = debounce(async () => {
               <a-form-item name="captcha">
                 <div class="flex">
                   <a-input
-                    v-model:value="loginFormState.captcha"
+                    v-model:value="adminStore.loginFormState.captcha"
                     :placeholder="$t('placeholder.captcha')"
                     style="height: 40px"
                   >
@@ -118,14 +113,14 @@ const handleUserNameInput = debounce(async () => {
                   <a-form-item no-style>
                     <div
                       class="svg-captcha"
-                      v-html="svgCaptcha"
-                      @click="svgCaptchaRequest"
+                      v-html="captchaStore.svgCaptcha"
+                      @click="captchaStore.svgCaptchaRequest"
                     ></div>
                   </a-form-item>
                 </div>
               </a-form-item>
               <a-form-item name="remember">
-                <a-checkbox v-model:checked="loginFormState.remember">
+                <a-checkbox v-model:checked="adminStore.loginFormState.remember">
                   {{ $t("login.remember") }}
                 </a-checkbox>
               </a-form-item>
@@ -134,7 +129,7 @@ const handleUserNameInput = debounce(async () => {
                   class="submit"
                   type="primary"
                   html-type="submit"
-                  :loading="isLoginFormLoading"
+                  :loading="adminStore.isLoginFormLoading"
                 >
                   {{ $t("login.login") }}
                 </a-button>

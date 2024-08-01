@@ -95,9 +95,10 @@ export const useAdminStore = defineStore("adminStore", {
     /**
      * 登录
      */
-    async adminLoginRequest() {
+    async adminLoginRequest(uuid: string) {
       const params = {
         ...this.loginFormState,
+        uuid,
         remember: this.loginFormState.remember ? 1 : 0,
       };
       this.isLoginFormLoading = true;

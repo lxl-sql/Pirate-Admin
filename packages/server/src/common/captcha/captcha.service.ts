@@ -7,6 +7,7 @@ import {SmsService} from '../sms/sms.service';
 import {GenerateCaptchaDto} from './dto/generate-captcha.dto';
 import {VerifyCaptchaDto} from './dto/verify-captcha.dto';
 import {CaptchaTypeEnum} from "@/types/enum";
+import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class CaptchaService {
@@ -31,11 +32,14 @@ export class CaptchaService {
 
   /**
    * @description 获取 svg 验证码
-   * @param session session 对象
    * @returns
    */
-  public async svgCaptcha(session: Record<string, any>) {
+  public async svgCaptcha(value?: string) {
+    if (value) {
+      await this.delCaptcha(`admin_login_captcha_${value}`)
+    }
     // create 字母和数字随机验证码
+    const uuid = uuidv4()
     // createMathExpr 数字算数随机验证码
     const {data, text} = svgCaptcha.createMathExpr({
       size: 4,
@@ -50,8 +54,47 @@ export class CaptchaService {
       mathMax: 20,
       mathOperator: this.getRandomOperator(),
     });
-    session.captcha = text;
-    return data;
+    const ttl = 1 * 60;
+    this.redisService.set(`admin_login_captcha_${uuid}`, text, ttl)
+    return {
+      uuid,
+      svg: data
+    };
+  }
+
+  /**
+   * 删除验证码
+   * @param key
+   */
+  public async delCaptcha(key: string) {
+    await this.redisService.del(key)
+  }
+
+  /**
+   * 验证验证码的有效性。
+   *
+   * @param key - 验证码的类型或标识符，例如注册、登录等。
+   * @param address - 与验证码关联的地址，可以是电子邮件地址或电话号码。
+   * @param captcha - 用户输入的验证码。
+   *
+   * @returns 返回输入的key，如果验证码验证成功。
+   *
+   * @throws {HttpException} 如果验证码已失效或验证码不匹配，则抛出相应的HTTP异常。
+   */
+  public async validateCaptcha(key: string, address: string, captcha: string) {
+    const redis_key = `${key}_${address}`;
+
+    const _captcha = await this.redisService.get(redis_key);
+
+    if (!_captcha) {
+      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
+    }
+
+    if (captcha.toLocaleLowerCase() !== _captcha.toLocaleLowerCase()) {
+      throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
+    }
+
+    return key
   }
 
   /**
@@ -65,15 +108,7 @@ export class CaptchaService {
 
     const redis_key = `${key}_${address}`;
 
-    const _captcha = await this.redisService.get(redis_key);
-
-    if (!_captcha) {
-      throw new HttpException('验证码已失效', HttpStatus.BAD_REQUEST);
-    }
-    if (captcha !== _captcha) {
-      throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
-    }
-    return redis_key;
+    return await this.validateCaptcha(redis_key, address, captcha)
   }
 
   /**

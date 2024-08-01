@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Param, Post, Query, Session,} from '@nestjs/common';
+import {Body, Controller, Get, HttpStatus, Param, Post, Query,} from '@nestjs/common';
 import {AdminService} from './admin.service';
 import {UpsertAdminDto} from './dto/upsert-admin.dto';
 import {LogCall, ProtocolHost, RealIp, RequireLogin, UserInfo,} from '@/decorators/custom.decorator';
@@ -63,11 +63,10 @@ export class AdminController {
   @LogCall('admin', '登录')
   public async login(
     @Body() loginUser: LoginAdminDto,
-    @Session() session: Record<string, any>,
     @RealIp() ip: string,
     @ProtocolHost() protocolHost: string,
   ) {
-    return await this.adminService.login(loginUser, session, ip, protocolHost);
+    return await this.adminService.login(loginUser, ip, protocolHost);
   }
 
   @ApiOperation({summary: '刷新Token'})

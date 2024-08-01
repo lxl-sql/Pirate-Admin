@@ -19,6 +19,14 @@ export class LoginAdminDto {
   password: string;
 
   @ApiProperty({
+    description: '验证码uuid',
+    example: '84397852-c35d-4c69-9ca2-a1d9e8eb7ef5',
+    required: true,
+  })
+  @IsNotEmpty({message: '验证码uuid不能为空'})
+  uuid: string;
+
+  @ApiProperty({
     description: '验证码',
     example: '123456',
     required: true,

@@ -1,4 +1,6 @@
 export interface CaptchaStoreState {
-  /** 详情数据 */
+  /** 图片验证码 */
   svgCaptcha: string;
+
+  uuid: string
 }

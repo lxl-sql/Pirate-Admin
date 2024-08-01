@@ -152,13 +152,10 @@ export class AdminService {
    */
   public async login(
     loginAdmin: LoginAdminDto,
-    session: Record<string, any>,
     ip: string,
     protocolHost: string,
   ): Promise<AdminLoginInfoVo> {
-    if (session.captcha?.toLocaleLowerCase() !== loginAdmin.captcha?.toLocaleLowerCase()) {
-      throw new HttpException('验证码错误', HttpStatus.BAD_REQUEST);
-    }
+    const redis_key = await this.captchaService.validateCaptcha('admin_login_captcha', loginAdmin.uuid, loginAdmin.captcha)
 
     const admin = await this.adminRepository.findOne({
       where: {username: loginAdmin.username},
@@ -204,7 +201,8 @@ export class AdminService {
 
     vo.accessToken = accessToken;
     vo.refreshToken = refreshToken;
-    session.captcha = null;
+
+    await this.captchaService.delCaptcha(redis_key)
 
     const date = new Date()
 
@@ -288,7 +286,7 @@ export class AdminService {
         ? info.roles.reduce((acc, cur) => {
           cur.permissions.forEach((permission) => {
             // 去重
-            if (!acc.includes(permission.code)) acc.push(permission.code);
+            if (!acc.includes(permission.name)) acc.push(permission.name);
           });
           return acc;
         }, [])
