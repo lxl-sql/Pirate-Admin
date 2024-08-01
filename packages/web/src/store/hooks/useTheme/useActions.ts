@@ -34,7 +34,7 @@ export const useActions = (state: ThemeState) => {
    * 初始化默认主题配置
    */
   const initLocal = () => {
-    const storeConfigLayout = $local.get<StoreConfigLayout>(storeConfigLayoutKey);
+    const storeConfigLayout = $local.get<StoreConfigLayout>(storeConfigLayoutKey) || {};
     const data: StoreConfigLayout = {
       color: storeConfigLayout.color || '#1677ff',
       themeMode: storeConfigLayout.themeMode || 'light',
@@ -158,6 +158,7 @@ export const useActions = (state: ThemeState) => {
   // 展开/收起菜单
   const toggleMenuState = () => {
     isSidebarCollapsed.value = !isSidebarCollapsed.value
+    if (isDrawerMenu.value) return
     $local.set('sider-expand', isSidebarCollapsed.value)
   }
   // 切换全屏
@@ -172,7 +173,11 @@ export const useActions = (state: ThemeState) => {
 
   const initSiderState = () => {
     const _innerWidth = window.innerWidth;
-    isDrawerMenu.value = _innerWidth <= 1200;
+    const lessThan = _innerWidth <= 1200;
+    if (lessThan !== isDrawerMenu.value) {
+      isDrawerMenu.value = lessThan
+      changeMenus()
+    }
     isSidebarCollapsed.value = !isDrawerMenu.value && $local.get('sider-expand') || false
   }
 
@@ -189,29 +194,34 @@ export const useActions = (state: ThemeState) => {
    * 根据主题切换menus值
    */
   const changeMenus = (value?: RouteLocationNormalized) => {
+    if (!cacheMenus.value?.length) return
     const mode: LayoutMode = layoutMode.value
     const _route = value || route
-    if (!cacheMenus.value?.length) return
     const _cacheMenus = cloneDeep(cacheMenus.value)
     if (['single-column', 'double-column'].includes(mode)) {
       headerMenus.value = _cacheMenus
+      if (isDrawerMenu.value) {
+        siderMenus.value = _cacheMenus
+        return
+      }
       if (mode === 'single-column') {
         siderMenus.value = []
       } else {
         const key = _route.name
-        let newSiderMenus: Menu | null = null
+        let newSiderMenus: Menu | null = {}
         treeForEach(_cacheMenus, (menu, _index, _arr, parent) => {
           if (menu.name === key) {
             newSiderMenus = parent ? parent : menu
           }
         })
         // console.log('route', key, newSiderMenus)
-        if (newSiderMenus === null) return
+        if (!newSiderMenus) return
         if (newSiderMenus.children?.length) {
           siderMenus.value = newSiderMenus.children
         } else {
           siderMenus.value = [newSiderMenus]
         }
+        newSiderMenus = null
       }
     } else {
       siderMenus.value = _cacheMenus

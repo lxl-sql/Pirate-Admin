@@ -6,11 +6,12 @@ import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {adminRoleUpsert, getAdminRoleById, getAdminRoleList, removeAdminRole,} from "@/api/auth/admin";
 import {AdminRoleTableSettingsType} from "./types";
 import {useI18n} from "vue-i18n";
-import {useAdminMenuStore} from '@/store'
+import {useAdminMenuStore, useAdminStore} from '@/store'
 import {storeToRefs} from "pinia";
 
 const {t} = useI18n();
 
+const adminStore = useAdminStore()
 const adminMenuSore = useAdminMenuStore()
 const {dataSource: permissionTreeData} = storeToRefs(adminMenuSore)
 const {getAdminMenuListRequest} = adminMenuSore
@@ -44,7 +45,12 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         form: true,
         hide: true,
         options: (dataSource: any[]) => {
-          return dataSource
+          const options = dataSource.map(item => {
+            item.disable = item.id === adminStore.userInfo.id
+            return item
+          })
+          console.log('options', options)
+          return options
         },
         formFieldConfig: {
           fieldNames: {

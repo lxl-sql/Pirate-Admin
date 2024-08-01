@@ -403,7 +403,7 @@ export class AdminService {
         await existsByOnFail(roleRepository, 'name', body.name, '角色名已存在');
         await existsByOnFail(roleRepository, 'slug', body.slug, '角色标识重复');
       } else {
-        const message = error.message || body.id ? '编辑失败' : '新增失败';
+        const message: string = error.message || (body.id ? '编辑失败' : '新增失败');
         throw new HttpException(message, HttpStatus.BAD_REQUEST);
       }
     }
@@ -441,7 +441,7 @@ export class AdminService {
       sort: found_role.sort,
       status: found_role.status,
       children: found_role.children,
-      parentId: found_role.parent.id,
+      parentId: found_role.parentId,
       createTime: found_role.createTime,
       updateTime: found_role.updateTime,
       permissionIds,

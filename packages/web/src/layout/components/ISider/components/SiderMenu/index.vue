@@ -61,7 +61,7 @@ defineOptions({
   <div v-if="showLogo" class="i-menu-logo flex items-center justify-center">
     <!-- 菜单栏展开 | 小屏 | horizontal 时显示logo -->
     <template v-if="!theme.isSidebarCollapsed || theme.isDrawerMenu || theme.layoutMode === 'single-column'">
-      <div class="logo-name flex items-center ellipsis" title="Pirate Admin">
+      <div class="logo-name ellipsis flex items-center" title="Pirate Admin">
         <img class="logo-img" src="@/assets/images/logo_piece.png" alt="Pirate Admin"/>
         <div class="website-name">Pirate Admin</div>
       </div>
@@ -74,7 +74,7 @@ defineOptions({
       <!-- 展开 -->
       <menu-unfold-outlined v-show="theme.isSidebarCollapsed" v-if="!theme.isDrawerMenu"/>
       <!-- 收起 -->
-      <menu-fold-outlined v-show="!theme.isSidebarCollapsed"/>
+      <menu-fold-outlined v-show="!theme.isSidebarCollapsed || theme.isDrawerMenu"/>
     </div>
   </div>
   <div class="i-menu-content">

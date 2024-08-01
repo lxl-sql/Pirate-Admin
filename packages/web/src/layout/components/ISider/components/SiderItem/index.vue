@@ -5,10 +5,13 @@ import {useRouter} from "vue-router";
 import SiderItem from './index.vue'
 import * as antIcons from "@ant-design/icons-vue";
 import {Menu} from "@/store/hooks/useTheme/types";
+import {useTheme} from "@/store/hooks";
 
 interface SiderItemProps {
   menus?: Menu[] | null
 }
+
+const theme = useTheme()
 
 const props = withDefaults(defineProps<SiderItemProps>(), {
   menus: () => [],
@@ -17,7 +20,9 @@ const props = withDefaults(defineProps<SiderItemProps>(), {
 const router = useRouter();
 
 // 跳转
-const toRouter = (menu: Menu) => {
+const toRouter = (type: 'sub-menu' | 'menu-item', menu: Menu) => {
+  // 单栏/双栏 小屏模式 点击无效
+  if (type === 'sub-menu' && theme.isDrawerMenu) return
   router.push({
     name: menu.name,
   });
@@ -32,7 +37,7 @@ defineOptions({
   <template v-for="item in menus" :key="item.name">
     <!-- 当存在子集 -->
     <template v-if="item.children && item.children.length">
-      <a-sub-menu :key="item.name" :title="item.title" @click="toRouter(item.children?.[0])">
+      <a-sub-menu :key="item.name" :title="item.title" @click="toRouter('sub-menu',item.children?.[0])">
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon"/>
         </template>
@@ -40,7 +45,7 @@ defineOptions({
       </a-sub-menu>
     </template>
     <template v-else>
-      <a-menu-item :key="item.name" :title="item.title" @click="toRouter(item)">
+      <a-menu-item :key="item.name" :title="item.title" @click="toRouter('menu-item',item)">
         <template #icon>
           <component :is="antIcons[item.icon]" class="fontSize-icon"/>
         </template>
