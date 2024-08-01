@@ -2,7 +2,7 @@ import {$local} from "@/utils/storage";
 import {theme as defaultTheme} from "ant-design-vue";
 import {MappingAlgorithm} from "ant-design-vue/es/config-provider/context";
 import {nextTick} from "vue";
-import {LayoutMode, Menu, StoreConfigLayout, ThemeMode, ThemeState} from "./types";
+import {LayoutMode, StoreConfigLayout, ThemeMode, ThemeState} from "./types";
 import {exitFullScreen, fullScreen} from "@/utils/dom";
 import menuData from './data.json'
 import {cloneDeep} from "lodash-es";
@@ -208,7 +208,7 @@ export const useActions = (state: ThemeState) => {
         siderMenus.value = []
       } else {
         const key = _route.name
-        let newSiderMenus: Partial<Menu> | null = {}
+        let newSiderMenus: object | null = {}
         treeForEach(_cacheMenus, (menu, _index, _arr, parent) => {
           if (menu.name === key) {
             newSiderMenus = parent ? parent : menu
