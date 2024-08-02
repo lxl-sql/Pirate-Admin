@@ -5,7 +5,7 @@ import {type Ref} from "vue";
 import {FormInstance, FormProps, PaginationProps, TableProps} from "ant-design-vue";
 import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
 import type {RuleError} from "ant-design-vue/lib/form/interface";
-import {FormType, Rules} from "@/types/form";
+import {FormType, IOptions, Rules} from "@/types/form";
 import {IModalProps} from "@/components/IComponents/IModal/types";
 import type {TableRowSelection} from "ant-design-vue/es/table/interface";
 
@@ -22,6 +22,8 @@ export declare type Operation =
   | "row-detail"
   | "row-update"
   | "row-delete";
+
+export type DefaultOptionType = 'status' | 'whether'
 
 /**
  * CancelFormType 表示取消表单的类型。
@@ -120,6 +122,8 @@ export interface TableSettingColumns<RecordType = DefaultRecordType> extends ICo
   detailSlot?: boolean;
   /** 详情自定义渲染 */
   detailRender?: <V extends keyof RecordType = any, T = any>(value: V, fields: RecordType) => T
+  /** select/radio/tree 选择项 */
+  options?: IColumns<RecordType>['options'] | DefaultOptionType | ((dataSource?: RecordType[], fields?: Record<string, any>) => IOptions[])
 }
 
 export interface TableReactive<

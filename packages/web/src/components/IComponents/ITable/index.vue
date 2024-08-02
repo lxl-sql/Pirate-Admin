@@ -299,7 +299,7 @@ defineOptions({
             >
               <template #default="scope">
                 <slot v-bind="scope">
-                  <query-form-item :column="scope.column" :model="model"/>
+                  <query-form-item :column="scope.column as IColumns" :model="model"/>
                 </slot>
               </template>
             </query-form>

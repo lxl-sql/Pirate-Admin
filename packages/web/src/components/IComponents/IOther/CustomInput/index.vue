@@ -31,12 +31,17 @@ withDefaults(defineProps<CustomInputProps>(), {});
   <a-textarea
     v-else-if="type === 'textarea'"
     allow-clear
-    rows="3"
+    :rows="3"
     v-bind="$attrs"
   />
   <i-tree-select
     v-else-if="type === 'tree-select'"
     allow-clear
+    :tree-data="treeData"
+    v-bind="$attrs"
+  />
+  <a-tree
+    v-else-if="type === 'tree'"
     :tree-data="treeData"
     v-bind="$attrs"
   />

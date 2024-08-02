@@ -158,8 +158,8 @@ export default class TableSettings<
     );
   };
 
-  private getParams(key: CustomParamsKey, params: Record<string, any>) {
-    return this.customParams?.[key]?.(params) || params;
+  private getParams(key: CustomParamsKey, params: Record<string, any> = {}) {
+    return cloneDeep(this.customParams?.[key]?.(params) || params);
   }
 
   /**
@@ -259,7 +259,7 @@ export default class TableSettings<
 
   public openForm = async (type: Omit<ModalType, 2>, id?: Key) => {
     this.form.fields.id = id;
-    this.form.modal.beforeOpen?.<Omit<ModalType, 2>, RecordType>(type, this.form.fields)
+    this.form.modal.beforeOpen?.(type, this.form.fields)
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
       this.initFormRefs();
@@ -275,8 +275,11 @@ export default class TableSettings<
    * 清理form中的缓存数据
    * @param {ModalType} type - 取消表单的类型。
    */
-  private clearForm = (type: ModalType) => {
-
+  private clearForm = (type: Omit<ModalType, 0>) => {
+    if (type === 1) {
+      this.formRefs?.resetFields();
+      this.resetFields();
+    }
   }
 
   /**
@@ -285,10 +288,9 @@ export default class TableSettings<
    */
   public cancelForm = (type: Omit<ModalType, 0>) => {
     if (type === 1) {
-      this.form.modal.beforeClose?.()
+      this.form.modal.beforeClose?.(this.form.fields)
       this.form.modal.open = false;
-      this.formRefs?.resetFields();
-      this.resetFields();
+      this.clearForm(type)
       this.form.modal.afterClose?.()
     } else {
       this.detail.modal.beforeClose?.()
@@ -301,6 +303,7 @@ export default class TableSettings<
     await this.formRefs?.validate();
     const {fields} = this.form;
     const params = this.getParams("confirmForm", fields);
+    this.form.modal.beforeClose?.(params)
     this.modal.loading = true;
     try {
       await this.api.upsert(params);
@@ -308,10 +311,12 @@ export default class TableSettings<
         message: t("message.success"),
         description: t(fields.id ? "success.update" : "success.create"),
       });
-      this.cancelForm(1);
+      this.form.modal.open = false
+      this.clearForm(1);
       await this.queryAll();
     } finally {
       this.modal.loading = false;
+      this.form.modal.afterClose?.()
     }
   };
 
@@ -321,12 +326,12 @@ export default class TableSettings<
    */
   public openDetail = async (id: Key) => {
     this.detail.fields.id = id
-    this.detail.modal.beforeOpen(id, this.detail.fields)
+    this.detail.modal.beforeOpen?.(id, this.detail.fields)
 
     this.detail.modal.open = true;
     await this.detailById(2, id);
 
-    this.detail.modal.afterOpen(id, this.detail.fields)
+    this.detail.modal.afterOpen?.(id, this.detail.fields)
   };
 
   /**

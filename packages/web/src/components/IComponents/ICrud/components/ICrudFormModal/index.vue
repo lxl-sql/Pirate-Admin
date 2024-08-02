@@ -4,6 +4,10 @@ import {computed, inject} from "vue";
 import {tableSettingKey} from "@/utils/tableSettings";
 import {TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
 import {IModalProps} from "@/components/IComponents/IModal/types";
+import {useI18n} from "vue-i18n";
+import {IOptions} from "@/types";
+
+const {t} = useI18n()
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
@@ -52,18 +56,28 @@ const valueProp = (column: TableSettingColumns) => {
   return column.formValueProp || column.dataIndex;
 };
 
-const defaultOptions = [
-  {label: '否', value: 0},
-  {label: '是', value: 1},
-]
+const defaultOptions: Record<string, IOptions[]> = {
+  // 默认 1 是; 0 否
+  whether: [
+    {label: t('enum.whether.1'), value: 1},
+    {label: t('enum.whether.0'), value: 0},
+  ],
+  // 默认 1 启用 0 禁用
+  status: [
+    {label: t('enum.status.1'), value: 1},
+    {label: t('enum.status.0'), value: 0},
+  ]
+}
 
 const getOptions = (column: TableSettingColumns) => {
   if (typeof column.options === 'function') {
     const dataSource = tableSettings?.table.dataSource || []
     const fields = form.value?.fields
     return column.options(dataSource, fields)
+  } else if (typeof column.options === 'string' && ['status', 'whether'].includes(column.options)) {
+    return defaultOptions[column.options]
   } else {
-    return column.options || defaultOptions
+    return column.options || defaultOptions.whether
   }
 };
 

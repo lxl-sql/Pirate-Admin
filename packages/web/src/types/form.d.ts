@@ -9,6 +9,7 @@ export type FormType =
   | "input-number"
   | "textarea"
   | "select"
+  | "tree"
   | "tree-select"
   | "cascader"
   | "checkbox"

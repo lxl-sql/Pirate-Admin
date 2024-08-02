@@ -3,7 +3,7 @@
 import * as antIcons from "@ant-design/icons-vue";
 import {provide, watch} from "vue";
 import {useAdminMenuStore} from "@/store/auth";
-import {treeForEach} from "@/utils/common";
+import {treeForEach} from "@/utils/tree";
 import {notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import type {AdminMenuDataSource} from "@/store/auth/menu/types";

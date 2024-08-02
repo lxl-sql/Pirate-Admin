@@ -7,7 +7,7 @@ import {exitFullScreen, fullScreen} from "@/utils/dom";
 import menuData from './data.json'
 import {cloneDeep} from "lodash-es";
 import {RouteLocationNormalized, useRoute} from "vue-router";
-import {treeForEach} from "@/utils/common";
+import {treeForEach} from "@/utils/tree";
 
 const {useToken} = defaultTheme
 export const useActions = (state: ThemeState) => {

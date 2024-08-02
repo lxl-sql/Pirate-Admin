@@ -4,35 +4,80 @@ import {computed, provide, shallowRef} from "vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {adminRoleUpsert, getAdminRoleById, getAdminRoleList, removeAdminRole,} from "@/api/auth/admin";
-import {AdminRoleRecordType, AdminRoleTableSettingsType} from "./types";
+import {AdminRoleFields, AdminRoleRecordType, AdminRoleTableSettingsType} from "./types";
 import {useI18n} from "vue-i18n";
 import {useAdminMenuStore} from '@/store'
 import {disableTreeByKey, recursive} from "@/utils/common";
 import {cloneDeep} from "lodash-es";
 import {ModalType} from "@/types/tableSettingsType";
+import {getTreeKeys, treeForEach} from "@/utils/tree";
+import {Key} from "@/types";
 
 const {t} = useI18n();
 
 const adminMenuSore = useAdminMenuStore()
 
-const parentPermissionIds = shallowRef<number[]>([])
+const parentPermissionIds = shallowRef<Key[]>([])
+const permissionTreeExpandedKeys = shallowRef<Key[]>([])
+const allPermissionIds = shallowRef<Key[]>([])
 
-// 初始化菜单权限数据源
-const onInit = async () => {
-  await adminMenuSore.getAdminMenuListRequest()
-}
-
-const formAfterOpen = async (type: ModalType, fields) => {
-  // console.log('formBeforeOpen --> fields', fields.parentId)
-  if (fields?.parentId) {
-    await getAdminRoleByIdAsync(fields.parentId)
-  }
-}
 
 const getAdminRoleByIdAsync = async (id: number) => {
   const {data} = await getAdminRoleById(id)
   parentPermissionIds.value = data.permissionIds
 }
+
+const formAfterOpen = async (type: ModalType, fields: AdminRoleFields) => {
+  if (fields) {
+    // console.log(' fields.permissionIds', fields.permissionIds)
+    allPermissionIds.value = fields.permissionIds || []
+    // 初始化菜单权限数据源
+    await adminMenuSore.getAdminMenuListRequest()
+    const dataSource = adminMenuSore.dataSource
+    // 默认展开
+    permissionTreeExpandedKeys.value = getTreeKeys(dataSource)
+    const keys: number[] = []
+    treeForEach<any>(dataSource, item => {
+      if (!item.children?.length && fields.permissionIds?.includes(item.id)) {
+        keys.push(item.id)
+      }
+    })
+    // console.log('keys', keys)
+    fields.permissionIds = keys
+
+    if (fields.parentId) {
+      await getAdminRoleByIdAsync(fields.parentId)
+    }
+  }
+}
+
+const formBeforeClose = (fields) => {
+  if (fields) {
+    fields.permissionIds = [...allPermissionIds.value]
+    allPermissionIds.value = []
+  }
+}
+const formAfterClose = () => {
+  parentPermissionIds.value = []
+}
+
+/**
+ * 链接父级id 只做缓存使用
+ * @param checkedKeys
+ * @param e
+ */
+const handleCheck = (checkedKeys, e) => {
+  allPermissionIds.value = checkedKeys.concat(e.halfCheckedKeys)
+}
+
+const permissions = computed(() => {
+  return recursive<AdminRoleRecordType>(cloneDeep(adminMenuSore.dataSource), (permission) => {
+    if (permission.id && parentPermissionIds.value.length) {
+      permission.disabled = !parentPermissionIds.value.includes(permission.id)
+    }
+    return permission
+  })
+})
 
 const tableSettings: AdminRoleTableSettingsType = new TableSettings({
   api: {
@@ -114,16 +159,7 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         form: true,
         type: 'select',
         formType: 'radio',
-        options: [
-          {
-            label: t("enum.status.1"),
-            value: 1,
-          },
-          {
-            label: t("enum.status.0"),
-            value: 0,
-          },
-        ],
+        options: 'status'
       },
       {
         title: "修改时间",
@@ -167,24 +203,25 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
       permissionIds: [{required: true, message: t("admin_role.error.permissionIds")}],
     },
     modal: {
-      afterOpen: formAfterOpen
+      afterOpen: formAfterOpen,
+      beforeClose: formBeforeClose,
+      afterClose: formAfterClose
     }
-  },
-  modal: {
-    init: onInit,
   },
 });
 
 provide(tableSettingKey, tableSettings);
 
-const permissions = computed(() => {
-  return recursive<AdminRoleRecordType>(cloneDeep(adminMenuSore.dataSource), (permission) => {
-    if (permission.id && parentPermissionIds.value.length) {
-      permission.disabled = !parentPermissionIds.value.includes(permission.id)
-    }
-    return permission
-  })
-})
+
+const handleSelect = (selectedKeys, e) => {
+  const keys = getTreeKeys(e.selectedNodes)
+  console.log(selectedKeys, e)
+  // if (e.selected) {
+  //   permissionTreeExpandedKeys.value = keys
+  // } else {
+  //   permissionTreeExpandedKeys.value = permissionTreeExpandedKeys.value.filter(key => keys.includes(key))
+  // }
+}
 </script>
 
 <template>
@@ -194,15 +231,17 @@ const permissions = computed(() => {
     </template>
     <!--  表单自定义  -->
     <template #form-permissionIds="{record,field,placeholder}">
-      <i-tree-select
-        v-model:value="record[field]"
-        tree-checkable
+      <a-tree
+        v-model:checked-keys="record[field]"
+        v-model:expanded-keys="permissionTreeExpandedKeys"
         allow-clear
-        multiple
-        tree-default-expand-all
-        :field-names="{label: 'title', value: 'id'}"
+        block-node
+        checkable
+        :field-names="{label: 'title', key: 'id'}"
         :tree-data="permissions"
         :placeholder="placeholder"
+        @check="handleCheck"
+        @select="handleSelect"
       />
     </template>
   </i-crud>

@@ -177,18 +177,6 @@ export function recursiveTreeMap<RecordType extends DefaultTreeRecordType<Record
   });
 }
 
-export function treeForEach<RecordType extends DefaultTreeRecordType<RecordType>>(...args: deepArguments<RecordType>) {
-  const [list, cb, children = 'children', parent] = args;
-  if (!isArray(list)) return list;
-  for (let i = 0, len = list.length; i < len; i++) {
-    const item = list[i];
-    cb && cb(item, i, list, parent);
-    if (item[children] && item[children].length) {
-      treeForEach(item[children], cb, children, item);
-    }
-  }
-}
-
 /**
  * @param args 入参
  * @returns

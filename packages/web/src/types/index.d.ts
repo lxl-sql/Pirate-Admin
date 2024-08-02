@@ -5,7 +5,7 @@ export type {TButtonType} from "./button";
 
 export type Key = string | number
 
-export type DefaultTreeRecordType<RecordType> = {
+export type DefaultTreeRecordType<RecordType = any> = {
   level?: number
   disabled?: boolean
   children?: RecordType[]

@@ -88,6 +88,10 @@
     "cancel": "Cancel"
   },
   "enum": {
+    "whether": {
+      "0": "No",
+      "1": "Yes"
+    },
     "status": {
       "0": "Disable",
       "1": "Enable"

@@ -13,7 +13,6 @@ import {
 } from "ant-design-vue";
 import {FormType, IOptions} from "@/types/form";
 import {CSSPropertiesType, TStyle} from "@/types/style";
-import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 import {TableRowSelection} from "ant-design-vue/es/table/interface";
 import {RangePickerProps} from "ant-design-vue/lib/date-picker";
 import {ColumnType} from "ant-design-vue/es/table";
@@ -45,13 +44,13 @@ export type FormFieldProps<T extends FormType = "input"> = T extends | "input"
                 ? UploadProps
                 : never;
 
-export interface IColumns<RecordType = DefaultRecordType> extends ColumnType<RecordType> {
+export declare interface IColumns<RecordType = any> extends ColumnType<RecordType> {
   /** key 需要必填 */
   dataIndex: Required<string>;
   /** 默认表单内容类型 */
   type?: FormType;
   /** select/radio/tree 选择项 */
-  options?: IOptions[] | ((dataSource?: RecordType[], fields?: Record<string, any>) => IOptions[]);
+  options?: IOptions[] | ((...args: any) => IOptions[]);
   /** 日期格式 */
   picker?: Picker;
   /** 占位内容 */
@@ -186,7 +185,7 @@ export interface ITableProps {
  * @description: 默认列表状态值
  */
 export interface DefaultTableState<
-  RecordType = DefaultRecordType,
+  RecordType = any,
   QueryFormType = any
 > {
   isTableLoading: boolean;

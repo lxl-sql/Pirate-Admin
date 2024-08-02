@@ -1,5 +1,5 @@
 import {CSSProperties} from "vue";
-import {TreeSelectProps} from "ant-design-vue";
+import {CheckedStrategy} from "ant-design-vue/es/vc-tree-select/utils/strategyUtil";
 
 interface FieldNames {
   label?: string;
@@ -10,7 +10,7 @@ interface FieldNames {
 export interface ITreeSelectProps<OptionType = any> {
   /** treeNodes 数据，如果设置则不需要手动构造 TreeNode 节点（value 在整个树范围内唯一） */
   treeData: OptionType[];
-  /**	替换 treeNode 中 label,value,children 字段为 treeData 中对应的字段 */
+  /**  替换 treeNode 中 label,value,children 字段为 treeData 中对应的字段 */
   fieldNames?: FieldNames;
   /** 下拉菜单的样式 */
   dropdownStyle?: CSSProperties;
@@ -28,15 +28,20 @@ export interface ITreeSelectProps<OptionType = any> {
   showSearch?: boolean;
   /** 显示清除按钮 */
   allowClear?: boolean;
+  /** 是否拼接全路径 */
+  treePathAll?: boolean;
+  /** tooltip 拼接父级名称 */
   spliceParentTitle?: boolean;
   /** 默认展开所有树节点 */
   treeDefaultExpandAll?: boolean;
-  /**	显示 checkbox */
+  /**  显示 checkbox */
   treeCheckable?: boolean
-  /**	定义选中项回填的方式。
+  /** 	checkable 状态下节点选择完全受控（父子节点选中状态不再关联），会使得 `labelInValue` 强制为 true */
+  treeCheckStrictly?: boolean
+  /**  定义选中项回填的方式。
    * - `TreeSelect.SHOW_ALL`: 显示所有选中节点(包括父节点).
    * - `TreeSelect.SHOW_PARENT`: 只显示父节点(当父节点下所有子节点都选中时).
    * - `TreeSelect.SHOW_CHILD`: 默认只显示子节点
    */
-  showCheckedStrategy?: TreeSelectProps['showCheckedStrategy'];
+  showCheckedStrategy?: CheckedStrategy;
 }

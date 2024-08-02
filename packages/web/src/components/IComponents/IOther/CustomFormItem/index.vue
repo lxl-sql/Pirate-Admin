@@ -70,6 +70,7 @@ defineOptions({
     >
       <custom-input
         v-model:value="model[valueProp]"
+        v-model:checkedKeys="model[valueProp]"
         :type="typeProp"
         :placeholder="placeholderProp"
         :tree-data="options"

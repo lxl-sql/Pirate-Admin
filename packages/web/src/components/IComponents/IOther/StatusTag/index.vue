@@ -1,22 +1,20 @@
 <!-- 状态tag 0 否 1 是 -->
 <script setup lang="ts">
 
-import {TagProps} from "ant-design-vue/es/tag";
-import {toRefs} from "vue";
 import {DefaultStatus} from "@/types/table";
 import {isNumber} from "lodash-es";
+import {ITagProps} from "@/types/tag";
 
-interface ProcessingTag extends /* @vue-ignore */ TagProps {
+interface ProcessingTag extends ITagProps {
   value?: DefaultStatus;
 }
-
-const props = defineProps<ProcessingTag>()
 
 const {
   value,
   color,
   ...resetProps
-} = toRefs(props)
+} = defineProps<ProcessingTag>()
+
 
 defineOptions({
   name: "StatusTag",
