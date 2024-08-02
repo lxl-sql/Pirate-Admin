@@ -5,16 +5,15 @@ import {useRouter} from "vue-router";
 import SiderItem from './index.vue'
 import * as antIcons from "@ant-design/icons-vue";
 import {Menu} from "@/store/hooks/useTheme/types";
-import {useTheme} from "@/store/hooks";
 
 interface SiderItemProps {
   menus?: Menu[] | null
+  mode?: 'inline' | 'horizontal'
 }
-
-const theme = useTheme()
 
 const props = withDefaults(defineProps<SiderItemProps>(), {
   menus: () => [],
+  mode: 'inline'
 });
 
 const router = useRouter();
@@ -22,7 +21,7 @@ const router = useRouter();
 // 跳转
 const toRouter = (type: 'sub-menu' | 'menu-item', menu: Menu) => {
   // 单栏/双栏 小屏模式 点击无效
-  if (type === 'sub-menu' && theme.isDrawerMenu) return
+  if (type === 'sub-menu' && props.mode === 'inline') return
   router.push({
     name: menu.name,
   });

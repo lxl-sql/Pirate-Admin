@@ -4,6 +4,7 @@ import {computed, inject} from "vue";
 import {TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
 import {useI18n} from "vue-i18n";
+import {IModalProps} from "@/components/IComponents/IModal/types";
 
 type Columns = TableSettingColumns
 
@@ -14,7 +15,7 @@ const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 const detail = computed(() => tableSettings?.detail)
 const modal = computed(() => tableSettings?.modal)
 
-const modalProps = computed(() => ({
+const modalProps = computed<IModalProps>(() => ({
   ...modal.value, // 公共弹窗配置
   ...detail.value?.modal, // form 表单弹窗配置
 }))
@@ -55,7 +56,6 @@ const getValue = (column: Columns) => {
 const getSpan = (column: Columns) => {
   return column.detailSpan || column.span || 1
 }
-
 defineOptions({
   name: 'ICrudDetailModal'
 })
@@ -65,7 +65,7 @@ defineOptions({
   <i-modal
     v-if="detail"
     :title="$t('title.detail')"
-    @cancel="tableSettings?.cancelForm"
+    @cancel="() => tableSettings?.cancelForm(2)"
     v-bind="modalProps"
   >
     <a-descriptions

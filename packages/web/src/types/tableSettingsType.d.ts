@@ -44,6 +44,13 @@ export declare type DefaultFieldsType = {
   id?: Key;
 };
 
+interface ModalCallback<T = any> {
+  beforeOpen?: (...args: T) => void
+  afterOpen?: (...args: T) => void
+  beforeClose?: (...args: T) => void
+  afterClose?: (...args: T) => void
+}
+
 export interface PrivateApi {
   /**
    * 插入或更新项
@@ -173,7 +180,7 @@ export interface FormReactive<Fields = DefaultFieldsType> {
   /** 表单布局 */
   defaultSpan?: number;
   /** 表单弹窗配置 */
-  modal: IModalProps;
+  modal: IModalProps & ModalCallback;
 }
 
 export interface DetailReactive<Fields = DefaultFieldsType> {
@@ -184,7 +191,7 @@ export interface DetailReactive<Fields = DefaultFieldsType> {
   /** 表单布局 */
   defaultSpan?: number;
   /** 表单弹窗配置 */
-  modal: IModalProps;
+  modal: IModalProps & ModalCallback;
   /** 国际化前缀 */
   i18nPrefixProp?: string;
 }

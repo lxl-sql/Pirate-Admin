@@ -84,7 +84,7 @@ defineOptions({
       :open-keys="openKeys"
       :selected-keys="selectedKeys"
     >
-      <sider-item :menus="menus"/>
+      <sider-item :menus="menus" :mode="mode"/>
     </a-menu>
     <div v-else class="text-center mt-1">
       <smile-outlined class="text-xl mb-2"/>

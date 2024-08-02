@@ -3,6 +3,7 @@
 import {computed, inject} from "vue";
 import {tableSettingKey} from "@/utils/tableSettings";
 import {TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
+import {IModalProps} from "@/components/IComponents/IModal/types";
 
 const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
 
@@ -72,7 +73,7 @@ const formItemAttrs = (column: TableSettingColumns) => ({
   ...column.formItemConfig,
 });
 
-const modalProps = computed(() => ({
+const modalProps = computed<IModalProps>(() => ({
   ...modal.value, // 公共弹窗配置
   ...form.value?.modal, // form 表单弹窗配置
 }))

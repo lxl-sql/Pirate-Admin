@@ -1,5 +1,5 @@
 // 获取时间状态
-import {deepArguments, deepCallback, DefaultTreeRecordType, IOptions, IPages} from "@/types";
+import {deepArguments, deepCallback, DefaultTreeRecordType, IOptions, IPages, Key} from "@/types";
 import {TagProps} from "ant-design-vue";
 import {cloneDeep, isArray, keys, round, values} from "lodash-es";
 import dayjs, {Dayjs} from "dayjs";
@@ -209,6 +209,36 @@ export function deepFilter<RecordType extends DefaultTreeRecordType<RecordType>>
     }
     return cb && cb(item, index, list, parent!);
   });
+}
+
+/**
+ * 禁用树形结构中的某个节点及其所有子节点。
+ * @param recordList - 要遍历的记录数组。
+ * @param value - 要匹配的键值。
+ * @param key - 要匹配的键，默认为 'id'。
+ */
+export function disableTreeByKey<RecordType extends DefaultTreeRecordType<RecordType>>(recordList: RecordType[], value: Key, key: string = 'id'): void {
+  for (const record of recordList) {
+    if (record[key] === value) {
+      setDisabled<RecordType>(record);
+    }
+    if (record.children) {
+      disableTreeByKey<RecordType>(record.children, value, key);
+    }
+  }
+}
+
+/**
+ * 递归禁用某个记录及其所有子记录。
+ * @param record - 要禁用的记录。
+ */
+function setDisabled<RecordType extends DefaultTreeRecordType<RecordType>>(record: RecordType): void {
+  record.disabled = true;
+  if (record.children) {
+    for (const child of record.children) {
+      setDisabled(child);
+    }
+  }
 }
 
 /**

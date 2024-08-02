@@ -15,5 +15,5 @@ export interface IModalProps extends ModalProps {
   // modal 加载loading 包括 body 和 确定按钮
   loading?: boolean;
   // 初始化
-  init?: () => void;
+  init?: (...args: any) => void;
 }

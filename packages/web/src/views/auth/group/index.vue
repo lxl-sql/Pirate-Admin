@@ -1,24 +1,37 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {provide} from "vue";
+import {computed, provide, shallowRef} from "vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {adminRoleUpsert, getAdminRoleById, getAdminRoleList, removeAdminRole,} from "@/api/auth/admin";
-import {AdminRoleTableSettingsType} from "./types";
+import {AdminRoleRecordType, AdminRoleTableSettingsType} from "./types";
 import {useI18n} from "vue-i18n";
-import {useAdminMenuStore, useAdminStore} from '@/store'
-import {storeToRefs} from "pinia";
+import {useAdminMenuStore} from '@/store'
+import {disableTreeByKey, recursive} from "@/utils/common";
+import {cloneDeep} from "lodash-es";
+import {ModalType} from "@/types/tableSettingsType";
 
 const {t} = useI18n();
 
-const adminStore = useAdminStore()
 const adminMenuSore = useAdminMenuStore()
-const {dataSource: permissionTreeData} = storeToRefs(adminMenuSore)
-const {getAdminMenuListRequest} = adminMenuSore
+
+const parentPermissionIds = shallowRef<number[]>([])
 
 // 初始化菜单权限数据源
 const onInit = async () => {
-  await getAdminMenuListRequest()
+  await adminMenuSore.getAdminMenuListRequest()
+}
+
+const formAfterOpen = async (type: ModalType, fields) => {
+  // console.log('formBeforeOpen --> fields', fields.parentId)
+  if (fields?.parentId) {
+    await getAdminRoleByIdAsync(fields.parentId)
+  }
+}
+
+const getAdminRoleByIdAsync = async (id: number) => {
+  const {data} = await getAdminRoleById(id)
+  parentPermissionIds.value = data.permissionIds
 }
 
 const tableSettings: AdminRoleTableSettingsType = new TableSettings({
@@ -44,20 +57,18 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         type: "tree-select",
         form: true,
         hide: true,
-        options: (dataSource: any[]) => {
-          const options = dataSource.map(item => {
-            item.disable = item.id === adminStore.userInfo.id
-            return item
-          })
-          console.log('options', options)
-          return options
+        options: (dataSource: AdminRoleRecordType[], fields) => {
+          const _dataSource = cloneDeep(dataSource)
+          disableTreeByKey(_dataSource, fields.id)
+          return _dataSource
         },
         formFieldConfig: {
           fieldNames: {
             label: 'name',
             value: 'id'
           },
-          treeDefaultExpandAll: true
+          treeDefaultExpandAll: true,
+          onChange: getAdminRoleByIdAsync
         }
       },
       {
@@ -155,6 +166,9 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
       slug: [{required: true, message: t("admin_role.error.slug")}],
       permissionIds: [{required: true, message: t("admin_role.error.permissionIds")}],
     },
+    modal: {
+      afterOpen: formAfterOpen
+    }
   },
   modal: {
     init: onInit,
@@ -163,6 +177,14 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
 
 provide(tableSettingKey, tableSettings);
 
+const permissions = computed(() => {
+  return recursive<AdminRoleRecordType>(cloneDeep(adminMenuSore.dataSource), (permission) => {
+    if (permission.id && parentPermissionIds.value.length) {
+      permission.disabled = !parentPermissionIds.value.includes(permission.id)
+    }
+    return permission
+  })
+})
 </script>
 
 <template>
@@ -179,7 +201,7 @@ provide(tableSettingKey, tableSettings);
         multiple
         tree-default-expand-all
         :field-names="{label: 'title', value: 'id'}"
-        :tree-data="permissionTreeData"
+        :tree-data="permissions"
         :placeholder="placeholder"
       />
     </template>

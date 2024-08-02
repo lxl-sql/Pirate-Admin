@@ -1,35 +1,10 @@
 <script setup lang="ts">
-import {computed, CSSProperties, ref, toRaw, watch} from "vue";
+import {computed, ref, toRaw, watch} from "vue";
 import {treeForEach} from "@/utils/common";
-import {TreeSelect, TreeSelectProps} from "ant-design-vue";
-
-interface FieldNames {
-  label?: string;
-  value?: string;
-  children?: string;
-}
-
-interface ITreeSelectProps {
-  treeData: any[];
-  fieldNames?: FieldNames;
-  dropdownStyle?: CSSProperties;
-  value?: string | string[] | number | number[];
-  placeholder?: string;
-  treeNodeFilterProp?: string;
-  maxTagCount?: number;
-  multiple?: boolean;
-  showSearch?: boolean;
-  allowClear?: boolean;
-  spliceParentTitle?: boolean;
-  treeDefaultExpandAll?: boolean;
-  treeCheckable?: boolean
-  showCheckedStrategy?: TreeSelectProps['showCheckedStrategy']
-}
+import {TreeSelect} from "ant-design-vue";
+import {ITreeSelectProps} from "@/types/treeSelect";
 
 const props = withDefaults(defineProps<ITreeSelectProps>(), {
-  value: undefined,
-  treeData: undefined,
-  placeholder: undefined,
   multiple: false,
   treeNodeFilterProp: "label",
   showSearch: true,

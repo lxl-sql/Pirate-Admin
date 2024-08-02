@@ -1,18 +1,19 @@
 import {TableSettingsType} from "@/types/tableSettingsType";
 
-interface AdminRoleDataSource {
-  parentId?: number,
-  id?: number,
-  path?: string,
-  status?: number,
-  cache?: number,
-  component?: string,
+export interface AdminRoleRecordType {
+  parentId?: number
+  id?: number
+  path?: string
+  status?: number
+  cache?: number
+  component?: string
+  disabled?: boolean
 }
 
-interface AdminRoleQueryForm extends AdminRoleDataSource {
+interface AdminRoleQueryForm extends AdminRoleRecordType {
 }
 
-export interface AdminRoleFields extends AdminRoleDataSource {
+export interface AdminRoleFields extends AdminRoleRecordType {
   description?: string,
   name?: string,
   title?: string,
@@ -21,6 +22,7 @@ export interface AdminRoleFields extends AdminRoleDataSource {
   type?: 1 | 2 | 3,
   frame?: number,
   sort?: number,
+  permissionIds?: number[]
 }
 
-export type AdminRoleTableSettingsType = TableSettingsType<AdminRoleDataSource, AdminRoleQueryForm, AdminRoleFields>;
+export type AdminRoleTableSettingsType = TableSettingsType<AdminRoleRecordType, AdminRoleQueryForm, AdminRoleFields>;

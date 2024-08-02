@@ -98,7 +98,6 @@ export default class TableSettings<
   }) as DetailReactive<Fields>
 
   public readonly modal = reactive({
-    init: undefined,
     loading: false,
     draggable: true,
   }) as ModalReactive
@@ -222,7 +221,11 @@ export default class TableSettings<
     await this.queryAll();
   };
 
-  public detailById = async (type: ModalType, id: Key) => {
+  /**
+   * @param type 1 | 2 新增是没有详情的
+   * @param id
+   */
+  public detailById = async (type: Omit<ModalType, 0>, id: Key) => {
     this.modal.loading = true;
     try {
       const {data} = await this.api?.findById(id);
@@ -254,8 +257,9 @@ export default class TableSettings<
     await this.queryAll();
   };
 
-  public openForm = async (type: ModalType, id?: Key) => {
+  public openForm = async (type: Omit<ModalType, 2>, id?: Key) => {
     this.form.fields.id = id;
+    this.form.modal.beforeOpen?.<Omit<ModalType, 2>, RecordType>(type, this.form.fields)
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
       this.initFormRefs();
@@ -264,19 +268,32 @@ export default class TableSettings<
     if (type === 1 && id) {
       await this.detailById(type, id);
     }
+    this.form.modal.afterOpen?.(type, this.form.fields)
   };
 
   /**
-   * 弹窗关闭事件
+   * 清理form中的缓存数据
    * @param {ModalType} type - 取消表单的类型。
    */
-  public cancelForm = (type: ModalType) => {
+  private clearForm = (type: ModalType) => {
+
+  }
+
+  /**
+   * 表单弹窗关闭事件
+   * @param {ModalType} type - 取消表单的类型。
+   */
+  public cancelForm = (type: Omit<ModalType, 0>) => {
     if (type === 1) {
+      this.form.modal.beforeClose?.()
       this.form.modal.open = false;
       this.formRefs?.resetFields();
-      this.resetFields()
+      this.resetFields();
+      this.form.modal.afterClose?.()
     } else {
+      this.detail.modal.beforeClose?.()
       this.detail.modal.open = false;
+      this.detail.modal.afterClose?.()
     }
   };
 
@@ -303,8 +320,13 @@ export default class TableSettings<
    * @param id
    */
   public openDetail = async (id: Key) => {
+    this.detail.fields.id = id
+    this.detail.modal.beforeOpen(id, this.detail.fields)
+
     this.detail.modal.open = true;
     await this.detailById(2, id);
+
+    this.detail.modal.afterOpen(id, this.detail.fields)
   };
 
   /**

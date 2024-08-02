@@ -7,6 +7,7 @@ export type Key = string | number
 
 export type DefaultTreeRecordType<RecordType> = {
   level?: number
+  disabled?: boolean
   children?: RecordType[]
 }
 
