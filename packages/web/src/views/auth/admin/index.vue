@@ -26,6 +26,7 @@ const onInit = async () => {
 };
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
+  console.log('src', src)
   if (!src) return;
   isAvatarPreviewSrcOpen.value = true;
   avatarPreviewSrc.value = src;
@@ -66,7 +67,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         title: "角色组",
         dataIndex: "roles",
         align: "center",
-        width: 120,
+        width: 180,
         type: 'tree-select',
         form: true,
         formValueProp: "roleIds",
@@ -87,8 +88,9 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         formValueProp: 'fileList',
         type: 'upload',
         formFieldConfig: {
-          length: 1,
-          accept: "image/*"
+          maxCount: 1,
+          accept: "image/*",
+          multiple: false,
         }
       },
       {
@@ -96,14 +98,24 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         dataIndex: "email",
         align: "center",
         width: 150,
-        form: true
+        form: true,
+        formFieldConfig(fields: AdminFields) {
+          return {
+            readonly: !!fields?.id
+          }
+        }
       },
       {
         title: "手机号",
         dataIndex: "phone",
         align: "center",
         width: 150,
-        form: true
+        form: true,
+        formFieldConfig(fields: AdminFields) {
+          return {
+            readonly: !!fields?.id
+          }
+        }
       },
       {
         title: "密码",
@@ -146,10 +158,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         width: 100,
         form: true,
         type: 'radio',
-        options: [
-          {label: t("enum.status.0"), value: 0},
-          {label: t("enum.status.1"), value: 1},
-        ],
+        options: 'status'
       },
       {
         title: "操作",
@@ -170,7 +179,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       username: undefined,
       nickname: undefined,
       avatar: undefined,
-      avatarPath: undefined,
+      avatarFull: undefined,
       email: undefined,
       phone: undefined,
       motto: undefined,
@@ -183,6 +192,19 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       username: [{required: true, message: t("user.error.username")}],
       nickname: [{required: true, message: t("user.error.nickname")}],
       roleIds: [{required: true, message: t("user.error.roles")}],
+    },
+    modal: {
+      afterOpen(type, fields) {
+        if (type !== 1) return;
+        const file = {
+          // 按照要求乱填即可
+          url: fields.avatarFull,
+          path: fields.avatar,
+          status: "done",
+          uid: "1",
+        };
+        fields.fileList = fields.avatar ? [file] : undefined
+      }
     }
   },
   modal: {
@@ -190,18 +212,17 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
   },
   customParams: {
     confirmForm(params: any) {
-      const [response] = params.fileList || [];
+      const [file] = params.fileList || [];
       return {
         ...params,
         fileList: undefined,
-        avatar: response?.path,
+        avatar: file?.path,
       };
     },
   },
 });
 
 provide(tableSettingKey, tableSettings);
-
 
 watch(
   () => tableSettings.form.fields?.id,
@@ -213,6 +234,10 @@ watch(
 
 <template>
   <i-crud>
+    <i-preview-image
+      v-model:open="isAvatarPreviewSrcOpen"
+      :src="avatarPreviewSrc"
+    />
     <template #roles="{ value }">
       <processing-tag v-for="text in value" :key="text" :value="text"/>
     </template>
@@ -233,10 +258,5 @@ watch(
     <template #status="{ value }">
       <status-tag :value="value"/>
     </template>
-
-    <i-preview-image
-      v-model:open="isAvatarPreviewSrcOpen"
-      :src="avatarPreviewSrc"
-    />
   </i-crud>
 </template>

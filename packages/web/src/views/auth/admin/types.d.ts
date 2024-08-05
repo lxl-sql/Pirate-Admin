@@ -10,7 +10,7 @@ export interface AdminDataSource extends RecordType {
   /** 头像 */
   avatar?: string;
   /** 头像路径 */
-  avatarPath?: string;
+  avatarFull?: string;
   /** 邮箱 */
   email?: string;
   /** 手机号 */

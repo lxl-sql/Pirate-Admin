@@ -73,6 +73,7 @@ const tableSettings: AnnexTableSettingsType = new TableSettings({
         dataIndex: "size",
         align: "center",
         width: 100,
+        customRender: ({text}) => formatFileSize(text)
       },
       {
         title: "文件类型",
@@ -201,9 +202,6 @@ const {dropZoneRef} = useDragAndDropUpload({
       </template>
       <template #usertype="{value}">
         <processing-tag :value="$t(`enum.usertype.${value}`)"/>
-      </template>
-      <template #size="{value}">
-        {{ formatFileSize(value) }}
       </template>
       <template #url="{value,record}">
         <preview-file file-type="thumbnail" :name="record.name" :url="value"/>

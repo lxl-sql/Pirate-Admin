@@ -44,13 +44,15 @@ export type FormFieldProps<T extends FormType = "input"> = T extends | "input"
                 ? UploadProps
                 : never;
 
+export type DefaultOptionType = 'status' | 'whether'
+
 export declare interface IColumns<RecordType = any> extends ColumnType<RecordType> {
   /** key 需要必填 */
   dataIndex: Required<string>;
   /** 默认表单内容类型 */
   type?: FormType;
   /** select/radio/tree 选择项 */
-  options?: IOptions[] | ((...args: any) => IOptions[]);
+  options?: IOptions[] | ((...args: any) => IOptions[]) | DefaultOptionType;
   /** 日期格式 */
   picker?: Picker;
   /** 占位内容 */
@@ -78,6 +80,7 @@ export declare interface IColumns<RecordType = any> extends ColumnType<RecordTyp
   searchLabelProp?: string;
   /** 回填到查询表单数据 Value 的属性值，默认是 column 的 dataIndex 值。比如表单展示不同字段，此值可以更换字段。 */
   searchValueProp?: string;
+  modelProp?: string;
   /** 是否隐藏 */
   hide?: boolean;
   /** 默认排序 */

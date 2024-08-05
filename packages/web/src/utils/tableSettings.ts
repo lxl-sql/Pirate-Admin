@@ -70,6 +70,7 @@ export default class TableSettings<
     loading: false,
     draggable: false,
     defaultExpandAllRows: false,
+    showRemark: true,
     displayFormModal: true,
     displayDetailModal: true,
   }) as TableReactive<RecordType, QueryForm>;
@@ -187,7 +188,9 @@ export default class TableSettings<
     this.table.loading = true;
     try {
       const {data} = await this.api?.find(params);
-      this.table.remark = data.remark;
+      if (this.table.showRemark) {
+        this.table.remark = data.remark;
+      }
       this.table.dataSource = data.records;
 
       this.table.pages = {
@@ -249,6 +252,9 @@ export default class TableSettings<
   // endregion
 
   public selectChange = (selectedRowKeys: Key[]) => {
+    if (typeof this.table.maxSelectedCount === 'number' && this.table.maxSelectedCount >= 0) {
+      selectedRowKeys.splice(this.table.maxSelectedCount)
+    }
     this.table.selectedRowKeys = selectedRowKeys;
   };
 

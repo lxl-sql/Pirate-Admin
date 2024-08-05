@@ -23,7 +23,11 @@ class LocalUtil implements LocalInterFace {
     // ts类型推断时不能将null赋值给JSON.parse()的参数
     let str = window.localStorage.getItem(key) || "";
     if (str) {
-      return JSON.parse(str);
+      try {
+        return JSON.parse(str);
+      } catch (e) {
+        return str
+      }
     }
     return str || value;
   }

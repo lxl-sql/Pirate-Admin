@@ -1,10 +1,11 @@
-import { Response } from "@/types/request";
+import {Response} from "@/types/request";
 
 export interface UserInfo {
   id?: number;
   username?: string;
   nickname?: string;
   avatar?: string;
+  avatarFull?: string;
   email?: string;
   phone?: string;
   roles?: string[];

@@ -164,7 +164,7 @@ const tableSettings = new TableSettings({
       username: undefined,
       nickname: undefined,
       avatar: undefined,
-      avatarPath: undefined,
+      avatarFull: undefined,
       email: undefined,
       phone: undefined,
       motto: undefined,

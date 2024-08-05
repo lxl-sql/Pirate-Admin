@@ -8,8 +8,8 @@ export interface AdminDataSource extends RecordType {
   nickname?: string;
   /** 头像 */
   avatar?: string;
-  /** 头像路径 */
-  avatarPath?: string;
+  /** 头像路径(绝对路径) */
+  avatarFull?: string;
   /** 邮箱 */
   email?: string;
   /** 手机号 */

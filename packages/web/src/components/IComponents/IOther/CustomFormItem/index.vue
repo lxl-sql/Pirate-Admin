@@ -17,6 +17,7 @@ const {t, te} = useI18n();
 const props = withDefaults(defineProps<CustomFormItemProps>(), {
   column: () => ({
     dataIndex: "id",
+    modelProp: 'value'
   }),
   options: () => [],
 });
@@ -50,6 +51,10 @@ const placeholderProp = computed(() => {
 
 const typeProp = computed(() => (props.typeProp && column[props.typeProp]) || column.type || 'input');
 
+const formFieldConfigProp = computed(() => {
+  return typeof column.formFieldConfig === 'function' ? column.formFieldConfig(model) : column.formFieldConfig
+})
+
 defineOptions({
   name: 'CustomFormItem'
 })
@@ -71,12 +76,13 @@ defineOptions({
       <custom-input
         v-model:value="model[valueProp]"
         v-model:checkedKeys="model[valueProp]"
+        v-model:fileList="model[valueProp]"
         :type="typeProp"
         :placeholder="placeholderProp"
         :tree-data="options"
         :options="options"
         :picker="column.picker"
-        v-bind="column.formFieldConfig"
+        v-bind="formFieldConfigProp"
       />
     </slot>
   </a-form-item>

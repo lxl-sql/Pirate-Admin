@@ -8,9 +8,7 @@
   :deep(.ant-upload) {
     &.ant-upload-select-picture-card {
       position: relative;
-      width: 120px;
-      height: 120px;
-      border-radius: 4px;
+      color: @text-regular;
 
       .select-text {
         position: absolute;
@@ -18,13 +16,15 @@
         top: 0;
         left: 0;
         height: 26px;
-        line-height: 26px;
-        border: 1px dashed #d9d9d9;
-        border-top: none;
+        line-height: 22px;
+        border-width: 1px;
+        border-style: dashed;
+        border-top-width: 0;
         border-radius: 0 0 20px 20px;
         font-size: 12px;
         transition: all 0.3s;
-        color: #606266;
+        color: @text-regular;
+        border-color: @colorBorder;
 
         &:hover {
           cursor: pointer;

@@ -19,7 +19,8 @@
     "en": "English",
     "search": "Search",
     "noDataTips": "No data",
-    "loginExpired": "Login expired, please login again"
+    "loginExpired": "Login expired, please login again",
+    "notification": "Notification"
   },
   "placeholder": {
     "username": "Please input the username",
@@ -76,6 +77,9 @@
     "confirm": "Confirm",
     "preview": "Preview",
     "Click Upload": "Click Upload"
+  },
+  "description": {
+    "Please select at least one attachment!": "Please select at least one attachment!"
   },
   "login": {
     "login": "Login",

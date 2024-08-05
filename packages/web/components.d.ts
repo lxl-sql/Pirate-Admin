@@ -66,7 +66,6 @@ declare module 'vue' {
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
     ATree: typeof import('ant-design-vue/es')['Tree']
     ATreeSelect: typeof import('ant-design-vue/es')['TreeSelect']
-    ATypographyTitle: typeof import('ant-design-vue/es')['TypographyTitle']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     AvatarUpload: typeof import('./src/components/IComponents/IOther/AvatarUpload/index.vue')['default']
     CloseAlert: typeof import('./src/components/IComponents/IOther/CloseAlert/index.vue')['default']

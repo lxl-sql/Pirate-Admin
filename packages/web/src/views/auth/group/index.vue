@@ -211,17 +211,6 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
 });
 
 provide(tableSettingKey, tableSettings);
-
-
-const handleSelect = (selectedKeys, e) => {
-  const keys = getTreeKeys(e.selectedNodes)
-  console.log(selectedKeys, e)
-  // if (e.selected) {
-  //   permissionTreeExpandedKeys.value = keys
-  // } else {
-  //   permissionTreeExpandedKeys.value = permissionTreeExpandedKeys.value.filter(key => keys.includes(key))
-  // }
-}
 </script>
 
 <template>
@@ -241,7 +230,6 @@ const handleSelect = (selectedKeys, e) => {
         :tree-data="permissions"
         :placeholder="placeholder"
         @check="handleCheck"
-        @select="handleSelect"
       />
     </template>
   </i-crud>

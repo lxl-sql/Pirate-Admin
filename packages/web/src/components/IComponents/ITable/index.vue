@@ -10,8 +10,9 @@ import CloseAlert from "../IOther/CloseAlert/index.vue";
 import QueryForm from "./components/QueryForm/index.vue";
 import QueryFormItem from "./components/QueryFormItem/index.vue";
 import useFormInstance from "@/hooks/useFormInstance";
-import {formatUnit} from "@/utils/common";
+import {formatUnit} from '@/utils/common'
 
+const _formatUnit = formatUnit
 // 国际化
 const {locale, te, t} = useI18n();
 
@@ -312,7 +313,7 @@ defineOptions({
           <slot name="leftActions"></slot>
         </a-space>
         <!-- 右侧功能区域 -->
-        <a-space>
+        <a-space class="ml-auto">
           <a-input
             v-if="keywordVisible"
             v-model:value="keyword"
@@ -405,7 +406,7 @@ defineOptions({
             <template #headerCell="{ column,...resetScope }">
               <slot name="headerCell" :column="column" v-bind="resetScope">
                 <div :style="{
-                  minWidth: column.minWidth ? formatUnit(column.minWidth) : formatUnit(column.width),
+                  minWidth: column.minWidth ? _formatUnit(column.minWidth) : _formatUnit(column.width)
                 }">
                   {{ getHeaderCellName(column) }}
                 </div>
@@ -414,9 +415,10 @@ defineOptions({
             <template #bodyCell="score">
               <slot name="bodyCell" v-bind="score">
                 <ellipsis
-                  v-if="score.column.ellipsis"
+                  v-if="score.column?.ellipsis"
                   :value="score.value"
                   :width="score.column.width"
+                  placement="top"
                   tooltip
                   v-bind="getEllipsisProps(score.column.ellipsis)"
                 />

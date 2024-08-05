@@ -6,12 +6,11 @@ interface ProcessingTag extends ITagProps {
   value?: string;
 }
 
-const {
-  value,
-  ...resetProps
-} = withDefaults(defineProps<ProcessingTag>(), {
+const props = withDefaults(defineProps<ProcessingTag>(), {
   color: "processing"
 })
+
+const {value, ...resetProps} = props
 
 
 defineOptions({
@@ -21,7 +20,8 @@ defineOptions({
 
 <template>
   <a-tag
-    class="last-of-type:mr-0"
+    v-if="value"
+    class="mx-1 mb-2"
     v-bind="resetProps"
   >
     {{ value }}

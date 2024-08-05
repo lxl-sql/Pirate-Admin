@@ -1,13 +1,36 @@
 .input-middleware {
-    width: 30px;
-    min-width: 30px;
-    padding-left: 0;
-    padding-right: 0;
-    text-align: center;
-    pointer-events: none;
-    background-color: var(--primary-color);
+  width: 30px;
+  min-width: 30px;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+  pointer-events: none;
+  background-color: var(--primary-color);
 }
+
 .ant-input-group-compact {
-    display: flex;
-    width: 100%;
+  display: flex;
+  width: 100%;
+}
+
+.select-file-table {
+  .reset-count {
+    font-weight: bold;
+    color: @colorPrimary;
+  }
+  :deep(.container-table) {
+    border: none;
+    .i-table-form,
+    .i-table-header {
+      padding: 0 0 1rem;
+      background-color: transparent;
+    }
+
+    .i-table-main {
+      padding: 0;
+      .ant-select.ant-select-in-form-item {
+        width: auto;
+      }
+    }
+  }
 }

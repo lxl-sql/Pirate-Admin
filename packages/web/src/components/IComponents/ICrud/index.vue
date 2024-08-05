@@ -168,5 +168,7 @@ defineOptions({
         </template>
       </template>
     </i-crud-detail-modal>
+
+    <slot></slot>
   </div>
 </template>

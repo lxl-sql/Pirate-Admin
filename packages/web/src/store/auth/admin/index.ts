@@ -24,7 +24,7 @@ export const useAdminStore = defineStore("adminStore", {
         username: undefined,
         nickname: undefined,
         avatar: undefined,
-        avatarPath: undefined,
+        avatarFull: undefined,
         email: undefined,
         phone: undefined,
         motto: undefined,
@@ -62,8 +62,8 @@ export const useAdminStore = defineStore("adminStore", {
         const {data} = await getAdminById(id);
         const file = {
           // 按照要求乱填即可
-          url: data.avatar,
-          path: data.avatarPath,
+          url: data.avatarFull,
+          path: data.avatar,
           status: "done",
           uid: "1",
         };

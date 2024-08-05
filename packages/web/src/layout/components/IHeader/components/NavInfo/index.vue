@@ -21,17 +21,15 @@ defineOptions({
     trigger="click"
   >
     <template #content>
-      <info-popover-content
-        @close="open = false"
-      />
+      <info-popover-content @close="open = false"/>
     </template>
     <div
       class="admin-info flex items-center h-full px-4 cursor-pointer transition duration-300"
       :title="adminStore.rawUserInfo.nickname"
     >
       <!-- 账号信息 -->
-      <a-avatar :size="32" :src="adminStore.rawUserInfo.avatar">
-        <template #icon v-if="!adminStore.rawUserInfo.avatar">
+      <a-avatar :size="32" :src="adminStore.rawUserInfo.avatarFull">
+        <template #icon v-if="!adminStore.rawUserInfo.avatarFull">
           <user-outlined class="text-[32px]"/>
         </template>
       </a-avatar>

@@ -24,7 +24,7 @@ defineOptions({
 
 <template>
   <a-image
-    :style="{ display: 'none' }"
+    class="hidden"
     :preview="{
       visible:open,
       onVisibleChange: onVisibleChange,

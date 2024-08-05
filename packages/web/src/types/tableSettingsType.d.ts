@@ -23,8 +23,6 @@ export declare type Operation =
   | "row-update"
   | "row-delete";
 
-export type DefaultOptionType = 'status' | 'whether'
-
 /**
  * CancelFormType 表示取消表单的类型。
  * @typedef {0| 1 | 2} ModalType
@@ -101,13 +99,10 @@ export interface TableSettingColumns<RecordType = DefaultRecordType> extends ICo
   formSpan?: number;
   /** 表单插槽 */
   formSlot?: boolean;
-
   /** 表单item配置 */
   formItemConfig?: any;
-
   /** 表单内容配置 */
-  formFieldConfig?: FormFieldProps;
-
+  formFieldConfig?: FormFieldProps | ((fields?: Record<string, any>) => FormFieldProps);
   /** 是否在详情中展示此字段 */
   detail?: boolean | ((fields?: Record<string, any>) => boolean);
   /** 回填到详情展示的属性名称，默认是 column 的label值。比如表单展示不同名称，此值可以更换名称。 */
@@ -123,7 +118,7 @@ export interface TableSettingColumns<RecordType = DefaultRecordType> extends ICo
   /** 详情自定义渲染 */
   detailRender?: <V extends keyof RecordType = any, T = any>(value: V, fields: RecordType) => T
   /** select/radio/tree 选择项 */
-  options?: IColumns<RecordType>['options'] | DefaultOptionType | ((dataSource?: RecordType[], fields?: Record<string, any>) => IOptions[])
+  options?: IColumns<RecordType>['options'] | ((dataSource?: RecordType[], fields?: Record<string, any>) => IOptions[])
 }
 
 export interface TableReactive<
@@ -158,6 +153,8 @@ export interface TableReactive<
   parentKey?: string;
   /** 表单布局 */
   defaultSpan?: number;
+  /** 多选框最大可选数 */
+  maxSelectedCount?: number;
   /** 表格 loading */
   loading?: boolean;
   /** 列表行支持拖拽 */
@@ -168,6 +165,8 @@ export interface TableReactive<
   displayFormModal?: boolean;
   /** 控制表格字段下的 detail-modal 对话框的可见性，默认为 true */
   displayDetailModal?: boolean;
+  /** 是否显示 `remark` 默认: true */
+  showRemark?: boolean;
 }
 
 export interface FormReactive<Fields = DefaultFieldsType> {

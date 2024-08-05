@@ -113,15 +113,13 @@ export class AdminService {
         }
       }
       this.adminRepository.merge(found_admin, admin, {
-        // email: admin.email || null,
-        // phone: admin.phone || null,
         email: found_admin.email, // TODO 不允许通过接口更新，只能通过绑定用户数据更新
         phone: found_admin.phone, // TODO 不允许通过接口更新，只能通过绑定用户数据更新
         avatar: admin.avatar || null,
         updateTime: new Date(),
-        roles: admin.roles || found_admin.roles,
         password: admin.password ? md5(admin.password) : found_admin.password,
       });
+      found_admin.roles = admin.roles || found_admin.roles
       await this.adminRepository.save(found_admin);
       return '修改成功';
     } catch (error) {
@@ -464,8 +462,7 @@ export class AdminService {
     const found_admin = await this.findOneById(id, ['roles']);
     return {
       ...found_admin,
-      avatarPath: found_admin.avatar,
-      avatar: requestHost(protocolHost, found_admin.avatar),
+      avatar: found_admin.avatar,
       avatarFull: requestHost(protocolHost, found_admin.avatar),
       password: null,
       roles: undefined,

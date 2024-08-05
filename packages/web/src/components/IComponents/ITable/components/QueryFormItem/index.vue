@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import {IColumns} from "@/types";
+import {IColumns, IOptions} from "@/types";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 interface QueryFormItemProps {
   column: IColumns;
@@ -13,8 +16,30 @@ withDefaults(defineProps<QueryFormItemProps>(), {
   model: () => ({}),
 });
 
-const getOptions = (column: IColumns) => {
-  return typeof column.options === 'function' ? column.options() : column.options || [];
+const defaultOptions: Record<string, IOptions[]> = {
+  // 默认 1 是; 0 否
+  whether: [
+    {label: t('enum.whether.1'), value: 1},
+    {label: t('enum.whether.0'), value: 0},
+  ],
+  // 默认 1 启用 0 禁用
+  status: [
+    {label: t('enum.status.1'), value: 1},
+    {label: t('enum.status.0'), value: 0},
+  ]
+}
+
+const getOptions = (column: IColumns): IOptions[] => {
+  if (typeof column.options === 'function') {
+    return column.options()
+  } else if (typeof column.options === 'string') {
+    if (['status', 'whether'].includes(column.options)) {
+      return defaultOptions[column.options]
+    }
+    throw new TypeError('options is not IOptions')
+  } else {
+    return column.options || defaultOptions.whether
+  }
 };
 
 const typeProp = (column: IColumns) => {

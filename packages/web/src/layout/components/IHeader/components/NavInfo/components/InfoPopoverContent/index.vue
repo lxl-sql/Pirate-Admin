@@ -27,7 +27,7 @@ defineOptions({
 
 <template>
   <div class="w-72 text-center">
-    <a-avatar :size="70" :src="adminStore.rawUserInfo.avatar" class="avatar-turn mb-1">
+    <a-avatar :size="70" :src="adminStore.rawUserInfo.avatarFull" class="avatar-turn mb-1">
       <template #icon>
         <user-outlined class="text-[60px] translate-y-3"/>
       </template>

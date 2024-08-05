@@ -17,6 +17,7 @@ const props = withDefaults(defineProps<IUploadProps>(), {
   name: "files",
   listType: 'picture-card',
   multiple: true,
+  showUploadList: true,
   openFileDialogOnClick: true
 });
 const emits = defineEmits([
@@ -79,7 +80,6 @@ const customRequest = async (originObject: any) => {
 };
 
 const handleUploadChange = (info: UploadChangeParam) => {
-  // console.log("info.file", info);
   if (info.file.status === "uploading") {
     return
   }
@@ -89,6 +89,7 @@ const handleUploadChange = (info: UploadChangeParam) => {
       description: t('error.upload'),
     })
   }
+  console.log("info.file", info);
   const _fileList = info.fileList
     .filter(file => file.status !== 'error' && file.status)
     .map(file => {
@@ -152,12 +153,15 @@ const openFileModal = () => {
   isSelectFileModalVisible.value = true;
 };
 // 取消 - 选择附件
-const onFileModalCancel = () => {
+const handleSelectFileModalCancel = () => {
   isSelectFileModalVisible.value = false;
 };
 // 确定 - 选择附件
-const onFileModalConfirm = () => {
-  onFileModalCancel();
+const handleSelectFileModalConfirm = (files) => {
+  fileList.value = files
+  emits('update:fileList', files)
+  emits('success', files)
+  handleSelectFileModalCancel();
 };
 </script>
 
@@ -214,8 +218,9 @@ const onFileModalConfirm = () => {
   <select-file-modal
     v-if="listType==='picture-card'"
     :open="isSelectFileModalVisible"
-    @confirm="onFileModalConfirm"
-    @cancel="onFileModalCancel"
+    :max-count="maxCount"
+    @confirm="handleSelectFileModalConfirm"
+    @cancel="handleSelectFileModalCancel"
   />
 </template>
 

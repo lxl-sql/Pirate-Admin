@@ -74,8 +74,11 @@ const getOptions = (column: TableSettingColumns) => {
     const dataSource = tableSettings?.table.dataSource || []
     const fields = form.value?.fields
     return column.options(dataSource, fields)
-  } else if (typeof column.options === 'string' && ['status', 'whether'].includes(column.options)) {
-    return defaultOptions[column.options]
+  } else if (typeof column.options === 'string') {
+    if (['status', 'whether'].includes(column.options)) {
+      return defaultOptions[column.options]
+    }
+    throw new TypeError('options is not IOptions')
   } else {
     return column.options || defaultOptions.whether
   }

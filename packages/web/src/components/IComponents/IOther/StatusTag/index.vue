@@ -9,12 +9,9 @@ interface ProcessingTag extends ITagProps {
   value?: DefaultStatus;
 }
 
-const {
-  value,
-  color,
-  ...resetProps
-} = defineProps<ProcessingTag>()
+const props = defineProps<ProcessingTag>()
 
+const {value, color, ...resetProps} = props
 
 defineOptions({
   name: "StatusTag",

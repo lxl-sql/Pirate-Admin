@@ -37,7 +37,6 @@ const handleSubmit = async () => {
   const params = {
     ...formState.value,
     type: 2,
-    avatar: formState.value.avatarPath
   }
   isSubmitLoading.value = true
   try {
@@ -55,8 +54,8 @@ const handleSubmit = async () => {
 
 const handleUploadSuccess = (file) => {
   console.log(file)
-  formState.value.avatar = file.url;
-  formState.value.avatarPath = file.path
+  formState.value.avatar = file.path;
+  formState.value.avatarFull = file.url
 }
 
 const openBindInfoModal = (type: CaptchaType) => {
@@ -74,8 +73,8 @@ const openBindInfoModal = (type: CaptchaType) => {
       >
         <div class="relative">
           <img
-            v-if="formState.avatar"
-            :src="formState.avatar"
+            v-if="formState.avatarFull"
+            :src="formState.avatarFull"
             alt="头像加载失败"
             class="min-w-32 min-h-32 w-32 h-32 rounded-full leading-10"
           />

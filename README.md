@@ -20,7 +20,8 @@
 
 </div>
 
-`Pirate Admin` 是一个 通用的后台管理模板，由 `Vue3` + `Ts` + `Vite4` + `Tailwindcss` + `VSCode`(可选 `webstorm`) 实现。它使用了最新的前端技术栈，自适应PC端和移动端。
+`Pirate Admin` 是一个 通用的后台管理模板，由 `Vue3` + `Ts` + `Vite4` + `Tailwindcss` + `VSCode`(可选 `webstorm`)
+实现。它使用了最新的前端技术栈，自适应PC端和移动端。
 
 `Pirate Admin` 内置了 `约定式路由`、`layout布局`、`请求封装`、`请求拦截`、`登录拦截`、`Tailwindcss`、`i18n多语言` 等基础功能。
 
@@ -69,3 +70,25 @@ $ pnpm remove xxx
 $ pnpm -r --filter=pirate-web remove xxx
 $ pnpm -r --filter=pirate-server remove xxx
 ```
+
+## 布局配置
+
+内置四套通用布局配置，以适应大部分应用场景
+
+- 默认布局
+  ![img.png](/assets/images/img.png)
+
+- 经典布局
+  ![img.png](/assets/images/img_1.png)
+
+- 单栏布局
+  ![img.png](/assets/images/img_2.png)
+
+- 双栏布局
+  ![img.png](/assets/images/img_3.png)
+
+- 系统内置 `6套` 主题色可供选择，同时支持自定义系统主题色
+  ![img.png](/assets/images/img_4.png)
+
+- 支持系统双色切换
+  ![img.png](/assets/images/img_5.png)
