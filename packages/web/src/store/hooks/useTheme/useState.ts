@@ -28,6 +28,7 @@ export const useState = (): ThemeState => {
   const isLayoutFullScreen = shallowRef<boolean>(false);
   const isPageRefreshing = shallowRef<boolean>(false);
   const isDrawerMenu = shallowRef<boolean>(false);
+  const menuUniqueOpened = shallowRef<boolean>(false);
 
   const cacheMenus = ref<Menu[] | null>(null);
   const siderMenus = ref<Menu[] | null>(null);
@@ -47,6 +48,7 @@ export const useState = (): ThemeState => {
     isLayoutFullScreen,
     isPageRefreshing,
     isDrawerMenu,
+    menuUniqueOpened,
     cacheMenus,
     siderMenus,
     headerMenus

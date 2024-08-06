@@ -144,11 +144,11 @@ export function recursive<RecordType extends DefaultTreeRecordType<RecordType>>(
   return list.map((item, index) => {
     item.level = level
     if (item[children] && item[children].length) {
-      item[children] = recursive(item[children], cb, children, item);
+      item[children] = recursive<RecordType>(item[children], cb, children, item, level + 1);
     } else {
       item[children] = null;
     }
-    return cb && cb(item, index, list, parent, level + 1);
+    return cb ? cb(item, index, list, parent, level) : item;
   });
 }
 
@@ -167,9 +167,9 @@ export function recursiveTreeMap<RecordType extends DefaultTreeRecordType<Record
   if (!isArray(list)) return list;
   return list.map((item, index) => {
     item.level = level
-    cb && cb(item, index, list, parent, level + 1);
+    cb && cb(item, index, list, parent, level);
     if (item[children] && item[children].length) {
-      item[children] = recursiveTreeMap(item[children], cb, children, item);
+      item[children] = recursiveTreeMap<RecordType>(item[children], cb, children, item, level + 1);
     } else {
       item[children] = null;
     }
@@ -191,7 +191,7 @@ export function deepFilter<RecordType extends DefaultTreeRecordType<RecordType>>
   if (!isArray(list)) return list;
   return cloneDeep(list).filter((item, index) => {
     if (item[children] && item[children].length) {
-      item[children] = recursiveTreeMap(item[children], cb, children, item);
+      item[children] = recursiveTreeMap<RecordType>(item[children], cb, children, item);
     } else {
       item[children] = null;
     }
@@ -564,4 +564,13 @@ export const isSuffixMatch = (suffix: string, fileTypePatterns: Record<string, R
 
 export const base64Encode = (str: string): string => {
   return btoa(unescape(encodeURIComponent(str)));
+}
+
+/**
+ * 合并两个数组
+ * @param arr1
+ * @param arr2
+ */
+export function mergeArraysUnique<T>(arr1: T[], arr2: T[]) {
+  return [...new Set([...arr1, ...arr2])];
 }

@@ -19,7 +19,7 @@ const routes = computed(() => {
     return {
       path: route.path,
       name: route.name || route.meta.name,
-      breadcrumbName: route.meta.title,
+      breadcrumbName: route.breadcrumbName || route.meta.title,
       children: route.children
     };
   })) as any[]

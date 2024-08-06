@@ -19,7 +19,7 @@ const adminMenuSore = useAdminMenuStore()
 
 const parentPermissionIds = shallowRef<Key[]>([])
 const permissionTreeExpandedKeys = shallowRef<Key[]>([])
-const allPermissionIds = shallowRef<Key[]>([])
+const allPermissionIds = shallowRef<number[]>([])
 
 
 const getAdminRoleByIdAsync = async (id: number) => {
@@ -51,7 +51,7 @@ const formAfterOpen = async (type: ModalType, fields: AdminRoleFields) => {
   }
 }
 
-const formBeforeClose = (fields) => {
+const formBeforeClose = (fields: AdminRoleFields) => {
   if (fields) {
     fields.permissionIds = [...allPermissionIds.value]
     allPermissionIds.value = []
@@ -66,7 +66,7 @@ const formAfterClose = () => {
  * @param checkedKeys
  * @param e
  */
-const handleCheck = (checkedKeys, e) => {
+const handleCheck = (checkedKeys: number[], e: any) => {
   allPermissionIds.value = checkedKeys.concat(e.halfCheckedKeys)
 }
 
@@ -102,9 +102,9 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
         type: "tree-select",
         form: true,
         hide: true,
-        options: (dataSource: AdminRoleRecordType[], fields) => {
+        options: (dataSource: AdminRoleRecordType[], fields: AdminRoleFields) => {
           const _dataSource = cloneDeep(dataSource)
-          disableTreeByKey(_dataSource, fields.id)
+          disableTreeByKey(_dataSource, fields?.id!)
           return _dataSource
         },
         formFieldConfig: {

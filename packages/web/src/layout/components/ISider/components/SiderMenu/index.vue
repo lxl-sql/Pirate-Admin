@@ -6,6 +6,9 @@ import {MenuFoldOutlined, MenuUnfoldOutlined, SmileOutlined,} from "@ant-design/
 import SiderItem from '../SiderItem/index.vue'
 import {useTheme} from "@/store/hooks";
 import {Menu} from "@/store/hooks/useTheme/types";
+import {mergeArraysUnique, setTimeoutPromise} from "@/utils/common";
+import {treeForEach} from "@/utils/tree";
+import {cloneDeep} from "lodash-es";
 
 const route = useRoute();
 const theme = useTheme();
@@ -24,32 +27,89 @@ const props = withDefaults(defineProps<SiderMenuProps>(), {
 
 const openKeys = ref<string[]>([]);
 const selectedKeys = ref<string[]>([]);
+const siderMenus = ref<Partial<Menu>[]>([])
 
-onMounted(() => {
-  getMenus();
+onMounted(async () => {
+  await setTimeoutPromise(100)
+  getExpandMenuItem('init');
+})
+
+watch(() => props.menus, (newValue) => {
+  if (!newValue) return
+  getExpandMenuItem('init');
 });
 
-watch(
-  () => route.path,
-  () => {
-    getExpandMenuItem();
-  }
-);
+// 防止误操作 开启手风琴模式 默认关闭所有menu
+watch(() => theme.menuUniqueOpened, (newValue) => {
+  if (!newValue || !props.menus?.length) return
+  openKeys.value = []
+  siderMenus.value = []
+});
 
-const getMenus = () => {
+watch(() => route.name, () => {
   getExpandMenuItem();
-};
+  if (theme.isDrawerMenu) {
+    theme.isSidebarCollapsed = false
+  }
+});
+
 
 /**
  * @description 获取当前打开的子菜单
  */
-const getExpandMenuItem = () => {
-  if (!theme.isSidebarCollapsed && !(theme.isDrawerMenu || theme.menuMode === 'horizontal') && route.meta.parentName) {
-    openKeys.value = (route.meta.parentName as string).split(",");
-  }
+const getExpandMenuItem = (status?: 'init') => {
   selectedKeys.value = [route.name as string];
-  // isSidebarOpen.value = false
+
+  if (props.mode === 'horizontal') return
+
+  // 手风琴模式逻辑
+  const matched = cloneDeep(route.matched).splice(1, route.matched.length - 2)
+  const names = matched.map(route => route.name) as string[]
+
+  if (theme.menuUniqueOpened) {
+    openKeys.value = names
+    // 初始化时才重新存值
+    if (status === 'init' && props.menus) {
+      treeForEach(props.menus, menu => {
+        if (names.includes(menu.name)) {
+          siderMenus.value.push({
+            level: menu.level,
+            name: menu.name
+          })
+        }
+      })
+      // console.log('siderMenus.value', names, siderMenus.value)
+    }
+  } else {
+    openKeys.value = mergeArraysUnique(names, openKeys.value)
+  }
+  // console.log('route', names, openKeys.value, matched)
 };
+
+// 手风琴模式
+const handleSubMenu = (menu: Menu) => {
+  if (!theme.menuUniqueOpened) return
+  const sameNameIndex = siderMenus.value.findIndex(sider => menu.name === sider.name)
+  if (sameNameIndex > -1) {
+    // 重复的直接删除
+    siderMenus.value.splice(sameNameIndex, 1)
+  } else {
+    // 缓存的层级大于当前展开层级全部过滤掉(默认是被关闭了)
+    siderMenus.value = siderMenus.value.filter(sider => sider.level! < menu.level!)
+    siderMenus.value.push({
+      level: menu.level,
+      name: menu.name
+    })
+  }
+  openKeys.value = siderMenus.value.map(sider => sider.name!)
+  // console.log('menu', menu.level, menu.name, JSON.stringify(siderMenus.value))
+}
+
+// 非手风琴模式
+const onOpenChange = (keys: string[]) => {
+  if (theme.menuUniqueOpened) return
+  openKeys.value = keys
+}
 
 defineOptions({
   name: 'SiderMenu'
@@ -80,13 +140,18 @@ defineOptions({
   <div class="i-menu-content">
     <a-menu
       v-if="menus?.length"
-      :mode="mode"
+      v-model:selected-keys="selectedKeys"
       :open-keys="openKeys"
-      :selected-keys="selectedKeys"
+      :mode="mode"
+      @open-change="onOpenChange"
     >
-      <sider-item :menus="menus" :mode="mode"/>
+      <sider-item
+        :mode="mode"
+        :menus="menus"
+        @sub-menu-click="handleSubMenu"
+      />
     </a-menu>
-    <div v-else class="text-center mt-1">
+    <div v-else class="text-center mt-1 overflow-hidden">
       <smile-outlined class="text-xl mb-2"/>
       <p class="mb-0">{{ $t('placeholder.Not Found') }}</p>
     </div>

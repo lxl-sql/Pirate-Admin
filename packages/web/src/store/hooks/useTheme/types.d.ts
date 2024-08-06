@@ -14,6 +14,7 @@ export interface StoreConfigLayout {
   color: string
   themeMode: ThemeMode
   layoutMode: LayoutMode
+  menuUniqueOpened: boolean
 }
 
 export interface Menu {
@@ -23,6 +24,7 @@ export interface Menu {
   name: string;
   icon: string;
   children?: Menu[];
+  level?: number;
 }
 
 export interface ThemeState {
@@ -34,6 +36,10 @@ export interface ThemeState {
   layoutMode: ShallowRef<LayoutMode>
   isDartTheme: ShallowRef<boolean>
   // layout
+  /**
+   * 是否收起侧边栏 true 收起 false 展开
+   * - 默认: false
+   */
   isSidebarCollapsed: ShallowRef<boolean>
   isFullScreen: ShallowRef<boolean>
   /**
@@ -42,7 +48,9 @@ export interface ThemeState {
   isLayoutFullScreen: ShallowRef<boolean>
   isPageRefreshing: ShallowRef<boolean>
   isDrawerMenu: ShallowRef<boolean>
-  cacheMenus: Ref<UnwrapRef<Menu[] | null>>,
-  siderMenus: Ref<UnwrapRef<Menu[] | null>>,
-  headerMenus: Ref<UnwrapRef<Menu[] | null>>,
+  /** 打开唯一菜单(手风琴模式) */
+  menuUniqueOpened: ShallowRef<boolean>
+  cacheMenus: Ref<UnwrapRef<Menu[] | null>>
+  siderMenus: Ref<UnwrapRef<Menu[] | null>>
+  headerMenus: Ref<UnwrapRef<Menu[] | null>>
 }

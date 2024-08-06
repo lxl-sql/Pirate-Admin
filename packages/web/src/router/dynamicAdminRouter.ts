@@ -1,22 +1,105 @@
 // 动态路由
-import {RouteRecordRaw} from "vue-router";
+import {RouteLocationGeneric, RouteRecordRaw} from "vue-router";
 
-export const dynamicRouter: RouteRecordRaw[] = [
+export function redirect(to: RouteLocationGeneric): string {
+  const route = to.matched?.[to.matched.length - 1]
+  console.log('auth to', to, route, route.path + '/' + route.children[0].path)
+  return route.path + '/' + route.children[0].path
+}
+
+export const dynamicAdminRouter: RouteRecordRaw[] = [
   {
-    path: "/home",
-    name: "home",
+    path: "dashboard",
+    name: "dashboard",
     meta: {
-      name: "home",
-      title: "首页",
+      title: "控制台",
       showNav: true,
     },
-    component: () => import("@/views/home/index.vue"),
+    component: () => import("@/views/dashboard/index.vue"),
   },
   {
-    path: "/auth",
-    redirect: "/auth/group",
+    path: "test",
+    name: "test",
     meta: {
-      name: "auth",
+      title: "test",
+      showNav: true,
+    },
+    redirect: redirect,
+    children: [
+      {
+        path: "test1",
+        name: "test1",
+        meta: {
+          title: "test1",
+          showNav: true,
+        },
+        redirect: redirect,
+        children: [
+          {
+            path: "test1-1",
+            name: "test1-1",
+            meta: {
+              title: "test1-1",
+              showNav: true,
+            },
+            component: () => import("@/views/dashboard/index.vue"),
+          },
+          {
+            path: "test1-2",
+            name: "test1-2",
+            meta: {
+              title: "test1-2",
+              showNav: true,
+            },
+            component: () => import("@/views/dashboard/index.vue"),
+          },
+        ]
+      },
+      {
+        path: "test2",
+        name: "test2",
+        meta: {
+          title: "test2",
+          showNav: true,
+        },
+        component: () => import("@/views/dashboard/index.vue"),
+      },
+      {
+        path: "test3",
+        name: "test3",
+        meta: {
+          title: "test3",
+          showNav: true,
+        },
+        redirect: redirect,
+        children: [
+          {
+            path: "test3-1",
+            name: "test3-1",
+            meta: {
+              title: "test3-1",
+              showNav: true,
+            },
+            component: () => import("@/views/dashboard/index.vue"),
+          },
+          {
+            path: "test3-2",
+            name: "test3-2",
+            meta: {
+              title: "test3-2",
+              showNav: true,
+            },
+            component: () => import("@/views/dashboard/index.vue"),
+          },
+        ]
+      },
+    ]
+  },
+  {
+    path: "auth",
+    name: "auth",
+    redirect: redirect,
+    meta: {
       title: "权限管理",
       showNav: true,
     },
@@ -25,37 +108,33 @@ export const dynamicRouter: RouteRecordRaw[] = [
         path: "group",
         name: "authGroup",
         meta: {
-          parentName: "auth",
           title: "角色组管理",
           showNav: true,
         },
         component: () => import("@/views/auth/group/index.vue"),
       },
       {
-        path: "/auth/admin",
+        path: "admin",
         name: "authAdmin",
         meta: {
-          parentName: "auth",
           title: "管理员管理",
           showNav: true,
         },
         component: () => import("@/views/auth/admin/index.vue"),
       },
       {
-        path: "/auth/menuRules",
-        name: "menuRules",
+        path: "rule",
+        name: "authRule",
         meta: {
-          parentName: "auth",
           title: "菜单规则管理",
           showNav: true,
         },
         component: () => import("@/views/auth/menu/index.vue"),
       },
       {
-        path: "/auth/adminLog",
-        name: "adminLog",
+        path: "log",
+        name: "authLog",
         meta: {
-          parentName: "auth",
           title: "管理员日志管理",
           showNav: true,
         },
@@ -64,37 +143,33 @@ export const dynamicRouter: RouteRecordRaw[] = [
     ],
   },
   {
-    path: "/user",
-    redirect: "/user/user",
+    path: "user",
+    name: "user",
     meta: {
-      name: "userIndex",
       title: "会员管理",
       showNav: true,
     },
     children: [
       {
-        path: "/user/user",
-        name: "userIndex",
+        path: "user",
+        name: "userUser",
         meta: {
-          name: "user_index",
-          parentName: "user",
           title: "会员管理",
           showNav: true,
         },
         component: () => import("@/views/user/user/index.vue"),
       },
       {
-        path: "/user/group",
+        path: "group",
         name: "userGroup",
         meta: {
-          parentName: "user",
           title: "会员分组管理",
           showNav: true,
         },
         component: () => import("@/views/user/group/index.vue"),
       },
       {
-        path: "/user/rule",
+        path: "rule",
         name: "userRule",
         meta: {
           parentName: "user",
@@ -104,7 +179,7 @@ export const dynamicRouter: RouteRecordRaw[] = [
         component: () => import("@/views/user/userRule/index.vue"),
       },
       {
-        path: "/user/log",
+        path: "log",
         name: "userLog",
         meta: {
           parentName: "user",
@@ -116,16 +191,15 @@ export const dynamicRouter: RouteRecordRaw[] = [
     ],
   },
   {
-    path: "/routine",
-    redirect: "/routine/config",
+    path: "routine",
+    name: "routine",
     meta: {
-      name: "routineConfig",
       title: "常规管理",
       showNav: true,
     },
     children: [
       {
-        path: "/routine/config",
+        path: "config",
         name: "routineConfig",
         meta: {
           parentName: "routine",
@@ -135,7 +209,7 @@ export const dynamicRouter: RouteRecordRaw[] = [
         component: () => import("@/views/routine/config/index.vue"),
       },
       {
-        path: "/routine/annex",
+        path: "annex",
         name: "routineAnnex",
         meta: {
           parentName: "routine",
@@ -145,7 +219,7 @@ export const dynamicRouter: RouteRecordRaw[] = [
         component: () => import("@/views/routine/annex/index.vue"),
       },
       {
-        path: "/routine/info",
+        path: "info",
         name: "routineInfo",
         meta: {
           parentName: "routine",
@@ -157,7 +231,7 @@ export const dynamicRouter: RouteRecordRaw[] = [
     ],
   },
   {
-    path: "/module",
+    path: "module",
     name: "module",
     meta: {
       title: "模块市场",

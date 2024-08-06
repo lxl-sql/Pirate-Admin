@@ -2,12 +2,13 @@ import {$local} from "@/utils/storage";
 import {theme as defaultTheme} from "ant-design-vue";
 import {MappingAlgorithm} from "ant-design-vue/es/config-provider/context";
 import {nextTick} from "vue";
-import {LayoutMode, StoreConfigLayout, ThemeMode, ThemeState} from "./types";
+import {LayoutMode, Menu, StoreConfigLayout, ThemeMode, ThemeState} from "./types";
 import {exitFullScreen, fullScreen} from "@/utils/dom";
 import menuData from './data.json'
 import {cloneDeep} from "lodash-es";
 import {RouteLocationNormalized, useRoute} from "vue-router";
 import {treeForEach} from "@/utils/tree";
+import {recursiveTreeMap} from "@/utils/common";
 
 const {useToken} = defaultTheme
 export const useActions = (state: ThemeState) => {
@@ -38,7 +39,8 @@ export const useActions = (state: ThemeState) => {
     const data: StoreConfigLayout = {
       color: storeConfigLayout.color || '#1677ff',
       themeMode: storeConfigLayout.themeMode || 'light',
-      layoutMode: storeConfigLayout.layoutMode || 'default'
+      layoutMode: storeConfigLayout.layoutMode || 'default',
+      menuUniqueOpened: storeConfigLayout.menuUniqueOpened || false
     }
     $local.set<StoreConfigLayout>(storeConfigLayoutKey, data)
     return data
@@ -58,6 +60,8 @@ export const useActions = (state: ThemeState) => {
     setToken(storeConfigLayout.color)
     // 设置布局配置
     setLayoutMode(storeConfigLayout.layoutMode)
+    // 侧边栏手风琴
+    setStoreConfigLayout('menuUniqueOpened', storeConfigLayout.menuUniqueOpened)
 
     await setStyleAttribute()
   }
@@ -78,6 +82,10 @@ export const useActions = (state: ThemeState) => {
     layoutMode.value = mode
   }
 
+  const setStoreConfigLayout = <T = any>(key: keyof StoreConfigLayout, value: T) => {
+    state[key].value = value
+  }
+
   /**
    * 切换主题
    */
@@ -85,7 +93,7 @@ export const useActions = (state: ThemeState) => {
     isDartTheme.value = !isDartTheme.value;
     setAlgorithm()
     const themeMode: ThemeMode = isDartTheme.value ? "dark" : "light";
-    $local.updateKey<ThemeMode>(storeConfigLayoutKey, 'themeMode', themeMode);
+    updateStoreConfigLayout<ThemeMode>('themeMode', themeMode);
 
     window.document.documentElement.setAttribute("data-theme", themeMode);
     await setStyleAttribute()
@@ -96,7 +104,7 @@ export const useActions = (state: ThemeState) => {
    */
   const changeThemeColor = async (color: string) => {
     setToken(color)
-    $local.updateKey<string>(storeConfigLayoutKey, 'color', color)
+    updateStoreConfigLayout<string>('color', color)
 
     await setStyleAttribute()
   };
@@ -104,8 +112,22 @@ export const useActions = (state: ThemeState) => {
   const changeLayoutMode = async (mode: LayoutMode) => {
     setLayoutMode(mode)
     changeMenus()
-    $local.updateKey<LayoutMode>(storeConfigLayoutKey, 'layoutMode', mode);
+    updateStoreConfigLayout<LayoutMode>('layoutMode', mode)
     await setStyleAttribute()
+  }
+
+  const changeStoreConfigLayout = <T = any>(key: keyof StoreConfigLayout, value: T) => {
+    setStoreConfigLayout(key, value)
+    updateStoreConfigLayout(key, value)
+  }
+
+  /**
+   * 更新本地存储的配置项
+   * @param key
+   * @param value
+   */
+  const updateStoreConfigLayout = <T = any>(key: keyof StoreConfigLayout, value: T) => {
+    $local.updateKey<T>(storeConfigLayoutKey, key, value);
   }
 
   /**
@@ -187,7 +209,9 @@ export const useActions = (state: ThemeState) => {
   }
 
   const getSiderMenus = async () => {
-    cacheMenus.value = menuData.data
+    // 获取 菜单层级 手风琴模式需要
+    cacheMenus.value = recursiveTreeMap<Menu>(menuData.data)
+    // console.log('cacheMenus.value', cacheMenus.value)
   }
 
   /**
@@ -207,11 +231,13 @@ export const useActions = (state: ThemeState) => {
       if (mode === 'single-column') {
         siderMenus.value = []
       } else {
-        const key = _route.name
+        const matched = cloneDeep(_route.matched)
+        const [route] = matched.splice(1, 2)
+        const key = route.name
         let newSiderMenus: any | null = {}
         treeForEach(_cacheMenus, (menu, _index, _arr, parent) => {
           if (menu.name === key) {
-            newSiderMenus = parent ? parent : menu
+            newSiderMenus = menu
           }
         })
         // console.log('route', key, newSiderMenus)
@@ -276,5 +302,6 @@ export const useActions = (state: ThemeState) => {
     toggleFullScreen,
     listenerChange,
     changeMenus,
+    changeStoreConfigLayout
   }
 }

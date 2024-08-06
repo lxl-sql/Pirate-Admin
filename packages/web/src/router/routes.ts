@@ -1,11 +1,11 @@
 // routes.ts
 import {RouteRecordRaw} from "vue-router";
-import {dynamicRouter} from './dynamicRoutes'
+import {dynamicAdminRouter, redirect} from './dynamicAdminRouter'
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "",
-    redirect: "/home",
+    redirect: "/admin",
   },
   {
     path: "/admin/login",
@@ -24,22 +24,21 @@ export const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/config/index.vue"),
   },
   {
-    path: "/home",
+    path: "/admin",
+    name: "admin",
+    redirect: redirect,
     meta: {
-      name: "layout",
-      title: "首页",
+      title: "页面布局",
       showNav: true,
     },
     component: () => import("@/layout/index.vue"),
-    children: dynamicRouter,
+    children: dynamicAdminRouter,
   },
   {
-    // 404
     path: "/404",
     name: "notFound",
     component: () => import("@/views/common/error/404/404.vue"),
     meta: {
-      name: "notFound",
       title: "404 Not Found", // 页面不存在
     },
   },

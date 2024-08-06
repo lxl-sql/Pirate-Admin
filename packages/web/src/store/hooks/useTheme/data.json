@@ -3,10 +3,64 @@
   "msg": "操作成功",
   "data": [
     {
-      "path": "/home",
-      "name": "home",
-      "title": "首页",
+      "path": "/dashboard",
+      "name": "dashboard",
+      "title": "控制台",
       "icon": "HomeOutlined"
+    },
+    {
+      "path": "/test",
+      "name": "test",
+      "title": "test",
+      "icon": "HomeOutlined",
+      "children": [
+        {
+          "path": "test1",
+          "name": "test1",
+          "title": "test1",
+          "icon": "HomeOutlined",
+          "children": [
+            {
+              "path": "test1-1",
+              "name": "test1-1",
+              "title": "test1-1",
+              "icon": "HomeOutlined"
+            },
+            {
+              "path": "test1-2",
+              "name": "test1-2",
+              "title": "test1-2",
+              "icon": "HomeOutlined"
+            }
+          ]
+        },
+        {
+          "path": "test2",
+          "name": "test2",
+          "title": "test2",
+          "icon": "HomeOutlined"
+        },
+        {
+          "path": "test3",
+          "name": "test3",
+          "title": "test3",
+          "icon": "HomeOutlined",
+          "children": [
+            {
+              "path": "test3-1",
+              "name": "test3-1",
+              "title": "test3-1",
+              "icon": "HomeOutlined"
+            },
+            {
+              "path": "test3-2",
+              "name": "test3-2",
+              "title": "test3-2",
+              "icon": "HomeOutlined"
+            }
+          ]
+        }
+      ]
     },
     {
       "path": "/auth",
@@ -27,14 +81,14 @@
           "icon": "HomeOutlined"
         },
         {
-          "path": "/auth/menuRules",
-          "name": "menuRules",
+          "path": "/auth/rule",
+          "name": "authRule",
           "title": "菜单规则管理",
           "icon": "HomeOutlined"
         },
         {
-          "path": "/auth/adminLog",
-          "name": "adminLog",
+          "path": "/auth/log",
+          "name": "authLog",
           "title": "管理员日志管理",
           "icon": "HomeOutlined"
         }
@@ -47,8 +101,8 @@
       "icon": "TeamOutlined",
       "children": [
         {
-          "path": "/user/index",
-          "name": "userIndex",
+          "path": "/user/user",
+          "name": "userUser",
           "title": "会员管理",
           "icon": "HomeOutlined"
         },

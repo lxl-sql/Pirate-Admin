@@ -115,6 +115,13 @@ defineExpose({
       >
       {{ theme.themeColor }}
     </div>
+    <div class="mb-2">侧边菜单手风琴</div>
+    <div class="flex items-center mb-4">
+      <a-switch
+        v-model:checked="theme.menuUniqueOpened"
+        @change="(value:boolean) => theme.changeStoreConfigLayout<boolean>('menuUniqueOpened',value)"
+      />
+    </div>
   </a-drawer>
 </template>
 
