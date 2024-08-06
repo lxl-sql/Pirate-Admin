@@ -17,7 +17,7 @@ const {t} = useI18n();
 
 const adminMenuSore = useAdminMenuStore()
 
-const parentPermissionIds = shallowRef<Key[]>([])
+const parentPermissionIds = shallowRef<number[]>([])
 const permissionTreeExpandedKeys = shallowRef<Key[]>([])
 const allPermissionIds = shallowRef<number[]>([])
 
@@ -29,8 +29,10 @@ const getAdminRoleByIdAsync = async (id: number) => {
 
 const formAfterOpen = async (type: ModalType, fields: AdminRoleFields) => {
   if (fields) {
-    // console.log(' fields.permissionIds', fields.permissionIds)
-    allPermissionIds.value = fields.permissionIds || []
+    const _permissionIds = cloneDeep(fields.permissionIds) || []; // 防止网络问题导致优先勾选父级
+    fields.permissionIds = []
+
+    allPermissionIds.value = _permissionIds || []
     // 初始化菜单权限数据源
     await adminMenuSore.getAdminMenuListRequest()
     const dataSource = adminMenuSore.dataSource
@@ -38,11 +40,10 @@ const formAfterOpen = async (type: ModalType, fields: AdminRoleFields) => {
     permissionTreeExpandedKeys.value = getTreeKeys(dataSource)
     const keys: number[] = []
     treeForEach<any>(dataSource, item => {
-      if (!item.children?.length && fields.permissionIds?.includes(item.id)) {
+      if (!item.children?.length && _permissionIds.includes(item.id)) {
         keys.push(item.id)
       }
     })
-    // console.log('keys', keys)
     fields.permissionIds = keys
 
     if (fields.parentId) {
@@ -59,6 +60,7 @@ const formBeforeClose = (fields: AdminRoleFields) => {
 }
 const formAfterClose = () => {
   parentPermissionIds.value = []
+  allPermissionIds.value = []
 }
 
 /**
@@ -214,6 +216,7 @@ provide(tableSettingKey, tableSettings);
 </script>
 
 <template>
+
   <i-crud>
     <template #status="{ value }">
       <status-tag :value="value"/>

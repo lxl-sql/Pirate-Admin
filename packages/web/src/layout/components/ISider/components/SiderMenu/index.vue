@@ -30,18 +30,19 @@ const selectedKeys = ref<string[]>([]);
 const siderMenus = ref<Partial<Menu>[]>([])
 
 onMounted(async () => {
+  if (props.mode === 'horizontal') return
   await setTimeoutPromise(100)
   getExpandMenuItem('init');
 })
 
 watch(() => props.menus, (newValue) => {
-  if (!newValue) return
+  if (props.mode === 'horizontal' || !newValue) return
   getExpandMenuItem('init');
 });
 
 // 防止误操作 开启手风琴模式 默认关闭所有menu
 watch(() => theme.menuUniqueOpened, (newValue) => {
-  if (!newValue || !props.menus?.length) return
+  if (props.mode === 'horizontal' || !newValue || !props.menus?.length) return
   openKeys.value = []
   siderMenus.value = []
 });
@@ -70,7 +71,7 @@ const getExpandMenuItem = (status?: 'init') => {
     openKeys.value = names
     // 初始化时才重新存值
     if (status === 'init' && props.menus) {
-      treeForEach(props.menus, menu => {
+      treeForEach(cloneDeep(props.menus), menu => {
         if (names.includes(menu.name)) {
           siderMenus.value.push({
             level: menu.level,
