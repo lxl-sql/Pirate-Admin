@@ -1,6 +1,6 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {computed, provide, shallowRef} from "vue";
+import {computed, provide, reactive, shallowRef} from "vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {adminRoleUpsert, getAdminRoleById, getAdminRoleList, removeAdminRole,} from "@/api/auth/admin";
@@ -17,14 +17,16 @@ const {t} = useI18n();
 
 const adminMenuSore = useAdminMenuStore()
 
-const parentPermissionIds = shallowRef<number[]>([])
+const parentPermissionIdMaps = reactive<Map<string, boolean>>(new Map())
 const permissionTreeExpandedKeys = shallowRef<Key[]>([])
 const allPermissionIds = shallowRef<number[]>([])
 
-
 const getAdminRoleByIdAsync = async (id: number) => {
   const {data} = await getAdminRoleById(id)
-  parentPermissionIds.value = data.permissionIds
+  data.permissionIds.forEach((id: number) => {
+    parentPermissionIdMaps.set(`${id}`, false)
+  })
+  console.log('parentPermissionIdMaps', parentPermissionIdMaps)
 }
 
 const formAfterOpen = async (type: ModalType, fields: AdminRoleFields) => {
@@ -59,7 +61,7 @@ const formBeforeClose = (fields: AdminRoleFields) => {
   }
 }
 const formAfterClose = () => {
-  parentPermissionIds.value = []
+  parentPermissionIdMaps.clear()
   allPermissionIds.value = []
 }
 
@@ -74,8 +76,12 @@ const handleCheck = (checkedKeys: number[], e: any) => {
 
 const permissions = computed(() => {
   return recursive<AdminRoleRecordType>(cloneDeep(adminMenuSore.dataSource), (permission) => {
-    if (permission.id && parentPermissionIds.value.length) {
-      permission.disabled = !parentPermissionIds.value.includes(permission.id)
+    if (!permission.id || !parentPermissionIdMaps.size) return permission;
+    const id = `${permission.id}`
+    if (parentPermissionIdMaps.has(id)) {
+      permission.disabled = parentPermissionIdMaps.get(id)
+    } else {
+      permission.disabled = true
     }
     return permission
   })

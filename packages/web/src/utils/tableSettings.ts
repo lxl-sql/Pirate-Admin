@@ -13,6 +13,7 @@ import {
   ModalType,
   Operation,
   PrivateApi,
+  QueryAllOptions,
   TableReactive,
   TableSettingsType,
 } from "@/types/tableSettingsType";
@@ -178,8 +179,12 @@ export default class TableSettings<
   }
 
   // region API请求方法
-  public queryAll = async () => {
+  public queryAll = async (options: QueryAllOptions = {}) => {
     if (!this.api?.find) return;
+    const {
+      showDataSource = true,
+      showPages = true
+    } = options
     const query = {
       ...this.getPagesParams(),
       ...this.transformParams(),
@@ -191,13 +196,18 @@ export default class TableSettings<
       if (this.table.showRemark) {
         this.table.remark = data.remark;
       }
-      this.table.dataSource = data.records;
 
-      this.table.pages = {
-        size: data.size,
-        page: data.page,
-        total: data.total,
-      };
+      if (showDataSource) {
+        this.table.dataSource = data.records;
+      }
+
+      if (showPages) {
+        this.table.pages = {
+          size: data.size,
+          page: data.page,
+          total: data.total,
+        };
+      }
 
       if (this.defaultExpandAllRows) { // 当默认值有值时，才会赋值 必须异步赋值
         this.table.defaultExpandAllRows = this.defaultExpandAllRows

@@ -128,8 +128,12 @@ provide(tableSettingKey, tableSettings)
 const onPreviewFileGroupUploadSuccess = async () => {
   if (layout.value === 'thumbnailGrid') {
     if (tableSettings.table.pages) {
+      // 只获取 page 即可
+      await tableSettings.queryAll({
+        showDataSource: false
+      })
       // 处理上传成功后的分页
-      tableSettings.table.pages.total++
+      // tableSettings.table.pages.total++
     }
   } else {
     await onUploadSuccess()

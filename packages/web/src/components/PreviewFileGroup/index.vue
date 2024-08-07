@@ -84,8 +84,12 @@ const onUploadSuccess = (key: Key, data) => {
     }
     // 2. hash 不同 替换 + 斩尾
     else {
+      // console.log(cloneDeep(props.pagination), cloneDeep(dataSource))
       Object.assign(dataSource[sameKeyIndex], file)
-      dataSource.splice(-1)
+      if (dataSource.length > (props.pagination?.pageSize || 10)) {
+        // 当 dataSource 大于 pageSize 时才 斩尾
+        dataSource.splice(-1)
+      }
       setDataSource(dataSource)
     }
     emits('uploadSuccess', file)
@@ -155,7 +159,7 @@ defineExpose({
 
 <template>
   <div class="preview-file-group">
-    <template v-if="dataSource.length !== 0">
+    <template v-if="dataSource.length">
       <transition-group name="list" tag="div" mode="in-out" class="flex flex-wrap">
         <preview-file
           v-for="item in dataSource"
@@ -178,6 +182,9 @@ defineExpose({
         v-bind="pagination"
         @change="handlePageSizeChange"
       />
+    </template>
+    <template v-else>
+      <a-empty/>
     </template>
   </div>
 </template>

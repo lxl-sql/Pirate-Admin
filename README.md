@@ -92,3 +92,8 @@ $ pnpm -r --filter=pirate-server remove xxx
 
 - 支持系统双色切换
   ![img.png](/assets/images/img_5.png)
+
+- 支持多类型附件预览
+  ![img.png](/assets/images/img_6.png)
+  ![img.png](/assets/images/img_7.png)
+  ![img.png](/assets/images/img_8.png)

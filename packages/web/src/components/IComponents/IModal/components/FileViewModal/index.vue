@@ -4,6 +4,7 @@ import {GlobalOutlined} from "@ant-design/icons-vue";
 import {openWindow} from "@/utils/dom";
 import {base64Encode} from "@/utils/common";
 
+const fileViewUrl = import.meta.env.VITE_FILE_VIEW_URL
 const open = shallowRef<boolean>(false)
 const url = shallowRef<string>('')
 
@@ -16,7 +17,7 @@ const getUrl = (url?: string) => {
   if (!url) {
     throw new Error('URL is required');
   }
-  return `http://localhost:8012/onlinePreview?url=${encodeURIComponent(base64Encode(url))}`
+  return `${fileViewUrl}/onlinePreview?url=${encodeURIComponent(base64Encode(url))}`
 }
 
 const handleCancel = () => {

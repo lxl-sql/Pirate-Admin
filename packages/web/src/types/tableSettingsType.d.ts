@@ -51,6 +51,13 @@ interface ModalCallback<T = any> {
   afterClose?: (...args: T) => void
 }
 
+export interface QueryAllOptions {
+  /** 是否显示列表数据 默认: true */
+  showDataSource?: boolean;
+  /** 是否显示分页数据 默认: true */
+  showPages?: boolean;
+}
+
 export interface PrivateApi {
   /**
    * 插入或更新项
@@ -277,7 +284,7 @@ export declare interface TableSettingsType<
   /**
    * 表格数据查询
    */
-  queryAll(): Promise<void> | void;
+  queryAll(options?: QueryAllOptions): Promise<void> | void;
 
   /**
    * 删除数据
