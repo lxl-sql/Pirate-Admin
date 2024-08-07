@@ -57,7 +57,7 @@ const tableSettings: any = new TableSettings({
         align: "center",
         width: 200,
         detail: true,
-        detailSort: 6,
+        detailSort: 7,
         detailSpan: 2,
         detailSlot: false,
       },
@@ -67,7 +67,15 @@ const tableSettings: any = new TableSettings({
         align: "center",
         width: 120,
         detail: true,
-        detailSort: 3,
+        detailSort: 4,
+      },
+      {
+        title: "IP地址",
+        dataIndex: "ipAddress",
+        align: "center",
+        width: 120,
+        detail: true,
+        detailSort: 5,
       },
       {
         title: "请求方式",
@@ -84,7 +92,7 @@ const tableSettings: any = new TableSettings({
         width: 200,
         ellipsis: true,
         detail: true,
-        detailSort: 7,
+        detailSort: 8,
         detailSpan: 2,
         customCell() {
           return {
@@ -100,7 +108,7 @@ const tableSettings: any = new TableSettings({
         align: "center",
         width: 150,
         detail: true,
-        detailSort: 8,
+        detailSort: 9,
         detailSpan: 2,
       },
       {
@@ -108,14 +116,14 @@ const tableSettings: any = new TableSettings({
         dataIndex: "status",
         hide: true,
         detail: true,
-        detailSort: 4,
+        detailSort: 3,
       },
       {
         title: "响应时间",
         dataIndex: "responseTime",
         hide: true,
         detail: true,
-        detailSort: 5,
+        detailSort: 6,
         detailRender: (value: number) => formatTime(value),
       },
       {
@@ -123,7 +131,7 @@ const tableSettings: any = new TableSettings({
         dataIndex: "params",
         hide: true,
         detail: true,
-        detailSort: 9,
+        detailSort: 10,
         detailSpan: 2,
       },
       {
@@ -169,6 +177,9 @@ provide(tableSettingKey, tableSettings);
     <template #ip="{ value }">
       <a-tag color="processing" class="last-of-type:mr-0">{{ value }}</a-tag>
     </template>
+    <template #ipAddress="{ value }">
+      <a-tag v-if="value" color="processing" class="last-of-type:mr-0">{{ value }}</a-tag>
+    </template>
     <template #method="{ value }">
       <method-tag :method="value"/>
     </template>
@@ -177,6 +188,9 @@ provide(tableSettingKey, tableSettings);
     </template>
     <template #detail-ip="{ value }">
       <a-tag color="processing" class="last-of-type:mr-0">{{ value }}</a-tag>
+    </template>
+    <template #detail-ipAddress="{ value }">
+      <a-tag v-if="value" color="processing" class="last-of-type:mr-0">{{ value }}</a-tag>
     </template>
     <template #detail-method="{ value }">
       <method-tag :method="value"/>

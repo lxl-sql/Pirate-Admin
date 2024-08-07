@@ -3,7 +3,7 @@ import {RouteLocationGeneric, RouteRecordRaw} from "vue-router";
 
 export function redirect(to: RouteLocationGeneric): string {
   const route = to.matched?.[to.matched.length - 1]
-  console.log('auth to', to, route, route.path + '/' + route.children[0].path)
+  console.log('redirect to', to, route, route.path + '/' + route.children[0].path)
   return route.path + '/' + route.children[0].path
 }
 
@@ -149,6 +149,7 @@ export const dynamicAdminRouter: RouteRecordRaw[] = [
       title: "会员管理",
       showNav: true,
     },
+    redirect: redirect,
     children: [
       {
         path: "user",
@@ -197,6 +198,7 @@ export const dynamicAdminRouter: RouteRecordRaw[] = [
       title: "常规管理",
       showNav: true,
     },
+    redirect: redirect,
     children: [
       {
         path: "config",
@@ -217,6 +219,16 @@ export const dynamicAdminRouter: RouteRecordRaw[] = [
           showNav: true,
         },
         component: () => import("@/views/routine/annex/index.vue"),
+      },
+      {
+        path: "cron",
+        name: "routineCron",
+        meta: {
+          parentName: "routine",
+          title: "定时任务",
+          showNav: true,
+        },
+        component: () => import("@/views/routine/cron/index.vue"),
       },
       {
         path: "info",

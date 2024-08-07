@@ -22,6 +22,7 @@ export class AdminLogService {
         'title',
         'url',
         'ip',
+        'ipAddress',
         'method',
         'responseTime',
         'userAgent',

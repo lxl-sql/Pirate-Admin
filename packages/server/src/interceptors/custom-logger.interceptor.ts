@@ -7,6 +7,9 @@ import {Request, Response} from 'express';
 import {catchError, Observable, tap} from 'rxjs';
 import {JwtService} from '@nestjs/jwt';
 import {JwtUserData} from '@/guards/login.guard';
+import IP2Region from "ip2region";
+
+// const IP2Region = require('ip2region').default;
 
 @Injectable()
 export class CustomLoggerInterceptor implements NestInterceptor {
@@ -18,6 +21,8 @@ export class CustomLoggerInterceptor implements NestInterceptor {
 
   @Inject(AdminLogService)
   private readonly adminLogService: AdminLogService;
+
+  private readonly IP2RegionQuery = new IP2Region();
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const logCall = this.reflector.get<[LogCallType, string]>(
@@ -65,12 +70,18 @@ export class CustomLoggerInterceptor implements NestInterceptor {
     if (!user.userId) return;
 
     const {statusCode} = response;
+
+    const ip = trimmedIp(request.realIp || request.ip)
+
+    const ipAddress = this.IP2RegionQuery.search(ip)
+
     // 默认参数
     const params = {
       userId: user.userId, // 登录时使用 userInfo
       username: user.username,
       title: title,
-      ip: trimmedIp(request.realIp || request.ip),
+      ip: ip,
+      ipAddress: [ipAddress.country, ipAddress.province, ipAddress.city].filter(Boolean).join('-'),
       method: request.method,
       url: request.url,
       params: this.paramsToString(this.getParams(request)),

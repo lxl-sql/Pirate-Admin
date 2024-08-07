@@ -42,7 +42,7 @@ export class FilesService {
 
         if (found_file) {
           // 更新上传次数 uploadCount
-          this.fileRepository.update(found_file.id, {
+          await this.fileRepository.update(found_file.id, {
             uploadCount: found_file.uploadCount + 1,
           });
           const url = requestHost(request, found_file.path);

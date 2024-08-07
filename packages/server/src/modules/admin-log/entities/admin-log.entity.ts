@@ -1,5 +1,5 @@
-import { DefaultEntity } from '@/entities/default.entity';
-import { Column, Entity } from 'typeorm';
+import {DefaultEntity} from '@/entities/default.entity';
+import {Column, Entity} from 'typeorm';
 
 @Entity({
   name: 'admin_logs',
@@ -28,6 +28,13 @@ export class AdminLog extends DefaultEntity {
     comment: 'ip',
   })
   ip: string;
+
+  @Column({
+    name: 'ip_address',
+    comment: 'ip地址',
+    nullable: true
+  })
+  ipAddress: string;
 
   @Column({
     comment: 'URL地址', // Path of the request URL that triggered the log

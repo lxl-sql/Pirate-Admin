@@ -30,13 +30,12 @@ const selectedKeys = ref<string[]>([]);
 const siderMenus = ref<Partial<Menu>[]>([])
 
 onMounted(async () => {
-  if (props.mode === 'horizontal') return
   await setTimeoutPromise(100)
   getExpandMenuItem('init');
 })
 
 watch(() => props.menus, (newValue) => {
-  if (props.mode === 'horizontal' || !newValue) return
+  if (!newValue) return
   getExpandMenuItem('init');
 });
 

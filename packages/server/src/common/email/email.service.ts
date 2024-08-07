@@ -88,7 +88,7 @@ export class EmailService {
 
   public async testEmail(config: GenerateEmailDto) {
     const {address, to, subject, html, host, port, user, pass} = config;
-    if (address !== to) {
+    if (address !== user) {
       throw new HttpException(
         '邮件发件人必须与授权用户相同！',
         HttpStatus.NOT_IMPLEMENTED,

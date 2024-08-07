@@ -145,6 +145,12 @@
           "icon": "HomeOutlined"
         },
         {
+          "path": "/routine/cron",
+          "name": "routineCron",
+          "title": "定时任务",
+          "icon": "HomeOutlined"
+        },
+        {
           "path": "/routine/info",
           "name": "routineInfo",
           "title": "个人资料",

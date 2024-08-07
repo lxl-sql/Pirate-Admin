@@ -6,6 +6,7 @@
       "title": "Title",
       "url": "Url",
       "ip": "IP",
+      "ipAddress": "IP Address",
       "method": "Method",
       "userAgent": "User-Agent",
       "createTime": "CreateTime",

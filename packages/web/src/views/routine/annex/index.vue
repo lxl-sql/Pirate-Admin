@@ -3,7 +3,7 @@
 import {provide, ref, shallowRef} from "vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {getFileList, removeFile} from "@/api/routine/files";
-import {formatFileSize, setTimeoutPromise} from "@/utils/common";
+import {formatFileSize} from "@/utils/common";
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons-vue'
 import {useDragAndDropUpload} from '@/hooks/useDragAndDropUpload'
 import {useUpload} from "@/hooks/useUpload";
@@ -141,7 +141,6 @@ const onPreviewFileGroupUploadSuccess = async () => {
 }
 
 const onUploadSuccess = async () => {
-  await setTimeoutPromise(100)
   await tableSettings.queryAll()
 }
 

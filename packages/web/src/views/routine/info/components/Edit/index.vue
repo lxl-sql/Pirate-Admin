@@ -28,7 +28,7 @@ const {validate, validateInfos} = Form.useForm(formState, rules);
 const isSubmitLoading = ref<boolean>(false)
 
 const refreshInfo = async () => {
-  await setTimeoutPromise(100)
+  // await setTimeoutPromise(100)
   await store.getAdminByIdRequest(store.userInfo.id)
 }
 
