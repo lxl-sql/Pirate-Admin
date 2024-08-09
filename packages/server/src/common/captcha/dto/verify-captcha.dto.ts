@@ -1,7 +1,7 @@
+import {ApiProperty} from "@nestjs/swagger";
 import {IsNotEmpty,} from 'class-validator';
 import {CaptchaType, CaptchaTypeEnum} from "@/types/enum";
 import {CustomType, IsCustomType} from "@/validators/is-custom-type.validator";
-import {ApiProperty} from "@nestjs/swagger";
 
 export class VerifyCaptchaDto {
   @ApiProperty({

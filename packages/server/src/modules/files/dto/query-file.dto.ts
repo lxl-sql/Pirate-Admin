@@ -1,6 +1,6 @@
-import { filterFalsyValues } from '@/utils/tools';
-import { Transform, TransformFnParams } from 'class-transformer';
-import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
+import {filterFalsyValues} from '@/utils/tools';
+import {Transform, TransformFnParams} from 'class-transformer';
+import {IsArray, IsNumber, IsString} from 'class-validator';
 
 export class QueryFileDto {
   @IsString()
@@ -10,7 +10,7 @@ export class QueryFileDto {
   username: string;
 
   @IsNumber()
-  @Transform(({ value }: TransformFnParams) =>
+  @Transform(({value}: TransformFnParams) =>
     filterFalsyValues(value, (value) => value > 0),
   )
   usertype?: number;

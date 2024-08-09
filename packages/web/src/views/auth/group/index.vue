@@ -3,7 +3,7 @@
 import {computed, provide, reactive, shallowRef} from "vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
-import {adminRoleUpsert, getAdminRoleById, getAdminRoleList, removeAdminRole,} from "@/api/auth/admin";
+import {findById, list, remove, upsert} from "@/api/auth/role";
 import {AdminRoleFields, AdminRoleRecordType, AdminRoleTableSettingsType} from "./types";
 import {useI18n} from "vue-i18n";
 import {useAdminMenuStore} from '@/store'
@@ -22,7 +22,7 @@ const permissionTreeExpandedKeys = shallowRef<Key[]>([])
 const allPermissionIds = shallowRef<number[]>([])
 
 const getAdminRoleByIdAsync = async (id: number) => {
-  const {data} = await getAdminRoleById(id)
+  const {data} = await findById(id)
   data.permissionIds.forEach((id: number) => {
     parentPermissionIdMaps.set(`${id}`, false)
   })
@@ -89,10 +89,10 @@ const permissions = computed(() => {
 
 const tableSettings: AdminRoleTableSettingsType = new TableSettings({
   api: {
-    find: getAdminRoleList,
-    findById: getAdminRoleById,
-    delete: removeAdminRole,
-    upsert: adminRoleUpsert,
+    find: list,
+    findById: findById,
+    delete: remove,
+    upsert: upsert,
   },
   table: {
     operations: [

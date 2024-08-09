@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "outDir": "dist",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "rootDir": "src",
     "paths": {
       "@/*": [
@@ -47,7 +47,8 @@
     "types/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "../server"
   ],
   "references": [
     {

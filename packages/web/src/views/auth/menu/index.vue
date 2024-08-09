@@ -2,59 +2,24 @@
 <script setup lang="ts">
 import * as antIcons from "@ant-design/icons-vue";
 import {provide, watch} from "vue";
-import {useAdminMenuStore} from "@/store/auth";
 import {treeForEach} from "@/utils/tree";
 import {notification} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 import type {AdminMenuDataSource} from "@/store/auth/menu/types";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {AdminRoleFields, AdminRoleTableSettingsType} from "@/views/auth/group/types";
-import {
-  adminMenuSortable,
-  adminMenuUpsert,
-  getAdminMenuById,
-  getAdminMenuList,
-  removeAdminMenu
-} from "@/api/auth/admin";
+
+import {findById, list, remove, sortable, status, upsert} from '@/api/auth/permission'
 
 const {t} = useI18n()
-const adminMenuStore = useAdminMenuStore()
-const {adminMenuStatusRequest} = adminMenuStore
-
-// 规则类型
-const typeEnum = (type: AdminMenuDataSource["type"], key: string) => {
-  const typeObj = {
-    1: {
-      color: "success",
-      name: t('admin_permission.enum.type.1'),
-    },
-    2: {
-      color: "processing",
-      name: t('admin_permission.enum.type.2'),
-    },
-    3: {
-      color: "warning",
-      name: t('admin_permission.enum.type.3'),
-    },
-  }
-  if (type && typeObj[type]) {
-    return typeObj[type][key];
-  } else {
-    return {
-      color: "error",
-      name: "暂无数据",
-    };
-  }
-};
-
 
 const tableSettings: AdminRoleTableSettingsType = new TableSettings({
   api: {
-    find: getAdminMenuList,
-    findById: getAdminMenuById,
-    delete: removeAdminMenu,
-    upsert: adminMenuUpsert,
-    sortable: adminMenuSortable
+    find: list,
+    findById: findById,
+    delete: remove,
+    upsert: upsert,
+    sortable: sortable
   },
   table: {
     operations: [
@@ -259,15 +224,11 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
     ids: ids
   }
   console.log('handleStatusChange', ids, params);
-  await adminMenuStatusRequest(params);
+  await status(params);
   notification.success({
     message: t("message.success"),
     description: t("success.update"),
   })
-}
-
-const test = (record) => {
-  console.log('test --> ', record)
 }
 </script>
 
@@ -277,9 +238,7 @@ const test = (record) => {
       <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
     </template>
     <template #type="{ value }">
-      <a-tag :color="typeEnum(value,'color')" class="mr-0">
-        {{ typeEnum(value, 'name') }}
-      </a-tag>
+      <rule-type-tag :value="value"/>
     </template>
     <template #cache="{ record }">
       <a-switch

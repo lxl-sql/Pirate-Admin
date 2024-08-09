@@ -49,9 +49,6 @@
     "uploadType": "上传文件类型不正确！",
     "roles": "请选择角色组"
   },
-  "content": {
-    "loginOut": "确定要退出登录吗？"
-  },
   "title": {
     "login": "登 录",
     "loginOutTitle": "退出登录",
@@ -66,13 +63,19 @@
     "update": "编辑",
     "delete": "删除",
     "remove": "消除",
+    "clear": "清空",
     "detail": "查看详情",
     "remove_selected_row": "删除选中行",
     "loading": "加载中...",
     "cancel": "取消",
     "confirm": "确定",
     "preview": "预览",
-    "Click Upload": "点击上传"
+    "Click Upload": "点击上传",
+    "Risk Operation": "风险操作"
+  },
+  "content": {
+    "Are you sure you want to log out?": "确定要退出登录吗？",
+    "After clearing the logs, past operation records will not be retrievable. Do you want to proceed?": "清空日志后，将无法查询以往的操作记录，是否继续操作？"
   },
   "description": {
     "Please select at least one attachment!": "至少选择一个附件！"

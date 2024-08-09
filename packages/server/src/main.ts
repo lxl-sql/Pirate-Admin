@@ -1,15 +1,15 @@
-import {NestFactory} from '@nestjs/core';
-import {AppModule} from '@/app.module';
+import {NestExpressApplication} from '@nestjs/platform-express';
+import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
 import {ValidationPipe} from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
+import {NestFactory} from '@nestjs/core';
+import * as session from 'express-session';
+import {UndefinedToNullInterceptor} from '@/interceptors/undefined-to-null.interceptor';
 import {FormatResponseInterceptor} from '@/interceptors/format-response.interceptor';
 import {InvokeRecordInterceptor} from '@/interceptors/invoke-record.interceptor';
-import {UnloginFilter} from '@/filters/unlogin.filter';
 import {CustomExceptionFilter} from '@/filters/custom-exception.filter';
-import * as session from 'express-session';
-import {NestExpressApplication} from '@nestjs/platform-express';
-import {UndefinedToNullInterceptor} from '@/interceptors/undefined-to-null.interceptor';
-import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import {UnloginFilter} from '@/filters/unlogin.filter';
+import {AppModule} from '@/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

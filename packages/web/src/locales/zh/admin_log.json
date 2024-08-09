@@ -6,7 +6,7 @@
       "title": "标题",
       "url": "URL",
       "ip": "IP",
-      "ipAddress": "IP地址",
+      "ipAddress": "IP属地",
       "method": "请求方式",
       "userAgent": "UserAgent",
       "createTime": "创建时间",

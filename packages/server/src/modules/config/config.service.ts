@@ -1,22 +1,22 @@
 // src/config/config.service.ts
 import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {DatabaseConfigDto} from './dto/database-config.dto';
+import {ConfigService as NestConfigService} from '@nestjs/config'
+import {InjectRepository} from '@nestjs/typeorm';
+import {In, Repository} from 'typeorm';
 import {promises as fs} from 'fs';
 import * as path from 'path';
-import {ConfigService as NestConfigService} from '@nestjs/config'
-import {ConfigDto} from './dto/config.dto';
-import {RedisConfigDto} from './dto/redis-config.dto';
-import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
-import {EmailService} from '@/common/email/email.service';
-import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Config} from './entities/config.entities';
-import {In, Repository} from 'typeorm';
-import {CreateConfigDto} from "@/modules/config/dto/create-config.dto";
 import {existsByOnFail, parseTextareaData} from "@/utils/tools";
-import {ConfigGroup} from "@/modules/config/entities/config-group.entities";
-import {CreateConfigGroupDto} from "@/modules/config/dto/create-config-group.dto";
-import {ValueConfigDto} from "@/modules/config/dto/value-config.dto";
+import {EmailService} from '@/common/email/email.service';
+import {ConfigGroup} from "./entities/config-group.entity";
+import {Config} from './entities/config.entity';
+import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
+import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
+import {CreateConfigGroupDto} from "./dto/create-config-group.dto";
+import {DatabaseConfigDto} from './dto/database-config.dto';
+import {CreateConfigDto} from "./dto/create-config.dto";
+import {RedisConfigDto} from './dto/redis-config.dto';
+import {ValueConfigDto} from "./dto/value-config.dto";
+import {ConfigDto} from './dto/config.dto';
 
 @Injectable()
 export class ConfigService {

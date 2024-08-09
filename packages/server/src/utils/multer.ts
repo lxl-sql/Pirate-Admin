@@ -1,7 +1,7 @@
-import * as multer from 'multer';
-import * as fs from 'fs';
-import * as path from 'path';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import {HttpException, HttpStatus} from '@nestjs/common';
+import {existsSync, mkdirSync} from 'fs';
+import {diskStorage} from 'multer';
+import {join} from 'path';
 
 const zero = (time: number) => (time < 10 ? '0' + time : time);
 
@@ -14,15 +14,15 @@ const getTimeDir = () => {
   return year + '/' + zero(month) + '/' + zero(day);
 };
 
-const storage = multer.diskStorage({
+const storage = diskStorage({
   destination: function (req, file, cb) {
     const dir = 'uploads/' + getTimeDir();
-    const uploadDir = path.join(process.cwd(), dir);
+    const uploadDir = join(process.cwd(), dir);
     // console.log('uploadDir -->', uploadDir, dir, file);
     try {
-      const exista = fs.existsSync(uploadDir);
+      const exista = existsSync(uploadDir);
       if (!exista) {
-        fs.mkdirSync(uploadDir, { recursive: true /** 递归创建 */ });
+        mkdirSync(uploadDir, {recursive: true /** 递归创建 */});
       }
     } catch (e) {
       throw new HttpException(
@@ -41,4 +41,4 @@ const storage = multer.diskStorage({
   },
 });
 
-export { storage };
+export {storage};

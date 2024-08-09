@@ -1,36 +1,39 @@
 import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/common';
-import {TypeOrmModule} from '@nestjs/typeorm';
 import {ConfigModule as NestConfigModule, ConfigService,} from '@nestjs/config';
-import {JwtModule} from '@nestjs/jwt';
 import {APP_GUARD, APP_INTERCEPTOR} from '@nestjs/core';
+import {ScheduleModule} from "@nestjs/schedule";
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {JwtModule} from '@nestjs/jwt';
+import {join} from 'path';
+import {Permission as AdminPermission} from '@/modules/admin/permission/entities/permission.entity';
+import {UserPermission} from '@/modules/user/entities/permission-user.entity';
+import {Role as AdminRole} from '@/modules/admin/role/entities/role.entity';
+import {ConfigGroup} from "@/modules/config/entities/config-group.entity";
+import {Log as AdminLog} from '@/modules/admin/log/entities/log.entity';
+import {Admin} from '@/modules/admin/admin/entities/admin.entity';
+import {UserRole} from '@/modules/user/entities/role-user.entity';
+import {Config} from '@/modules/config/entities/config.entity';
+import {File} from '@/modules/files/entities/files.entity';
+import {User} from '@/modules/user/entities/user.entity';
+import {CustomLoggerInterceptor} from '@/interceptors/custom-logger.interceptor';
+import {RealIpMiddleware} from "@/middlewares/real-ip.middleware";
+import {PermissionGuard} from '@/guards/permission.guard';
+import {LoginGuard} from '@/guards/login.guard';
 import {AppController} from '@/app.controller';
 import {AppService} from '@/app.service';
-import {UserModule} from '@/modules/user/user.module';
-import {User} from '@/modules/user/entities/user.entity';
-import {UserRole} from '@/modules/user/entities/role-user.entity';
-import {UserPermission} from '@/modules/user/entities/permission-user.entity';
+import {PermissionModule as AdminPermissionModule} from '@/modules/admin/permission/permission.module';
+import {RoleModule as AdminRoleModule} from '@/modules/admin/role/role.module';
+import {LogModule as AdminLogModule} from '@/modules/admin/log/log.module';
+import {AdminModule} from '@/modules/admin/admin/admin.module';
+import {CaptchaModule} from '@/common/captcha/captcha.module';
+import {CommonModule} from '@/modules/common/common.module';
+import {ConfigModule} from '@/modules/config/config.module';
+import {FilesModule} from '@/modules/files/files.module';
 import {RedisModule} from '@/common/redis/redis.module';
 import {EmailModule} from '@/common/email/email.module';
-import {SmsModule} from '@/common/sms/sms.module';
-import {CaptchaModule} from '@/common/captcha/captcha.module';
-import {LoginGuard} from '@/guards/login.guard';
-import {PermissionGuard} from '@/guards/permission.guard';
-import {AdminModule} from '@/modules/admin/admin.module';
-import {AdminRole} from '@/modules/admin/entities/role-admin.entity';
-import {AdminPermission} from '@/modules/admin/entities/permission-admin.entity';
-import {Admin} from '@/modules/admin/entities/admin.entity';
-import {CommonModule} from '@/modules/common/common.module';
 import {TokenModule} from '@/common/token/token.module';
-import {FilesModule} from '@/modules/files/files.module';
-import {File} from '@/modules/files/entities/files.entity';
-import {AdminLogModule} from '@/modules/admin-log/admin-log.module';
-import {CustomLoggerInterceptor} from '@/interceptors/custom-logger.interceptor';
-import {AdminLog} from '@/modules/admin-log/entities/admin-log.entity';
-import {join} from 'path';
-import {ConfigModule} from '@/modules/config/config.module';
-import {Config} from '@/modules/config/entities/config.entities';
-import {ConfigGroup} from "@/modules/config/entities/config-group.entities";
-import {RealIpMiddleware} from "@/middlewares/real-ip.middleware";
+import {UserModule} from '@/modules/user/user.module';
+import {SmsModule} from '@/common/sms/sms.module';
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
@@ -44,6 +47,7 @@ const envFilePath = IS_DEV
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     NestConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -97,11 +101,13 @@ const envFilePath = IS_DEV
     EmailModule,
     SmsModule,
     AdminModule,
+    AdminLogModule,
+    AdminPermissionModule,
+    AdminRoleModule,
     CaptchaModule,
     CommonModule,
     TokenModule,
     FilesModule,
-    AdminLogModule,
     ConfigModule,
   ],
   controllers: [AppController],

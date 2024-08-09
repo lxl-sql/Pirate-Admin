@@ -70,13 +70,19 @@
     "update": "Update",
     "delete": "Delete",
     "remove": "Remove",
+    "clear": "Clear",
     "detail": "Detail",
     "remove_selected_row": "Remove selected rows",
     "loading": "Loading...",
     "cancel": "Cancel",
     "confirm": "Confirm",
     "preview": "Preview",
-    "Click Upload": "Click Upload"
+    "Click Upload": "Click Upload",
+    "Risk Operation": "Risk Operation"
+  },
+  "content": {
+    "Are you sure you want to log out?": "Are you sure you want to log out?",
+    "After clearing the logs, past operation records will not be retrievable. Do you want to proceed?": "After clearing the logs, past operation records will not be retrievable. Do you want to proceed?"
   },
   "description": {
     "Please select at least one attachment!": "Please select at least one attachment!"

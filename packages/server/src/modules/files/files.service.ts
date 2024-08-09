@@ -1,17 +1,16 @@
 import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {File} from './entities/files.entity';
-import {Repository} from 'typeorm';
-import {createHash} from 'crypto';
-import * as fs from 'fs';
-import {createReadStream, unlinkSync} from 'fs';
-import {Request} from 'express';
-import * as path from 'path';
-import {QueryFileDto} from './dto/query-file.dto';
 import {ConfigService} from '@nestjs/config';
+import {Repository} from 'typeorm';
+import {createReadStream, existsSync, readdirSync, readFileSync, statSync, unlinkSync} from 'fs';
+import {join, relative} from 'path';
+import {createHash} from 'crypto';
+import {Request} from 'express';
 import {between, filterFalsyValues, findManyOption, like, pageFormat, requestHost,} from '@/utils/tools';
 import {removePublic} from '@/utils/crud';
 import {IdsDto} from '@/dtos/remove.dto';
+import {File} from './entities/files.entity';
+import {QueryFileDto} from './dto/query-file.dto';
 
 @Injectable()
 export class FilesService {
@@ -198,7 +197,7 @@ export class FilesService {
    */
   private calculateFileHashSync(filePath: string): string {
     const hash = createHash('sha256');
-    const fileData = fs.readFileSync(filePath);
+    const fileData = readFileSync(filePath);
     hash.update(fileData);
     return hash.digest('hex');
   }
@@ -215,14 +214,14 @@ export class FilesService {
     const currentDate = new Date(date); // 复制目标日期对象以避免修改原始对象
     while (true) {
       const uploadDir = this.getUploadDir(currentDate);
-      if (!fs.existsSync(uploadDir)) {
+      if (!existsSync(uploadDir)) {
         break; // 目录不存在，结束循环
       }
-      const files = fs.readdirSync(uploadDir);
+      const files = readdirSync(uploadDir);
       for (const file of files) {
-        const filePath = path.join(uploadDir, file);
-        if (fs.statSync(filePath).isFile()) {
-          const relativePath = path.relative('uploads', filePath);
+        const filePath = join(uploadDir, file);
+        if (statSync(filePath).isFile()) {
+          const relativePath = relative('uploads', filePath);
           const fileHash = this.calculateFileHashSync(filePath);
           previousUploadFiles.push({
             path: 'uploads/' + relativePath,

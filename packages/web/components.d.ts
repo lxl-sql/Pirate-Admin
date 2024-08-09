@@ -106,6 +106,7 @@ declare module 'vue' {
     Rocket: typeof import('./src/components/SvgIcon/rocket.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    RuleTypeTag: typeof import('./src/components/IComponents/IOther/RuleTypeTag/index.vue')['default']
     SelectFileModal: typeof import('./src/components/IComponents/IModal/components/SelectFileModal/index.vue')['default']
     SourceCodeOutlined: typeof import('./src/components/IComponents/IIcon/SourceCodeOutlined/index.vue')['default']
     StatusTag: typeof import('./src/components/IComponents/IOther/StatusTag/index.vue')['default']

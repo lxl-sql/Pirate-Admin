@@ -1,9 +1,9 @@
 /**
  * 管理员日志列表
  */
-import { defineStore } from "pinia";
-import { getAdminLogById, getAdminLogList } from "@/api/auth/adminLog";
-import { AdminLogStoreState } from "./types";
+import {defineStore} from "pinia";
+import {findById, list} from "@/api/auth/log";
+import {AdminLogStoreState} from "./types";
 
 export const useAdminLogStore = defineStore("adminLogStore", {
   state: (): AdminLogStoreState => {
@@ -33,7 +33,7 @@ export const useAdminLogStore = defineStore("adminLogStore", {
       };
       this.isTableLoading = true;
       try {
-        const { data } = await getAdminLogList(params);
+        const {data} = await list(params);
         // console.log(data, "getAdminLogList");
         this.dataSource = data.records;
 
@@ -52,7 +52,7 @@ export const useAdminLogStore = defineStore("adminLogStore", {
     async getAdminLogByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const { data } = await getAdminLogById(id);
+        const {data} = await findById(id);
         data.params = data.params && JSON.parse(data.params);
         this.detailInfo = data;
       } finally {

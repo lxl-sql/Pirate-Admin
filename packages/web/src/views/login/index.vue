@@ -10,6 +10,7 @@ import {debounce} from "lodash-es";
 import {notification} from "ant-design-vue";
 import router from "@/router";
 import {useAdminStore, useCaptchaStore} from "@/store";
+import {useForm} from "ant-design-vue/es/form";
 
 const {t} = useI18n();
 const captchaStore = useCaptchaStore();
@@ -20,6 +21,8 @@ const rules = reactive({
   password: [{required: true, message: t("error.password")}],
   captcha: [{required: true, message: t("error.captcha")}],
 });
+
+const {resetFields, validate, validateInfos} = useForm(adminStore.loginFormState, rules);
 
 onMounted(async () => {
   pageBubble.init();
@@ -32,6 +35,7 @@ onBeforeUnmount(() => {
 
 // 登录
 const handleLogin = async () => {
+  await validate()
   try {
     const data = await adminStore.adminLoginRequest(captchaStore.uuid);
     await router.push("/");
@@ -40,6 +44,7 @@ const handleLogin = async () => {
       message: t("success.login"),
       description: data.userInfo.username + " " + t("success.welcome"),
     });
+    resetFields()
   } catch (error) {
     await captchaStore.svgCaptchaRequest();
   }
@@ -73,12 +78,12 @@ const handleUserNameInput = debounce(async () => {
           />
           <div class="content">
             <a-form
+              name="basic"
               :model="adminStore.loginFormState"
               :rules="rules"
-              name="basic"
               @finish="handleLogin"
             >
-              <a-form-item name="username">
+              <a-form-item v-bind="validateInfos.username">
                 <a-input
                   v-model:value="adminStore.loginFormState.username"
                   allow-clear
@@ -90,7 +95,7 @@ const handleUserNameInput = debounce(async () => {
                   </template>
                 </a-input>
               </a-form-item>
-              <a-form-item name="password">
+              <a-form-item v-bind="validateInfos.password">
                 <a-input-password
                   v-model:value="adminStore.loginFormState.password"
                   allow-clear
@@ -102,7 +107,7 @@ const handleUserNameInput = debounce(async () => {
                   </template>
                 </a-input-password>
               </a-form-item>
-              <a-form-item name="captcha">
+              <a-form-item v-bind="validateInfos.captcha">
                 <div class="flex">
                   <a-input
                     v-model:value="adminStore.loginFormState.captcha"
@@ -119,7 +124,7 @@ const handleUserNameInput = debounce(async () => {
                   </a-form-item>
                 </div>
               </a-form-item>
-              <a-form-item name="remember">
+              <a-form-item v-bind="validateInfos.remember">
                 <a-checkbox v-model:checked="adminStore.loginFormState.remember">
                   {{ $t("login.remember") }}
                 </a-checkbox>

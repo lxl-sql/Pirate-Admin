@@ -226,8 +226,13 @@ export default class TableSettings<
       message: t("message.success"),
       description: t("success.delete"),
     });
-    if (type === "delete") {
-      this.table.selectedRowKeys = [];
+    // 如果勾选了多选框
+    if (this.table.selectedRowKeys?.length) {
+      if (type === "delete") {
+        this.table.selectedRowKeys = [];
+      } else {
+        this.table.selectedRowKeys = this.table.selectedRowKeys.filter(key => !ids.includes(key))
+      }
     }
     // 用于计算最大页数
     this.table.pages!.total -= ids.length;

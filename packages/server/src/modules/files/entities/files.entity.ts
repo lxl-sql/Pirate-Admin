@@ -1,5 +1,5 @@
-import { DefaultEntity } from '@/entities/default.entity';
 import { Column, Entity } from 'typeorm';
+import { DefaultEntity } from '@/entities/default.entity';
 
 @Entity({
   name: 'files',

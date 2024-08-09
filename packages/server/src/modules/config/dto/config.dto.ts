@@ -1,6 +1,6 @@
 import {IsIn, ValidateNested} from 'class-validator';
-import {DatabaseConfigDto} from './database-config.dto';
 import {Type} from 'class-transformer';
+import {DatabaseConfigDto} from './database-config.dto';
 import {RedisConfigDto} from './redis-config.dto';
 
 export class ConfigDto {

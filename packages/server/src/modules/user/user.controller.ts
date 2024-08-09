@@ -1,15 +1,15 @@
 import {Body, Controller, Get, ParseIntPipe, Post, Query, Session,} from '@nestjs/common';
+import {ApiConsumes, ApiProduces, ApiTags} from "@nestjs/swagger";
+import {generateParseIntPipe} from '@/utils/tools';
+import {CaptchaTypeEnum} from "@/types/enum";
+import {RealIp, RequireLogin, UserInfo} from '@/decorators/custom.decorator';
 import {UserService} from './user.service';
-import {RegisterUserDto} from './dto/register-user.dto';
-import {LoginUserDto} from './dto/login-user.dto';
-import {RealIp, RequireLogin, UserInfo} from 'src/decorators/custom.decorator';
 import {UpdatePasswordUserDto} from './dto/update-password-user.dto';
+import {RegisterUserDto} from './dto/register-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {FrozenUserDto} from './dto/frozen-user.dto';
-import {generateParseIntPipe} from 'src/utils/tools';
+import {LoginUserDto} from './dto/login-user.dto';
 import {QueryUserDto} from './dto/query-user.dto';
-import {CaptchaTypeEnum} from "@/types/enum";
-import {ApiConsumes, ApiProduces, ApiTags} from "@nestjs/swagger";
 
 @ApiTags('User') // 将此 API 放在 'Admin' 分类下
 // @ApiBearerAuth() // 如果需要认证

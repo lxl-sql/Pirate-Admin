@@ -1,6 +1,6 @@
 import {Controller, Get, Inject, Query} from '@nestjs/common';
-import {CommonService} from './common.service';
 import {CaptchaService} from '@/common/captcha/captcha.service';
+import {CommonService} from './common.service';
 
 @Controller('common')
 export class CommonController {

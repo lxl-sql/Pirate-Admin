@@ -1,7 +1,7 @@
 import {ApiExtraModels, ApiOkResponse, getSchemaPath} from "@nestjs/swagger";
 import {applyDecorators, Type} from "@nestjs/common";
-import {NotPaginationVo, PaginationVo, ResponseVo} from "@/vos/response.vo";
 import {ResponseType} from "@/enums/response-type.enum";
+import {NotPaginationVo, PaginationVo, ResponseVo} from "@/vos/response.vo";
 
 export function ApiVoResponse<TModal = any>(modal: Type<TModal>, responseType = ResponseType.DEFAULT) {
   const dataSchema = {

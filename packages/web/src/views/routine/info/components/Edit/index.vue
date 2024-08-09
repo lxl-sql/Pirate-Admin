@@ -6,11 +6,10 @@ import {Form, FormInstance, notification} from "ant-design-vue";
 import {useAdminStore} from "@/store";
 import {storeToRefs} from "pinia";
 import {Rules} from "@/types/form";
-import {adminUpsert} from "@/api/auth/admin";
+import {upsert} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
 import BindInfoModal from "./components/BindInfoModal/index.vue";
 import {CaptchaType} from "@/types/request";
-import {setTimeoutPromise} from "@/utils/common";
 
 const {t} = useI18n()
 
@@ -40,7 +39,7 @@ const handleSubmit = async () => {
   }
   isSubmitLoading.value = true
   try {
-    await adminUpsert(params)
+    await upsert(params)
     notification.success({
       message: t('message.success'),
       description: t('success.saved successfully'),

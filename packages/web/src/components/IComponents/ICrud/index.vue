@@ -20,11 +20,14 @@ const selectedRowKeys = computed(
   () => table.value?.selectedRowKeys || []
 );
 
-const rowSelection = computed(() => ({
-  selectedRowKeys: table.value?.selectedRowKeys,
-  onChange: tableSettings?.selectChange,
-  ...table.value?.rowSelection,
-}));
+const rowSelection = computed(() => {
+  if (!table.value?.rowSelection) return null
+  return {
+    selectedRowKeys: table.value?.selectedRowKeys,
+    onChange: tableSettings?.selectChange,
+    ...table.value?.rowSelection,
+  }
+});
 
 /** @param hasTableChild {boolean} 列表数据是否有 children */
 const hasTableChild = computed(() => operations.value.includes('expand') && table.value?.dataSource?.some(item => item.children?.length))

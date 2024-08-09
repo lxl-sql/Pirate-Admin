@@ -2,7 +2,7 @@
  * 角色组
  */
 import {defineStore} from "pinia";
-import {adminMenuStatus, adminMenuUpsert, getAdminRoleById, getAdminRoleList,} from "@/api/auth/admin";
+import {findById, list, status, upsert} from "@/api/auth/permission";
 import {RoleStoreState} from "./types";
 
 export const useRoleStore = defineStore("roleStore", {
@@ -36,7 +36,7 @@ export const useRoleStore = defineStore("roleStore", {
     async getRoleListRequest() {
       this.isTableLoading = true;
       try {
-        const {data} = await getAdminRoleList(this.queryForm);
+        const {data} = await list(this.queryForm);
         console.log(data, "getRoleList");
         this.dataSource = data.records;
       } finally {
@@ -49,7 +49,7 @@ export const useRoleStore = defineStore("roleStore", {
     async getRoleByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getAdminRoleById(id);
+        const {data} = await findById(id);
         data.parentId = data.parentId || undefined;
         this.formState = data;
       } finally {
@@ -62,7 +62,7 @@ export const useRoleStore = defineStore("roleStore", {
     async adminMenuUpsertRequest() {
       this.isModalLoading = true;
       try {
-        const {data} = await adminMenuUpsert(this.formState);
+        const {data} = await upsert(this.formState);
         return data;
       } finally {
         this.isModalLoading = false;
@@ -72,7 +72,7 @@ export const useRoleStore = defineStore("roleStore", {
      * 角色组 修改状态
      */
     async adminMenuStatusRequest(params) {
-      await adminMenuStatus(params);
+      await status(params);
     },
   },
 });

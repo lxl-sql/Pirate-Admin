@@ -1,15 +1,13 @@
-import {AdminLogService} from '@/modules/admin-log/admin-log.service';
-import {LogCallType, LogCallTypeEnum} from '@/types/enum';
-import {trimmedIp} from '@/utils/tools';
 import {CallHandler, ExecutionContext, Inject, Injectable, NestInterceptor,} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
-import {Request, Response} from 'express';
-import {catchError, Observable, tap} from 'rxjs';
 import {JwtService} from '@nestjs/jwt';
-import {JwtUserData} from '@/guards/login.guard';
+import {catchError, Observable, tap} from 'rxjs';
+import {Request, Response} from 'express';
 import IP2Region from "ip2region";
-
-// const IP2Region = require('ip2region').default;
+import {trimmedIp} from '@/utils/tools';
+import {LogCallType, LogCallTypeEnum} from '@/types/enum';
+import {JwtUserData} from '@/guards/login.guard';
+import {LogService as AdminLogService} from '@/modules/admin/log/log.service';
 
 @Injectable()
 export class CustomLoggerInterceptor implements NestInterceptor {

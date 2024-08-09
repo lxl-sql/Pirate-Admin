@@ -2,7 +2,7 @@
  * 管理员列表
  */
 import {defineStore} from "pinia";
-import {adminLogin, getAdminAvatar, getAdminById,} from "@/api/auth/admin";
+import {avatar, findById, login,} from "@/api/auth/admin";
 import {AdminState} from "./types";
 import {$local} from "@/utils/storage";
 import {UserInfo} from "@/api/types/user";
@@ -59,7 +59,7 @@ export const useAdminStore = defineStore("adminStore", {
     async getAdminByIdRequest(id?: number) {
       this.isModalLoading = true;
       try {
-        const {data} = await getAdminById(id);
+        const {data} = await findById(id);
         const file = {
           // 按照要求乱填即可
           url: data.avatarFull,
@@ -86,7 +86,7 @@ export const useAdminStore = defineStore("adminStore", {
         return
       }
       try {
-        const {data} = await getAdminAvatar({username});
+        const {data} = await avatar({username});
         this.avatar = data;
       } catch (error) {
         this.avatar = undefined;
@@ -103,7 +103,7 @@ export const useAdminStore = defineStore("adminStore", {
       };
       this.isLoginFormLoading = true;
       try {
-        const {data} = await adminLogin(params);
+        const {data} = await login(params);
         this.rawUserInfo = data.userInfo;
         $local.set("accessToken", data.accessToken);
         $local.set("refreshToken", data.refreshToken);

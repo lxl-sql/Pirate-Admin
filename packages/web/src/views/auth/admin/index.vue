@@ -1,20 +1,18 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
 import {provide, ref, watch} from "vue";
-import {adminUpsert, getAdminById, getAdminList, removeAdmin} from "@/api/auth/admin";
+import {findById, list, remove, upsert} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
 import {useI18n} from "vue-i18n";
 import {AdminFields, AdminTableSettingsType} from "./types";
 import {useRoleStore} from "@/store";
-import {storeToRefs} from "pinia";
 import {UserOutlined} from "@ant-design/icons-vue";
 
 const {t} = useI18n();
 
 const roleStore = useRoleStore()
-const {dataSource: roleOptions} = storeToRefs(roleStore)
 
 const {getRoleListRequest} = roleStore
 
@@ -34,10 +32,10 @@ const openAvatarPreviewImage = (src: string) => {
 
 const tableSettings: AdminTableSettingsType = new TableSettings({
   api: {
-    find: getAdminList,
-    findById: getAdminById,
-    delete: removeAdmin,
-    upsert: adminUpsert,
+    find: list,
+    findById: findById,
+    delete: remove,
+    upsert: upsert,
   },
   table: {
     operations: ["refresh", "create", "delete", "row-update", "row-delete"],
@@ -71,7 +69,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         type: 'tree-select',
         form: true,
         formValueProp: "roleIds",
-        options: roleOptions,
+        options: roleStore.dataSource,
         formFieldConfig: {
           fieldNames: {label: 'name', value: 'id'},
           multiple: true,

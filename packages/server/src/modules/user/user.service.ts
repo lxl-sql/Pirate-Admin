@@ -1,25 +1,25 @@
 import {HttpException, HttpStatus, Inject, Injectable, Logger, UnauthorizedException,} from '@nestjs/common';
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
 import {EntityManager, Repository} from 'typeorm';
-import * as svgCaptcha from 'svg-captcha-fixed';
 import {JwtService} from '@nestjs/jwt';
 import {ConfigService} from '@nestjs/config';
+import * as svgCaptcha from 'svg-captcha-fixed';
 import {like, mapTree, md5, trimmedIp} from '@/utils/tools';
-import {RedisService} from '@/common/redis/redis.service';
-import {User} from './entities/user.entity';
-import {UserRole} from './entities/role-user.entity';
-import {RegisterUserDto} from './dto/register-user.dto';
-import {LoginUserDto} from './dto/login-user.dto';
-import {UpdatePasswordUserDto} from './dto/update-password-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {FrozenUserDto} from './dto/frozen-user.dto';
-import {QueryUserDto} from './dto/query-user.dto';
-import {UserLoginInfoVo} from './vo/login-user.vo';
-import {UserProfileInfoVo} from "./vo/profile-info-user.vo";
 import {CaptchaService} from '@/common/captcha/captcha.service';
+import {RedisService} from '@/common/redis/redis.service';
 import {BaseUserInfoVo} from '@/common/token/vo/user-info.vo';
 import {CaptchaTypeEnum} from "@/types/enum";
 import {Status} from "@/enums/status.enum";
+import {UserRole} from './entities/role-user.entity';
+import {User} from './entities/user.entity';
+import {UpdatePasswordUserDto} from './dto/update-password-user.dto';
+import {RegisterUserDto} from './dto/register-user.dto';
+import {UpdateUserDto} from './dto/update-user.dto';
+import {FrozenUserDto} from './dto/frozen-user.dto';
+import {LoginUserDto} from './dto/login-user.dto';
+import {QueryUserDto} from './dto/query-user.dto';
+import {UserProfileInfoVo} from "./vo/profile-info-user.vo";
+import {UserLoginInfoVo} from './vo/login-user.vo'
 
 @Injectable()
 export class UserService {

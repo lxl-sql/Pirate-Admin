@@ -1,12 +1,12 @@
 import {Body, Controller, Get, Post} from '@nestjs/common';
-import {ConfigService} from './config.service';
-import {DatabaseConfigDto} from './dto/database-config.dto';
-import {ConfigDto} from './dto/config.dto';
 import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
-import {CreateConfigDto} from "@/modules/config/dto/create-config.dto";
-import {CreateConfigGroupDto} from "@/modules/config/dto/create-config-group.dto";
-import {ValueConfigDto} from "@/modules/config/dto/value-config.dto";
+import {ConfigService} from './config.service';
+import {CreateConfigGroupDto} from "./dto/create-config-group.dto";
+import {DatabaseConfigDto} from './dto/database-config.dto';
+import {CreateConfigDto} from "./dto/create-config.dto";
+import {ValueConfigDto} from "./dto/value-config.dto";
+import {ConfigDto} from './dto/config.dto';
 
 @Controller('config')
 export class ConfigController {

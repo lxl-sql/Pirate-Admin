@@ -1,9 +1,9 @@
 import {Column, Entity, JoinTable, ManyToMany} from 'typeorm';
-import {UserRole} from './role-user.entity';
 import {DateFormatTransformer} from '@/utils/transformer';
-import {DefaultEntity} from '@/entities/default.entity';
 import {Status} from "@/enums/status.enum";
 import {Gender} from "@/enums/gender.enum";
+import {DefaultEntity} from '@/entities/default.entity';
+import {UserRole} from './role-user.entity';
 
 @Entity({
   name: 'users',

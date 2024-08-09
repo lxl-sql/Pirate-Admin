@@ -1,24 +1,25 @@
 <!-- 管理员日志管理 -->
 <script setup lang="ts">
-import {SendOutlined,} from "@ant-design/icons-vue";
-import {provide, ref} from "vue";
+import {ClearOutlined, SendOutlined,} from "@ant-design/icons-vue";
+import {provide} from "vue";
 import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
-import {getAdminLogById, getAdminLogList} from "@/api/auth/adminLog";
+import {findById, list, remove} from "@/api/auth/log";
 import {formatTime} from "@/utils/common";
 import CodeSegment from "@/components/CodeSegment/index.vue";
+import {Modal} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
 
-const avatarPreviewSrc = ref("");
-const isAvatarPreviewSrc = ref<boolean>(false);
+const {t} = useI18n()
 
 const toUrl = (url: string) => {
   window.open(url);
 };
 
-
 const tableSettings: any = new TableSettings({
   api: {
-    find: getAdminLogList,
-    findById: getAdminLogById,
+    find: list,
+    findById: findById,
+    delete: remove
   },
   table: {
     operations: [
@@ -70,7 +71,7 @@ const tableSettings: any = new TableSettings({
         detailSort: 4,
       },
       {
-        title: "IP地址",
+        title: "IP属地",
         dataIndex: "ipAddress",
         align: "center",
         width: 120,
@@ -146,6 +147,7 @@ const tableSettings: any = new TableSettings({
     isI18nGlobal: true,
     scroll: {x: true},
     displayFormModal: false,
+    rowSelection: null
   },
   detail: {
     modal: {
@@ -155,10 +157,36 @@ const tableSettings: any = new TableSettings({
 });
 
 provide(tableSettingKey, tableSettings);
+
+/**
+ * 清空日志
+ */
+const handleRemoveAll = () => {
+  Modal.confirm({
+    type: 'warning',
+    title: t("title.Risk Operation"),
+    content: t("content['After clearing the logs, past operation records will not be retrievable. Do you want to proceed?']"),
+    async onOk() {
+      await tableSettings.deleteByIds('delete', [0])
+    }
+  })
+}
 </script>
 
 <template>
   <i-crud>
+    <template #afterLeftAction>
+      <a-button type="primary" danger @click="handleRemoveAll">
+        <template #icon>
+          <clear-outlined/>
+        </template>
+        {{ $t('title.clear') }}
+      </a-button>
+      <div class="flex items-center">
+        <span class="mr-2">日志保留天数</span>
+        <a-input-number/>
+      </div>
+    </template>
     <template #url="{ value }">
       <a-input-group compact class="!flex">
         <a-input
@@ -195,10 +223,5 @@ provide(tableSettingKey, tableSettings);
     <template #detail-method="{ value }">
       <method-tag :method="value"/>
     </template>
-
-    <i-preview-image
-      :src="avatarPreviewSrc"
-      v-model:open="isAvatarPreviewSrc"
-    />
   </i-crud>
 </template>

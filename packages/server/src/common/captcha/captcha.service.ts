@@ -1,13 +1,13 @@
 import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import * as svgCaptcha from 'svg-captcha-fixed';
+import {v4 as uuidv4} from 'uuid';
+import {randomString} from '@/utils/tools';
+import {CaptchaTypeEnum} from "@/types/enum";
 import {RedisService} from '../redis/redis.service';
 import {EmailService} from '../email/email.service';
-import {randomString} from '@/utils/tools';
 import {SmsService} from '../sms/sms.service';
 import {GenerateCaptchaDto} from './dto/generate-captcha.dto';
 import {VerifyCaptchaDto} from './dto/verify-captcha.dto';
-import {CaptchaTypeEnum} from "@/types/enum";
-import {v4 as uuidv4} from 'uuid';
 
 @Injectable()
 export class CaptchaService {

@@ -1,12 +1,12 @@
 /**
  * 默认实体类
  */
-import { DateFormatTransformer } from '@/utils/transformer';
 import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { DateFormatTransformer } from '@/utils/transformer';
 
 export abstract class DefaultEntity {
   @PrimaryGeneratedColumn()

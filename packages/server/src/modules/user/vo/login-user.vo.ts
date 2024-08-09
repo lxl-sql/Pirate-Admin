@@ -1,6 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {BaseTokenVo} from "@/common/token/vo/base-token.vo";
 import {UserProfileInfoVo} from "@/modules/user/vo/profile-info-user.vo";
+import {BaseTokenVo} from "@/common/token/vo/base-token.vo";
 
 export class UserLoginInfoVo extends BaseTokenVo {
   @ApiProperty({

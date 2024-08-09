@@ -3,21 +3,29 @@ import {PoweroffOutlined, UserOutlined} from "@ant-design/icons-vue";
 import {useRouter} from "vue-router";
 import {useAdminStore} from "@/store";
 import {$local} from "@/utils/storage";
+import {Modal} from "ant-design-vue";
+import {useI18n} from "vue-i18n";
 
 const adminStore = useAdminStore()
-
 const router = useRouter();
+const {t} = useI18n()
 
 const emits = defineEmits(['close'])
 
 // 注销
 const handleLogout = () => {
-  emits('close')
-  const lang = $local.get("lang") || "zh";
-  $local.clear();
-  $local.set("lang", lang);
-  router.push("/admin/login");
-  console.log("handleLogout");
+  Modal.confirm({
+    title: "",
+    content: t('content.Are you sure you want to log out?'),
+    onOk() {
+      emits('close')
+      const lang = $local.get("lang") || "zh";
+      $local.clear();
+      $local.set("lang", lang);
+      router.push("/admin/login");
+      console.log("handleLogout");
+    }
+  })
 };
 
 defineOptions({

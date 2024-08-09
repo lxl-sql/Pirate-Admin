@@ -1,9 +1,9 @@
-import {IdsDto} from '@/dtos/remove.dto';
-import {UpsertDto} from '@/dtos/upsert.dto';
-import {DefaultEntity} from '@/entities/default.entity';
 import {HttpException, HttpStatus} from '@nestjs/common';
-import {validateOrReject} from 'class-validator';
 import {In, Repository, TreeRepository} from 'typeorm';
+import {validateOrReject} from 'class-validator';
+import {DefaultEntity} from '@/entities/default.entity';
+import {UpsertDto} from '@/dtos/upsert.dto';
+import {IdsDto} from '@/dtos/remove.dto';
 
 /**
  * @description 删除用户
