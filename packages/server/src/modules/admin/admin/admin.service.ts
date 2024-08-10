@@ -1,6 +1,6 @@
 import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
-import {In} from 'typeorm';
+import {In, Not} from 'typeorm';
 import * as dayjs from 'dayjs';
 import {like, md5, requestHost, trimmedIp,} from '@/utils/tools';
 import {removePublic} from '@/utils/crud';
@@ -19,6 +19,7 @@ import {LoginAdminDto} from './dto/login-admin.dto';
 import {QueryAdminDto} from './dto/query-admin.dto';
 import {AdminProfileInfoVo} from "./vo/profile-info-admin.vo";
 import {AdminLoginInfoVo} from './vo/login-admin.vo';
+import {forEachTree} from "@/utils/tree";
 
 @Injectable()
 export class AdminService {
@@ -123,11 +124,7 @@ export class AdminService {
    * @param protocolHost
    * @returns
    */
-  public async login(
-    loginAdmin: LoginAdminDto,
-    ip: string,
-    protocolHost: string,
-  ): Promise<AdminLoginInfoVo> {
+  public async login(loginAdmin: LoginAdminDto, ip: string, protocolHost: string): Promise<AdminLoginInfoVo> {
     const redis_key = await this.captchaService.validateCaptcha('admin_login_captcha', loginAdmin.uuid, loginAdmin.captcha)
 
     const admin = await this.adminRepository.findOneByUsername(loginAdmin.username, ['roles', 'roles.permissions'])
@@ -221,11 +218,7 @@ export class AdminService {
    * @param relations 是否需要角色和权限
    * @returns
    */
-  private generateUserInfo(
-    info: Admin,
-    relations: string[],
-    protocolHost: string,
-  ): AdminProfileInfoVo {
+  private generateUserInfo(info: Admin, relations: string[], protocolHost: string,): AdminProfileInfoVo {
     const userInfo: AdminProfileInfoVo = {
       id: info.id,
       username: info.username,
@@ -260,6 +253,32 @@ export class AdminService {
   }
 
   /**
+   * 根据用户 id 返回包含自身角色的所有的子级角色
+   * @param id
+   * @private
+   */
+  private async findIdWithRoleIds(id: number) {
+    const found_admin = await this.adminRepository.findOneById(id, ['roles'])
+    const admin_roleIds = found_admin.roles.map(role => role.id)
+    const roles = await this.roleRepository.findTrees()
+    let bool = false
+    let roleIds: number[] = []
+    // 从最外层循环 只要找到数据 就不在查找
+    forEachTree(roles, (role, _i, _l, _p, level) => {
+      if (admin_roleIds.includes(role.id) && !bool) {
+        bool = true
+        roleIds.push(role.id)
+        forEachTree(role.children, r => {
+          roleIds.push(r.id)
+        })
+        return false
+      }
+      return true
+    })
+    return roleIds
+  }
+
+  /**
    * @description 获取用户列表
    * @param page 页码
    * @param size 每页数量
@@ -268,29 +287,27 @@ export class AdminService {
    * @param userId 当前登录用户的 id
    * @returns
    */
-  public async list(
-    page: number,
-    size: number,
-    query: QueryAdminDto,
-    protocolHost: string,
-    userId: number,
-  ): Promise<PaginationVo<AdminProfileInfoVo>> {
+  public async list(page: number, size: number, query: QueryAdminDto, protocolHost: string, userId: number): Promise<PaginationVo<AdminProfileInfoVo>> {
+    const roleIds = await this.findIdWithRoleIds(userId)
+
     const condition = {
+      id: Not(userId),
       nickname: like(query.nickname),
+      roles: {
+        id: In(roleIds)
+      }
     };
 
     const [user, total] = await this.adminRepository.findAndCountAll(page, size, condition)
 
-    const records = user
-      .filter((item) => item.id !== userId)
-      .map((item) => {
-        return this.generateUserInfo(item, ['roles'], protocolHost);
-      });
+    const records = user.map((item) => {
+      return this.generateUserInfo(item, ['roles'], protocolHost);
+    });
 
     return {
       page,
       size,
-      total: total - 1, // 不算自己
+      total,
       records,
       remark: '管理员列表不会将自己算入，请注意',
     };

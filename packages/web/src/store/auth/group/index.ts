@@ -2,7 +2,7 @@
  * 角色组
  */
 import {defineStore} from "pinia";
-import {findById, list, status, upsert} from "@/api/auth/permission";
+import {findById, list, status, upsert} from "@/api/auth/role";
 import {RoleStoreState} from "./types";
 
 export const useRoleStore = defineStore("roleStore", {

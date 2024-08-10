@@ -1,8 +1,9 @@
 <!-- 自定义表单项 -->
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
-import {computed, inject} from "vue";
+import {computed, inject, watch} from "vue";
 import {TableSettingColumns} from "@/types/tableSettingsType";
+import {IOptions} from "@/types";
 
 interface CustomFormItemProps {
   column?: TableSettingColumns;
@@ -18,8 +19,7 @@ const props = withDefaults(defineProps<CustomFormItemProps>(), {
   column: () => ({
     dataIndex: "id",
     modelProp: 'value'
-  }),
-  options: () => [],
+  })
 });
 
 // model
@@ -51,8 +51,45 @@ const placeholderProp = computed(() => {
 
 const typeProp = computed(() => (props.typeProp && column[props.typeProp]) || column.type || 'input');
 
-const formFieldConfigProp = computed(() => {
+const getFormFieldConfig = computed(() => {
   return typeof column.formFieldConfig === 'function' ? column.formFieldConfig(model) : column.formFieldConfig
+})
+
+
+const defaultOptions: Record<string, IOptions[]> = {
+  // 默认 1 是; 0 否
+  whether: [
+    {label: t('enum.whether.1'), value: 1},
+    {label: t('enum.whether.0'), value: 0},
+  ],
+  // 默认 1 启用 0 禁用
+  status: [
+    {label: t('enum.status.1'), value: 1},
+    {label: t('enum.status.0'), value: 0},
+  ]
+}
+
+const showOptions = computed(() => {
+  return !column.type || !['select', 'radio', 'radio-button', 'tree-select', 'tree', 'cascader'].includes(column.formType || column.type)
+})
+
+const getOptions = computed(() => {
+  if (showOptions.value) return
+  if (!column.options) return defaultOptions.whether;
+  if (props.options) {
+    return props.options
+  } else if (typeof column.options === 'string') {
+    if (['status', 'whether'].includes(column.options)) {
+      return defaultOptions[column.options]
+    }
+    throw new TypeError('options is not IOptions')
+  } else {
+    return column.options
+  }
+});
+
+watch(() => column.options, (newValue) => {
+  console.log('newValue', newValue)
 })
 
 defineOptions({
@@ -71,7 +108,9 @@ defineOptions({
       :record="model"
       :value="model[valueProp]"
       :field="valueProp"
-      :placeholder="placeholderProp"
+      :picker="column.picker"
+      :options="getOptions"
+      v-bind="getFormFieldConfig"
     >
       <custom-input
         v-model:value="model[valueProp]"
@@ -79,10 +118,9 @@ defineOptions({
         v-model:fileList="model[valueProp]"
         :type="typeProp"
         :placeholder="placeholderProp"
-        :tree-data="options"
-        :options="options"
         :picker="column.picker"
-        v-bind="formFieldConfigProp"
+        :options="getOptions"
+        v-bind="getFormFieldConfig"
       />
     </slot>
   </a-form-item>

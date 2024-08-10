@@ -14,7 +14,7 @@ export class PermissionController {
   @Inject(PermissionService)
   private readonly permissionService: PermissionService
 
-  @ApiOperation({summary: '获取管理员角色列表数据'})
+  @ApiOperation({summary: '获取管理员菜单规则列表数据'})
   @ApiVoResponse(PermissionVo, 3)
   @Get()
   @RequireLogin()
@@ -23,7 +23,7 @@ export class PermissionController {
     return await this.permissionService.list();
   }
 
-  @ApiOperation({summary: '新增/编辑管理员菜单规则管'})
+  @ApiOperation({summary: '新增/编辑管理员菜单规则'})
   @Post('upsert')
   @RequireLogin()
   @LogCall('admin', '菜单规则管理-新增/编辑')
@@ -31,7 +31,7 @@ export class PermissionController {
     return await this.permissionService.upsert(body);
   }
 
-  @ApiOperation({summary: '根据id删除管理员角色'})
+  @ApiOperation({summary: '根据id删除管理员菜单规则'})
   @Post('remove')
   @RequireLogin()
   @LogCall('admin', '菜单规则管理-删除')
@@ -39,7 +39,7 @@ export class PermissionController {
     return await this.permissionService.remove(body);
   }
 
-  @ApiOperation({summary: '根据id获取管理员角色详情'})
+  @ApiOperation({summary: '根据id获取管理员菜单规则详情'})
   @ApiVoResponse(PermissionVo)
   @Get('/:id')
   @RequireLogin()
@@ -48,7 +48,7 @@ export class PermissionController {
     return await this.permissionService.detail(id);
   }
 
-  @ApiOperation({summary: '根据id修改管理员角色状态'})
+  @ApiOperation({summary: '根据id修改管理员菜单规则状态'})
   @Post('status')
   @RequireLogin()
   @LogCall('admin', '菜单规则管理-修改状态')
@@ -56,7 +56,8 @@ export class PermissionController {
     return await this.permissionService.status(body);
   }
 
-  @ApiOperation({summary: '根据id和源id修改管理员角色排序'})
+
+  @ApiOperation({summary: '根据id和源id修改管理员菜单规则排序'})
   @Get('sortable/:id/:targetId')
   @RequireLogin()
   @LogCall('admin', '菜单规则管理-排序')

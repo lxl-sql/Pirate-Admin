@@ -1,10 +1,10 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import {provide, ref, watch} from "vue";
+import {ref, watch} from "vue";
 import {findById, list, remove, upsert} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
-import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
+import TableSettings from "@/utils/tableSettings";
 import {useI18n} from "vue-i18n";
 import {AdminFields, AdminTableSettingsType} from "./types";
 import {useRoleStore} from "@/store";
@@ -14,13 +14,12 @@ const {t} = useI18n();
 
 const roleStore = useRoleStore()
 
-const {getRoleListRequest} = roleStore
-
 const avatarPreviewSrc = ref("");
 const isAvatarPreviewSrcOpen = ref<boolean>(false);
 
 const onInit = async () => {
-  await getRoleListRequest();
+  await roleStore.getRoleListRequest();
+  console.log('onInit roleStore.dataSource', roleStore.dataSource)
 };
 // 显示预览图片
 const openAvatarPreviewImage = (src: string) => {
@@ -68,14 +67,6 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
         width: 180,
         type: 'tree-select',
         form: true,
-        formValueProp: "roleIds",
-        options: roleStore.dataSource,
-        formFieldConfig: {
-          fieldNames: {label: 'name', value: 'id'},
-          multiple: true,
-          spliceParentTitle: true,
-          treeDefaultExpandAll: true
-        }
       },
       {
         title: "头像",
@@ -192,7 +183,7 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       roleIds: [{required: true, message: t("user.error.roles")}],
     },
     modal: {
-      afterOpen(type, fields) {
+      afterOpen(type, fields: AdminFields) {
         if (type !== 1) return;
         const file = {
           // 按照要求乱填即可
@@ -220,8 +211,6 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
   },
 });
 
-provide(tableSettingKey, tableSettings);
-
 watch(
   () => tableSettings.form.fields?.id,
   (id) => {
@@ -231,7 +220,7 @@ watch(
 </script>
 
 <template>
-  <i-crud>
+  <i-crud :setting="tableSettings">
     <i-preview-image
       v-model:open="isAvatarPreviewSrcOpen"
       :src="avatarPreviewSrc"
@@ -255,6 +244,17 @@ watch(
     </template>
     <template #status="{ value }">
       <status-tag :value="value"/>
+    </template>
+
+    <template #form-roles="{record,placeholder}">
+      <i-tree-select
+        v-model:value="record.roleIds"
+        :tree-data="roleStore.dataSource"
+        :field-names="{label:'name',value:'id'}"
+        :placeholder="placeholder"
+        multiple
+        tree-default-expand-all
+      />
     </template>
   </i-crud>
 </template>

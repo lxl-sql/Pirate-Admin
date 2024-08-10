@@ -1,7 +1,6 @@
 import {DataSource, Repository} from "typeorm";
 import {Admin} from "./entities/admin.entity";
 import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
-import {findManyOption} from "@/utils/tools";
 import {WhereOptions} from "@/types";
 
 @Injectable()
@@ -67,26 +66,27 @@ export class AdminRepository extends Repository<Admin> {
    * @param where
    */
   public async findAndCountAll(page: number, size: number, where: WhereOptions<Admin>) {
-    return await this.findAndCount(
-      findManyOption<Admin>(page, size, {
-        select: [
-          'id',
-          'username',
-          'nickname',
-          'avatar',
-          'email',
-          'phone',
-          'status',
-          'lastLoginIp',
-          'lastLoginTime',
-          'createTime',
-        ],
-        where: where,
-        relations: ['roles'],
-        order: {
-          createTime: 'DESC',
-        },
-      })
-    );
+    return await this.findAndCount({
+      skip: (page - 1) * size,
+      take: size,
+      select: [
+        'id',
+        'username',
+        'nickname',
+        'avatar',
+        'email',
+        'phone',
+        'status',
+        'lastLoginIp',
+        'lastLoginTime',
+        'updateTime',
+        'createTime',
+      ],
+      where: where,
+      relations: ['roles'],
+      order: {
+        createTime: 'DESC',
+      },
+    });
   }
 }

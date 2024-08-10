@@ -19,6 +19,8 @@ defineOptions({
     v-model:open="open"
     placement="bottomRight"
     trigger="click"
+    z-index="1"
+    arrow-point-at-center
   >
     <template #content>
       <info-popover-content @close="open = false"/>

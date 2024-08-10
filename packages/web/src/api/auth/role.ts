@@ -20,3 +20,8 @@ export const upsert = (data) => {
 export const remove = (data) => {
   return request.post("/admin/role/remove", data);
 };
+
+// 删除角色
+export const status = (data) => {
+  return request.post("/admin/role/status", data);
+};

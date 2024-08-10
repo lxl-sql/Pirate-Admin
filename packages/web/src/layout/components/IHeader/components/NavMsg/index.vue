@@ -13,10 +13,11 @@ defineOptions({
 <template>
   <a-popover
     v-model:open="open"
-    placement="bottom"
+    placement="bottomRight"
     title="消息提醒"
     trigger="click"
     overlay-class-name="nav-msg-popover"
+    arrow-point-at-center
   >
     <template #content>
       <div class="nav-msg-content">

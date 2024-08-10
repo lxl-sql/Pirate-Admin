@@ -1,6 +1,7 @@
 import {Injectable} from "@nestjs/common";
 import {DataSource, FindOperator, TreeRepository} from "typeorm";
 import {Role} from "./entities/role.entity";
+import {StatusDto} from "@/dtos/status.dto";
 
 @Injectable()
 export class RoleRepository extends TreeRepository<Role> {
@@ -20,5 +21,14 @@ export class RoleRepository extends TreeRepository<Role> {
       where: {id},
       relations
     })
+  }
+
+  public async status(body: StatusDto) {
+    return await this
+      .createQueryBuilder()
+      .update(Role)
+      .set({status: body.status})
+      .whereInIds(body.ids)
+      .execute();
   }
 }

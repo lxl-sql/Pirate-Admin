@@ -7,7 +7,6 @@ interface CustomInputProps {
   type?: IColumns['type'],
   options?: any[],
   picker?: DatePickerProps['picker']
-  treeData?: any[]
   checkedKeys?: any
   fileList?: any
   value?: any
@@ -45,13 +44,13 @@ withDefaults(defineProps<CustomInputProps>(), {});
   <i-tree-select
     v-else-if="type === 'tree-select'"
     allow-clear
-    :tree-data="treeData"
+    :tree-data="options"
     :value="value"
     v-bind="$attrs"
   />
   <a-tree
     v-else-if="type === 'tree'"
-    :tree-data="treeData"
+    :tree-data="options"
     :checked-keys="checkedKeys"
     v-bind="$attrs"
   />

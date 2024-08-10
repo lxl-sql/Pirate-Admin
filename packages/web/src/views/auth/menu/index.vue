@@ -233,7 +233,7 @@ const handleStatusChange = async (record: AdminMenuDataSource) => {
 </script>
 
 <template>
-  <i-crud>
+  <i-crud :setting="tableSettings">
     <template #icon="{value}">
       <component v-if="value" :is="antIcons[value]" class="text-[18px]"/>
     </template>

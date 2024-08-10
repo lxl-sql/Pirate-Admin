@@ -6,9 +6,9 @@ import {IdsDto} from "@/dtos/remove.dto";
 import {NotPaginationVo} from "@/vos/response.vo";
 import {Permission} from "./entities/permission.entity";
 import {PermissionRepository} from "./permission.repository";
-import {StatusPermissionDto} from './dto/status-permission.dto'
 import {UpsertPermissionDto} from './dto/upsert-permission.dto'
 import {PermissionVo} from './vo/permission.vo'
+import {StatusDto} from "@/dtos/status.dto";
 
 @Injectable()
 export class PermissionService {
@@ -90,14 +90,9 @@ export class PermissionService {
    * @param body
    * @returns
    */
-  public async status(body: StatusPermissionDto) {
+  public async status(body: StatusDto) {
     try {
-      await this.permissionRepository
-        .createQueryBuilder()
-        .update(Permission)
-        .set({status: body.status})
-        .whereInIds(body.ids)
-        .execute();
+      await this.permissionRepository.status(body);
       return '修改成功';
     } catch (error) {
       throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
@@ -110,35 +105,27 @@ export class PermissionService {
    * @param targetId 排序位置主键值
    */
   public async sortable(id: number, targetId: number) {
-    const list = await this.permissionRepository.find({
-      where: {
-        id: In([id, targetId]),
-      },
-    });
+    const list = await this.permissionRepository.findById(In([id, targetId]));
+
     const data = list.find((item) => item.id === id);
-    const targetData = list.find((item) => item.id === targetId);
-    if (!data || !targetData) {
+    const target_permission = list.find((item) => item.id === targetId);
+    if (!data || !target_permission) {
       throw new HttpException(
         `提供的${data ? 'targetId' : 'id'}无效。`,
         HttpStatus.BAD_REQUEST,
       );
     }
     // 获取最大排序
-    const maxSort = targetData.sort > data.sort ? targetData.sort : data.sort;
-    const items = await this.permissionRepository
-      .createQueryBuilder('p')
-      .where('p.parentId = :parentId', {parentId: targetData.parentId})
-      .andWhere('p.sort <= :sort', {sort: maxSort})
-      .orderBy('p.sort', 'DESC')
-      .getMany();
+    const max_sort = target_permission.sort > data.sort ? target_permission.sort : data.sort;
+    const items = await this.permissionRepository.findMaxSort(target_permission.parentId, max_sort)
 
-    const currentIndex = items.findIndex((item) => item.id === id);
-    const targetIndex = items.findIndex((item) => item.id === targetId);
+    const current_index = items.findIndex((item) => item.id === id);
+    const target_index = items.findIndex((item) => item.id === targetId);
 
     // 移动当前项到目标位置
-    items.splice(targetIndex, 0, items.splice(currentIndex, 1)[0]);
+    items.splice(target_index, 0, items.splice(current_index, 1)[0]);
 
-    let sort = maxSort;
+    let sort = max_sort;
     for (let i = 0; i < items.length; i++) {
       items[i].sort = sort;
       sort--;

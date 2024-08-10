@@ -1,43 +1,22 @@
-import {Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
-import {findManyOption, pageFormat} from "@/utils/tools";
+import {Inject, Injectable} from '@nestjs/common';
+import {removePublic} from "@/utils/crud";
+import {pageFormat} from "@/utils/tools";
 import {IdsDto} from "@/dtos/remove.dto";
 import {Log} from './entities/log.entity';
+import {LogRepository} from "./log.repository";
 import {QueryLogDto} from './dto/query-log.dto';
-import {removePublic} from "@/utils/crud";
 
 @Injectable()
 export class LogService {
-  @InjectRepository(Log)
-  private readonly adminLogRepository: Repository<Log>;
+  @Inject(LogRepository)
+  private readonly logRepository: LogRepository;
 
   public async list(page: number, size: number, query: QueryLogDto) {
     const condition = {
       userId: query.userId,
     };
 
-    const [records, total] = await this.adminLogRepository.findAndCount(
-      findManyOption<Log>(page, size, {
-        select: [
-          'id',
-          'userId',
-          'username',
-          'title',
-          'url',
-          'ip',
-          'ipAddress',
-          'method',
-          'responseTime',
-          'userAgent',
-          'createTime',
-        ],
-        where: condition,
-        order: {
-          createTime: 'DESC',
-        },
-      })
-    );
+    const [records, total] = await this.logRepository.findAndCountAll(page, size, condition)
 
     return pageFormat(
       page,
@@ -54,12 +33,12 @@ export class LogService {
   public async loggerCreate(
     options: Omit<Log, 'id' | 'updateTime' | 'createTime'>,
   ) {
-    const new_logger = this.adminLogRepository.create(options);
-    await this.adminLogRepository.save(new_logger);
+    const new_logger = this.logRepository.create(options);
+    await this.logRepository.save(new_logger);
   }
 
   public async detail(id: number) {
-    return await this.adminLogRepository.findOneBy({id});
+    return await this.logRepository.findOneBy({id});
   }
 
   /**
@@ -81,7 +60,7 @@ export class LogService {
    * @private
    */
   private async clearAll() {
-    await this.adminLogRepository.clear()
+    await this.logRepository.clear()
   }
 
   /**
@@ -90,6 +69,6 @@ export class LogService {
    * @private
    */
   private async removeIds(body: IdsDto) {
-    await removePublic(this.adminLogRepository, body)
+    await removePublic(this.logRepository, body)
   }
 }

@@ -1,6 +1,7 @@
 import {HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
 import {In} from "typeorm";
-import {existsByOnFail, mapTree, sortTree} from "@/utils/tools";
+import {existsByOnFail} from "@/utils/tools";
+import {mapTree, sortTree} from "@/utils/tree";
 import {treeRemovePublic, treeUpsertPublic} from "@/utils/crud";
 import {IdsDto} from "@/dtos/remove.dto";
 import {Role} from "./entities/role.entity";
@@ -9,6 +10,7 @@ import {RoleRepository} from "./role.repository";
 import {UpsertRoleDto} from './dto/upsert-role.dto'
 import {QueryRoleDto} from './dto/query-role.dto'
 import {RoleVo} from './vo/role.vo'
+import {StatusDto} from "@/dtos/status.dto";
 
 @Injectable()
 export class RoleService {
@@ -94,6 +96,7 @@ export class RoleService {
     if (!found_role) {
       throw new HttpException('角色不存在', HttpStatus.NOT_FOUND);
     }
+
     const permissionIds = found_role.permissions.map((permission) => permission.id);
     return {
       id: found_role.id,
@@ -110,4 +113,17 @@ export class RoleService {
     };
   }
 
+  /**
+   * @description 修改角色状态
+   * @param body
+   * @returns
+   */
+  public async status(body: StatusDto) {
+    try {
+      await this.roleRepository.status(body)
+      return '修改成功';
+    } catch (error) {
+      throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);
+    }
+  }
 }

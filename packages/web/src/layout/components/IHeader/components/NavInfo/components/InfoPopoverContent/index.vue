@@ -15,7 +15,7 @@ const emits = defineEmits(['close'])
 // 注销
 const handleLogout = () => {
   Modal.confirm({
-    title: "",
+    title: t('title.notification'),
     content: t('content.Are you sure you want to log out?'),
     onOk() {
       emits('close')

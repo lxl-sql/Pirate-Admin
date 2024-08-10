@@ -7,6 +7,7 @@ import {RoleService} from "./role.service";
 import {UpsertRoleDto} from "./dto/upsert-role.dto";
 import {QueryRoleDto} from "./dto/query-role.dto";
 import {RoleVo} from "./vo/role.vo";
+import {StatusDto} from "@/dtos/status.dto";
 
 @ApiTags('Admin Role')
 @Controller('admin/role')
@@ -46,5 +47,13 @@ export class RoleController {
   @LogCall('admin', '角色组管理-详情')
   public async detail(@Param('id') id: number) {
     return await this.roleService.detail(id);
+  }
+
+  @ApiOperation({summary: '根据id修改管理员角色状态'})
+  @Post('status')
+  @RequireLogin()
+  @LogCall('admin', '角色组管理-修改状态')
+  public async status(@Body() body: StatusDto) {
+    return await this.roleService.status(body);
   }
 }

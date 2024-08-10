@@ -1,12 +1,8 @@
 /**
  * 默认实体类
  */
-import {
-  CreateDateColumn,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { DateFormatTransformer } from '@/utils/transformer';
+import {CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn,} from 'typeorm';
+import {DateFormatTransformer} from "@/utils/transformer";
 
 export abstract class DefaultEntity {
   @PrimaryGeneratedColumn()
@@ -14,16 +10,17 @@ export abstract class DefaultEntity {
 
   @UpdateDateColumn({
     name: 'update_time',
+    type: 'timestamp',
     comment: '更新时间',
-    transformer: new DateFormatTransformer(),
+    transformer: new DateFormatTransformer()
   })
   updateTime: Date;
 
   @CreateDateColumn({
     name: 'create_time',
+    type: 'timestamp',
     comment: '创建时间',
-    transformer: new DateFormatTransformer(),
-    nullable: true
+    transformer: new DateFormatTransformer()
   })
   createTime: Date;
 }

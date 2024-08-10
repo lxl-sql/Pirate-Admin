@@ -1,8 +1,8 @@
 <!-- 角色组管理 -->
 <script setup lang="ts">
-import {computed, provide, reactive, shallowRef} from "vue";
+import {computed, reactive, shallowRef} from "vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
-import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
+import TableSettings from "@/utils/tableSettings";
 import {findById, list, remove, upsert} from "@/api/auth/role";
 import {AdminRoleFields, AdminRoleRecordType, AdminRoleTableSettingsType} from "./types";
 import {useI18n} from "vue-i18n";
@@ -217,13 +217,10 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
     }
   },
 });
-
-provide(tableSettingKey, tableSettings);
 </script>
 
 <template>
-
-  <i-crud>
+  <i-crud :setting="tableSettings">
     <template #status="{ value }">
       <status-tag :value="value"/>
     </template>

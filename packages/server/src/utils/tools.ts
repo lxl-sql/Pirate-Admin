@@ -161,59 +161,6 @@ export function trimmedIp(ip: string): string | null {
 }
 
 /**
- *
- * @param list 数据
- * @param children 子级字段 默认children
- * @param cb 回调
- * @param parent 父级 默认null
- * @returns
- */
-export function mapTree<T>(
-  list: T[],
-  callback: (item: T, index: number, list: T[], parent: T) => void,
-  children = 'children',
-  parent: T | null = null,
-) {
-  if (!Array.isArray(list)) {
-    return list;
-  }
-  return list.map((item, index) => {
-    callback?.(item, index, list, parent);
-    if (item[children] && item[children].length) {
-      item[children] = mapTree(item[children], callback, children, item);
-    } else {
-      item[children] = null;
-    }
-    return item;
-  });
-}
-
-/**
- * sort tree 排序
- * @param list
- * @param callback
- * @param children
- * @returns
- */
-export function sortTree<T>(
-  list: T[],
-  callback: (a: T, b: T) => number,
-  children = 'children',
-) {
-  // 首先对当前层级的节点进行排序
-  list.sort(callback);
-
-  // 递归地对每个子节点进行排序
-  list.forEach((node) => {
-    if (node[children]?.length) {
-      node[children] = sortTree(node[children], callback, children);
-    }
-  });
-
-  return list;
-}
-
-/**
  * @description 获取请求的host
  * @param request
  * @param path

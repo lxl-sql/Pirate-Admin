@@ -1,6 +1,6 @@
 <!-- CRUD -->
 <script setup lang="ts">
-import {computed, inject} from "vue";
+import {computed, provide} from "vue";
 import {DragOutlined, EditOutlined, PlusOutlined, ReloadOutlined, ZoomInOutlined} from "@ant-design/icons-vue";
 import {sortNumber} from "@/utils/common";
 import {TableSettingsType} from "@/types/tableSettingsType";
@@ -9,7 +9,13 @@ import ITooltip from "@/components/IComponents/ITooltip/index.vue";
 import ICrudFormModal from "./components/ICrudFormModal/index.vue";
 import ICrudDetailModal from "./components/ICrudDetailModal/index.vue";
 
-const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
+interface ICrudProps {
+  setting: TableSettingsType
+}
+
+const props = defineProps<ICrudProps>()
+
+const tableSettings = props.setting
 
 const table = computed(() => tableSettings?.table)
 
@@ -35,6 +41,8 @@ const hasTableChild = computed(() => operations.value.includes('expand') && tabl
 /** @param expandAllRowsDisabled {boolean} 是否禁用 展开/收起 按钮 */
 const expandAllRowsDisabled = computed(() => operations.value.includes('expand') && table.value?.dataSource?.length && hasTableChild.value)
 
+provide(tableSettingKey, props.setting);
+console.log(' props.setting', props.setting)
 defineOptions({
   name: "ICrud",
 });

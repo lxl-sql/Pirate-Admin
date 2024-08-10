@@ -156,8 +156,6 @@ const tableSettings: any = new TableSettings({
   }
 });
 
-provide(tableSettingKey, tableSettings);
-
 /**
  * 清空日志
  */
@@ -174,7 +172,7 @@ const handleRemoveAll = () => {
 </script>
 
 <template>
-  <i-crud>
+  <i-crud :setting="tableSettings">
     <template #afterLeftAction>
       <a-button type="primary" danger @click="handleRemoveAll">
         <template #icon>

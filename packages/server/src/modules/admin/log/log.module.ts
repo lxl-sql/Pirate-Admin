@@ -3,12 +3,13 @@ import {TypeOrmModule} from '@nestjs/typeorm';
 import {Log} from './entities/log.entity';
 import {LogController} from './log.controller';
 import {LogService} from './log.service';
+import {LogRepository} from "./log.repository";
 
 @Global()
 @Module({
   imports: [TypeOrmModule.forFeature([Log])],
   controllers: [LogController],
-  providers: [LogService],
+  providers: [LogService, LogRepository],
   exports: [LogService],
 })
 export class LogModule {
