@@ -5,11 +5,15 @@ import {IdsDto} from "@/dtos/remove.dto";
 import {Log} from './entities/log.entity';
 import {LogRepository} from "./log.repository";
 import {QueryLogDto} from './dto/query-log.dto';
+import {CronJob} from "cron";
+import {MoreThanOrEqual} from "typeorm";
 
 @Injectable()
 export class LogService {
   @Inject(LogRepository)
   private readonly logRepository: LogRepository;
+
+  private jobs: CronJob[] = []
 
   public async list(page: number, size: number, query: QueryLogDto) {
     const condition = {
@@ -30,9 +34,7 @@ export class LogService {
    * @description: 创建日志
    * @param options
    */
-  public async loggerCreate(
-    options: Omit<Log, 'id' | 'updateTime' | 'createTime'>,
-  ) {
+  public async loggerCreate(options: Omit<Log, 'id' | 'updateTime' | 'createTime'>,) {
     const new_logger = this.logRepository.create(options);
     await this.logRepository.save(new_logger);
   }
@@ -48,27 +50,35 @@ export class LogService {
   public async remove(body: IdsDto) {
     const [firstId] = body.ids
     if (firstId === 0) {
-      await this.clearAll()
+      // 清空日志
+      await this.logRepository.clear()
     } else {
-      await this.removeIds(body)
+      // 删除对应的 id | ids
+      await removePublic(this.logRepository, body)
     }
     return '删除成功'
   }
 
   /**
-   * 删除所有日志
-   * @private
+   * 清除在某时间范围外旧的操作日志
    */
-  private async clearAll() {
-    await this.logRepository.clear()
+  private async clearOldLogs() {
+    // daysToKeep 0 默认不清除
+    const daysToKeep = 0
+    const cutoff_date = new Date()
+    cutoff_date.setDate(cutoff_date.getDate() - daysToKeep)
+
+    const delete_result = await this.logRepository.delete({
+      createTime: MoreThanOrEqual(cutoff_date)
+    })
+
+    console.log(`Deleted ${delete_result.affected} logs older than ${daysToKeep} days.`);
   }
 
   /**
-   * 删除对应的id
-   * @param body
-   * @private
+   * 计划日志清理
    */
-  private async removeIds(body: IdsDto) {
-    await removePublic(this.logRepository, body)
+  public async scheduleLogCleanup(cronTime: string) {
+    const job = new CronJob(cronTime, this.clearOldLogs)
   }
 }

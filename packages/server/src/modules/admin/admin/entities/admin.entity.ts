@@ -1,5 +1,6 @@
 import {Column, Entity, JoinTable, ManyToMany} from 'typeorm';
 import {DateFormatTransformer} from '@/utils/transformer';
+import {Status} from "@/enums/status.enum";
 import {DefaultEntity} from '@/entities/default.entity';
 import {Role} from '../../role/entities/role.entity';
 
@@ -56,9 +57,9 @@ export class Admin extends DefaultEntity {
   @Column({
     comment: '状态 0 禁用 1 启用',
     type: 'tinyint',
-    default: 1,
+    default: Status.ENABLED,
   })
-  status: number;
+  status: Status;
 
   @Column({
     length: 50,

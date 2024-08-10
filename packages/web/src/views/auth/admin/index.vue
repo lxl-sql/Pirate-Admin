@@ -1,6 +1,6 @@
 <!-- 管理员管理 -->
 <script setup lang="ts">
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {findById, list, remove, upsert} from "@/api/auth/admin";
 import ProcessingTag from "@/components/IComponents/IOther/ProcessingTag/index.vue";
 import StatusTag from "@/components/IComponents/IOther/StatusTag/index.vue";
@@ -9,6 +9,7 @@ import {useI18n} from "vue-i18n";
 import {AdminFields, AdminTableSettingsType} from "./types";
 import {useRoleStore} from "@/store";
 import {UserOutlined} from "@ant-design/icons-vue";
+import {ModalType} from "@/types/tableSettingsType";
 
 const {t} = useI18n();
 
@@ -183,7 +184,12 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       roleIds: [{required: true, message: t("user.error.roles")}],
     },
     modal: {
-      afterOpen(type, fields: AdminFields) {
+      beforeOpen(type: ModalType) {
+        if (tableSettings.form.rules) {
+          tableSettings.form.rules.password = [{required: type === 0, message: t("user.error.password")}]
+        }
+      },
+      afterOpen(type: ModalType, fields: AdminFields) {
         if (type !== 1) return;
         const file = {
           // 按照要求乱填即可
@@ -211,12 +217,12 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
   },
 });
 
-watch(
-  () => tableSettings.form.fields?.id,
-  (id) => {
-    tableSettings.form.rules!.password = [{required: !id, message: t("user.error.password")}]
-  }
-)
+// watch(
+//   () => tableSettings.form.fields?.id,
+//   (id) => {
+//     tableSettings.form.rules!.password = [{required: !id, message: t("user.error.password")}]
+//   }
+// )
 </script>
 
 <template>

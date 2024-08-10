@@ -7,10 +7,10 @@ import {promises as fs} from 'fs';
 import * as path from 'path';
 import {existsByOnFail, parseTextareaData} from "@/utils/tools";
 import {EmailService} from '@/common/email/email.service';
-import {ConfigGroup} from "./entities/config-group.entity";
-import {Config} from './entities/config.entity';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
 import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
+import {ConfigGroup} from "./entities/config-group.entity";
+import {ConfigRepository} from "./config.repository";
 import {CreateConfigGroupDto} from "./dto/create-config-group.dto";
 import {DatabaseConfigDto} from './dto/database-config.dto';
 import {CreateConfigDto} from "./dto/create-config.dto";
@@ -29,8 +29,8 @@ export class ConfigService {
   @InjectRepository(ConfigGroup)
   private readonly configGroupRepository: Repository<ConfigGroup>;
 
-  @InjectRepository(Config)
-  private readonly configRepository: Repository<Config>;
+  @Inject(ConfigRepository)
+  private readonly configRepository: ConfigRepository;
 
   private readonly envFilePath = path.resolve(__dirname, '.env');
   private readonly envProdFilePath = path.resolve(__dirname, '.env.production');

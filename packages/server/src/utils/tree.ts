@@ -1,9 +1,5 @@
 type TreeCallback<T> = (item: T, index: number, list: T[], parent?: T, level?: number) => boolean | void
 
-interface LevelTree<T> {
-  level: number
-}
-
 /**
  * 遍历树结构并支持中断
  * @param list 数据

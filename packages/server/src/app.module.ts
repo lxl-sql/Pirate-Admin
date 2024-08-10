@@ -34,6 +34,8 @@ import {EmailModule} from '@/common/email/email.module';
 import {TokenModule} from '@/common/token/token.module';
 import {UserModule} from '@/modules/user/user.module';
 import {SmsModule} from '@/common/sms/sms.module';
+import {CronModule} from './modules/cron/cron/cron.module';
+import {LogModule as CronLogModule} from './modules/cron/log/log.module';
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
@@ -109,6 +111,8 @@ const envFilePath = IS_DEV
     TokenModule,
     FilesModule,
     ConfigModule,
+    CronModule,
+    CronLogModule,
   ],
   controllers: [AppController],
   providers: [
