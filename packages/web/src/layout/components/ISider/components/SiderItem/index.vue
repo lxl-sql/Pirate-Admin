@@ -45,28 +45,29 @@ defineOptions({
 </script>
 
 <template>
-  <template v-for="item in menus" :key="item.name">
+  <template v-for="item in menus">
     <!-- 当存在子集 -->
-    <template v-if="item.children && item.children.length">
-      <a-sub-menu :key="item.name" :title="item.title" @click.stop="handleSubMenu(item)">
-        <template #icon>
-          <component :is="antIcons[item.icon]" class="fontSize-icon"/>
-        </template>
-        <sider-item
-          :menus="item.children"
-          @menu-click="handleMenu($event)"
-          @sub-menu-click="handleSubMenu($event)"
-        />
-      </a-sub-menu>
-    </template>
-    <template v-else>
-      <a-menu-item :key="item.name" :title="item.title" @click.stop="handleMenu(item)">
-        <template #icon>
-          <component :is="antIcons[item.icon]" class="fontSize-icon"/>
-        </template>
-        <span>{{ item.title }}</span>
-      </a-menu-item>
-    </template>
+    <a-sub-menu
+      v-if="item.children && item.children.length"
+      :key="item.name"
+      :title="item.title"
+      @click.stop="handleSubMenu(item)"
+    >
+      <template #icon>
+        <component :is="antIcons[item.icon]" class="fontSize-icon"/>
+      </template>
+      <sider-item
+        :menus="item.children"
+        @menu-click="handleMenu($event)"
+        @sub-menu-click="handleSubMenu($event)"
+      />
+    </a-sub-menu>
+    <a-menu-item v-else :key="item.name" :title="item.title" @click.stop="handleMenu(item)">
+      <template #icon>
+        <component :is="antIcons[item.icon]" class="fontSize-icon"/>
+      </template>
+      <span>{{ item.title }}</span>
+    </a-menu-item>
   </template>
 </template>
 

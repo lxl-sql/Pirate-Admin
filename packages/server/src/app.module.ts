@@ -40,11 +40,10 @@ import {LogModule as CronLogModule} from './modules/cron/log/log.module';
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
 const envFilePath = IS_DEV
-  ? ['.env.development', '.env.production', '.env']
+  ? ['.env', '.env.development']
   : [
-    join(__dirname, '../.env.development'),
-    join(__dirname, '../.env.production'),
-    join(__dirname, '../.env'),
+    join(__dirname, '.env'),
+    join(__dirname, '.env.production'),
   ];
 
 @Module({

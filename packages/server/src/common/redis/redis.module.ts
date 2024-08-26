@@ -1,7 +1,7 @@
-import { Global, Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { createClient } from 'redis';
-import { RedisService } from './redis.service';
+import {Global, Module} from '@nestjs/common';
+import {ConfigService} from '@nestjs/config';
+import {createClient} from 'redis';
+import {RedisService} from './redis.service';
 
 @Global()
 @Module({
@@ -15,7 +15,7 @@ import { RedisService } from './redis.service';
             host: configService.get('REDIS_HOST', '127.0.0.1'),
             port: configService.get('REDIS_PORT', 6379),
           },
-          database: configService.get('REDIS_DB'),
+          database: configService.get('REDIS_DB', 0),
           password: configService.get('REDIS_PASSWORD'),
         })
           .on('error', (err) =>
@@ -33,4 +33,5 @@ import { RedisService } from './redis.service';
   ],
   exports: [RedisService],
 })
-export class RedisModule {}
+export class RedisModule {
+}
