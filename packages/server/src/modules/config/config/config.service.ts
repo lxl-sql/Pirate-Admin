@@ -1,17 +1,17 @@
 // src/config/config.service.ts
 import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import {ConfigService as NestConfigService} from '@nestjs/config'
-import {InjectRepository} from '@nestjs/typeorm';
-import {In, Repository} from 'typeorm';
+import {In} from 'typeorm';
 import {promises as fs} from 'fs';
 import * as path from 'path';
 import {existsByOnFail, parseTextareaData} from "@/utils/tools";
 import {EmailService} from '@/common/email/email.service';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
 import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
-import {ConfigGroup} from "./entities/config-group.entity";
+import {Group} from "../group/entities/group.entity";
+import {GroupRepository} from "../group/group.repository";
 import {ConfigRepository} from "./config.repository";
-import {CreateConfigGroupDto} from "./dto/create-config-group.dto";
+import {CreateGroupDto} from "../group/dto/create-group.dto";
 import {DatabaseConfigDto} from './dto/database-config.dto';
 import {CreateConfigDto} from "./dto/create-config.dto";
 import {RedisConfigDto} from './dto/redis-config.dto';
@@ -26,8 +26,8 @@ export class ConfigService {
   @Inject(forwardRef(() => EmailService))
   private readonly emailServer: EmailService;
 
-  @InjectRepository(ConfigGroup)
-  private readonly configGroupRepository: Repository<ConfigGroup>;
+  @Inject(GroupRepository)
+  private readonly configGroupRepository: GroupRepository;
 
   @Inject(ConfigRepository)
   private readonly configRepository: ConfigRepository;
@@ -208,7 +208,7 @@ export class ConfigService {
   }
 
   public async findAll() {
-    const configGroup = await this.findAllGroup()
+    const configGroup = await this.configGroupRepository.findAll()
     const config = await this.configRepository.find({
       order: {
         weight: "DESC"
@@ -269,27 +269,12 @@ export class ConfigService {
     }, {} as { [key: string]: any });
   }
 
-  /**
-   * 新增配置项分组
-   */
-  public async createGroup(body: CreateConfigGroupDto) {
-    try {
-      const new_config = this.configGroupRepository.create(body);
-      await this.configGroupRepository.save(new_config)
-      return '保存成功'
-    } catch (error) {
-      if (error.code === 'ER_DUP_ENTRY') {
-        await existsByOnFail(this.configGroupRepository, 'name', body.name, '$value 字段名已存在');
-      }
-    }
-  }
-
-  async createOrUpdateConfigGroups(createConfigGroupDtos: CreateConfigGroupDto[]) {
+  async createOrUpdateConfigGroups(createConfigGroupDtos: CreateGroupDto[]) {
     const keys = createConfigGroupDtos.map(dto => dto.name);
 
     await this.configGroupRepository.manager.transaction(async (entityManager) => {
       // 批量查询现有的 ConfigGroups
-      const existingGroups = await entityManager.find(ConfigGroup);
+      const existingGroups = await entityManager.find(Group);
 
       // 获取现有组的名称到实体的映射
       const existingGroupMap = new Map(existingGroups.map(group => [group.name, group]));
@@ -310,7 +295,7 @@ export class ConfigService {
         } else {
           // 如果不存在，则创建新的
           groupsToSave.push(
-            entityManager.create(ConfigGroup, dto),
+            entityManager.create(Group, dto),
           );
         }
       }
@@ -325,12 +310,5 @@ export class ConfigService {
         await entityManager.remove(groupsToDelete);
       }
     });
-  }
-
-  /**
-   * 查询所有配置项分组
-   */
-  public async findAllGroup() {
-    return await this.configGroupRepository.find()
   }
 }

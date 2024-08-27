@@ -1,6 +1,6 @@
 import {IsNotEmpty} from "class-validator";
 
-export class CreateConfigGroupDto {
+export class CreateGroupDto {
   @IsNotEmpty({message: '分组字段不能为空！'})
   name: string
 

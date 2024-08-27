@@ -58,10 +58,10 @@ const containerClass = computed(() => {
         <router-view
           class="layout-view"
           :class="{fullScreen: theme.isLayoutFullScreen}"
-          v-slot="{ Component }"
+          v-slot="{ Component, route }"
         >
           <transition name="slide-right" mode="out-in">
-            <component v-if="!theme.isPageRefreshing" :is="Component" :key="$route.fullPath"/>
+            <component v-if="!theme.isPageRefreshing" :is="Component" :key="route.fullPath"/>
           </transition>
         </router-view>
       </a-layout-content>

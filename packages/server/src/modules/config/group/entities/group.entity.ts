@@ -1,10 +1,10 @@
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
-import {Config} from "./config.entity";
+import {Config} from "../../config/entities/config.entity";
 
 @Entity({
   name: 'config_group'
 })
-export class ConfigGroup {
+export class Group {
   @PrimaryGeneratedColumn()
   id: number
 

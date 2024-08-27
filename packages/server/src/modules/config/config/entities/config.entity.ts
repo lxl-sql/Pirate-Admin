@@ -1,15 +1,15 @@
 // 快捷配置入口
 import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
 import {DefaultEntity} from '@/entities/default.entity';
-import {ConfigGroup} from "./config-group.entity";
+import {Group} from "../../group/entities/group.entity";
 
 @Entity({
   name: 'config',
 })
 export class Config extends DefaultEntity {
-  @ManyToOne(() => ConfigGroup, (group) => group.configs)
+  @ManyToOne(() => Group, (group) => group.configs)
   @JoinColumn({name: 'group_id'})
-  group: ConfigGroup;
+  group: Group;
 
   @Column({
     length: 100,

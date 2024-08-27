@@ -123,6 +123,6 @@ export class Cron extends DefaultEntity {
   })
   status: Status;
 
-  @OneToMany(() => Log, cronLog => cronLog.cron)
+  @OneToMany(() => Log, log => log.cron)
   logs: Log[];
 }

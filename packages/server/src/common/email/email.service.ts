@@ -1,6 +1,6 @@
 import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import {createTransport, Transporter} from 'nodemailer';
-import {ConfigService} from "@/modules/config/config.service";
+import {ConfigService} from "@/modules/config/config/config.service";
 import {GenerateEmailDto} from './dto/generate-email.dto';
 import {ConfigEmailDto} from './dto/config-email.dto';
 

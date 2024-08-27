@@ -1,19 +1,34 @@
-import {Inject, Injectable} from '@nestjs/common';
+import {Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
+import {LessThan} from "typeorm";
+import {CronJob} from "cron";
 import {removePublic} from "@/utils/crud";
 import {pageFormat} from "@/utils/tools";
 import {IdsDto} from "@/dtos/remove.dto";
 import {Log} from './entities/log.entity';
 import {LogRepository} from "./log.repository";
 import {QueryLogDto} from './dto/query-log.dto';
-import {CronJob} from "cron";
-import {MoreThanOrEqual} from "typeorm";
 
 @Injectable()
-export class LogService {
+export class LogService implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(LogService.name);
+
   @Inject(LogRepository)
   private readonly logRepository: LogRepository;
 
+  // @
+
   private jobs: CronJob[] = []
+
+  async onModuleInit() {
+    const cronTime = '0 0 * * *'; // 每天午夜
+    const daysToKeep = 7; // 保留最近 7 天的日志
+
+    await this.scheduleLogCleanup(cronTime, daysToKeep);
+  }
+
+  onModuleDestroy() {
+    this.clearJobs()
+  }
 
   public async list(page: number, size: number, query: QueryLogDto) {
     const condition = {
@@ -59,17 +74,27 @@ export class LogService {
     return '删除成功'
   }
 
+  private clearJobs() {
+    this.jobs.forEach((job) => job.stop());
+    this.jobs = [];
+    this.logger.log('All scheduled jobs have been stopped and cleared.');
+  }
+
   /**
    * 清除在某时间范围外旧的操作日志
    */
-  private async clearOldLogs() {
+  private async clearOldLogs(daysToKeep: number) {
     // daysToKeep 0 默认不清除
-    const daysToKeep = 0
+    if (daysToKeep === 0) {
+      this.logger.log('No logs were cleared because daysToKeep is set to 0.');
+      return;
+    }
+
     const cutoff_date = new Date()
     cutoff_date.setDate(cutoff_date.getDate() - daysToKeep)
 
     const delete_result = await this.logRepository.delete({
-      createTime: MoreThanOrEqual(cutoff_date)
+      createTime: LessThan(cutoff_date)
     })
 
     console.log(`Deleted ${delete_result.affected} logs older than ${daysToKeep} days.`);
@@ -78,7 +103,15 @@ export class LogService {
   /**
    * 计划日志清理
    */
-  public async scheduleLogCleanup(cronTime: string) {
-    const job = new CronJob(cronTime, this.clearOldLogs)
+  public async scheduleLogCleanup(cronTime: string, daysToKeep: number) {
+    const job = new CronJob(cronTime, () => {
+      this.clearOldLogs(daysToKeep).catch((err) => {
+        this.logger.error('Failed to clear old logs', err);
+      });
+    })
+
+    job.start();
+    this.jobs.push(job); // 将任务保存到 jobs 数组中
+    this.logger.log(`Scheduled log cleanup job with cron time: ${cronTime}`);
   }
 }

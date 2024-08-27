@@ -2,7 +2,6 @@ import {Body, Controller, Get, Post} from '@nestjs/common';
 import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
 import {ConfigService} from './config.service';
-import {CreateConfigGroupDto} from "./dto/create-config-group.dto";
 import {DatabaseConfigDto} from './dto/database-config.dto';
 import {CreateConfigDto} from "./dto/create-config.dto";
 import {ValueConfigDto} from "./dto/value-config.dto";
@@ -11,6 +10,11 @@ import {ConfigDto} from './dto/config.dto';
 @Controller('config')
 export class ConfigController {
   constructor(private readonly configService: ConfigService) {
+  }
+
+  @Get()
+  public async findAll() {
+    return await this.configService.findAll();
   }
 
   @Post()
@@ -23,20 +27,6 @@ export class ConfigController {
     return await this.configService.createValue(valueConfigDto);
   }
 
-  @Get()
-  public async findAll() {
-    return await this.configService.findAll();
-  }
-
-  @Post('/group')
-  public async createGroup(@Body() createConfigGroupDto: CreateConfigGroupDto) {
-    return await this.configService.createGroup(createConfigGroupDto);
-  }
-
-  @Get('/group')
-  public async findAllGroup() {
-    return await this.configService.findAllGroup();
-  }
 
   @Post('database')
   public async saveDatabaseConfig(@Body() config: DatabaseConfigDto) {
