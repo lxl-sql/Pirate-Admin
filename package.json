@@ -13,7 +13,7 @@
     "start:server-watch": "pnpm -r --filter=pirate-server run start:dev",
     "start:server-debug": "pnpm -r --filter=pirate-server run start:debug",
     "start:dev": "npx concurrently \"pnpm start:web\" \"pnpm start:server-watch\"",
-    "start:debug": "npx concurrently \"pnpm start:web\" \"pnpm start:server-debug\"",
+    "start:debug": "npx concurrently \"pnpm start:debug\" \"pnpm start:server-debug\"",
     "build": "pnpm -r --filter=pirate-* run build",
     "build:dev": "pnpm -r --filter=pirate-* run build:dev",
     "build:web": "pnpm -r --filter=pirate-web run build",

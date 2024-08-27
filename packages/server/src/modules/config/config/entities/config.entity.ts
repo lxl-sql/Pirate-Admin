@@ -1,14 +1,14 @@
 // 快捷配置入口
-import {Column, Entity, JoinColumn, ManyToOne} from 'typeorm';
-import {DefaultEntity} from '@/entities/default.entity';
-import {Group} from "../../group/entities/group.entity";
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { DefaultEntity } from '@/entities/default.entity';
+import { Group } from "../../group/entities/group.entity";
 
 @Entity({
   name: 'config',
 })
 export class Config extends DefaultEntity {
   @ManyToOne(() => Group, (group) => group.configs)
-  @JoinColumn({name: 'group_id'})
+  @JoinColumn({ name: 'group_id' })
   group: Group;
 
   @Column({
@@ -27,6 +27,7 @@ export class Config extends DefaultEntity {
   @Column({
     length: 100,
     comment: '字段类型',
+    default: 'input'
   })
   type: string;
 

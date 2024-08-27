@@ -6,6 +6,7 @@
   "main": "./src/main.ts",
   "scripts": {
     "start": "vite --mode development",
+    "start:debug": "vite --mode development --debug",
     "dev": "vite --mode development",
     "start:prod": "vite --mode production",
     "dev:prod": "vite --mode production",

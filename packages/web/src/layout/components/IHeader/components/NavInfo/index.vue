@@ -19,7 +19,7 @@ defineOptions({
     v-model:open="open"
     placement="bottomRight"
     trigger="click"
-    z-index="1"
+    :z-index="1"
     arrow-point-at-center
   >
     <template #content>

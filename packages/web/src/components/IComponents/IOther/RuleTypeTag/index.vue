@@ -1,10 +1,10 @@
 <!-- 规则类型 -->
 <script setup lang="ts">
-import {useI18n} from "vue-i18n";
-import {ITagProps} from "@/types/tag";
-import {computed} from "vue";
+import { useI18n } from "vue-i18n";
+import { ITagProps } from "@/types/tag";
+import { computed } from "vue";
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 
 interface RuleTypeTagProps extends ITagProps {
@@ -26,10 +26,12 @@ const typeObj = {
   },
 }
 
+const props = defineProps<RuleTypeTagProps>();
+
 const {
   value,
   ...restProps
-} = defineProps<RuleTypeTagProps>()
+} = props;
 
 const color = computed(() => {
   return value ? typeObj[value]?.color : 'error'
