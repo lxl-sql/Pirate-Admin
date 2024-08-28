@@ -67,7 +67,7 @@ const envFilePath = IS_DEV
         database: configService.get('MYSQL_DB'),
         synchronize: true,
         logging: true,
-        timezone: "Z",
+        // timezone: "Z",
         entities: [
           User,
           UserRole,

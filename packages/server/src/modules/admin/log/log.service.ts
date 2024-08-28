@@ -1,13 +1,13 @@
-import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { LessThan } from "typeorm";
-import { CronJob } from "cron";
-import { removePublic } from "@/utils/crud";
-import { pageFormat } from "@/utils/tools";
-import { IdsDto } from "@/dtos/remove.dto";
-import { Log } from './entities/log.entity';
-import { LogRepository } from "./log.repository";
-import { QueryLogDto } from './dto/query-log.dto';
-import { ConfigRepository } from '../../config/config/config.repository';
+import {Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
+import {LessThan} from "typeorm";
+import {CronJob} from "cron";
+import {removePublic} from "@/utils/crud";
+import {pageFormat} from "@/utils/tools";
+import {IdsDto} from "@/dtos/remove.dto";
+import {Log} from './entities/log.entity';
+import {LogRepository} from "./log.repository";
+import {QueryLogDto} from './dto/query-log.dto';
+import {ConfigRepository} from '../../config/config/config.repository';
 
 @Injectable()
 export class LogService implements OnModuleInit, OnModuleDestroy {
@@ -54,7 +54,7 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
   }
 
   public async detail(id: number) {
-    return await this.logRepository.findOneBy({ id });
+    return await this.logRepository.findOneBy({id});
   }
 
   /**
@@ -111,20 +111,23 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
 
     job.start();
     this.jobs.push(job); // 将任务保存到 jobs 数组中
-    this.logger.log(`Scheduled log cleanup job with cron time: ${cronTime}`);
+    this.logger.log(`Scheduled log cleanup job with cron time: ${cronTime}, daysToKeep: ${daysToKeep}`);
   }
 
   /**
    * 清空指定天数之外的日志
-   * @param day 日期
+   * @param day 日期 默认保留最近 7 天的日志
    */
   public async clear(day: string = '7') {
-    const cronTime = '0 0 * * *'; // 每天午夜
-    // const daysToKeep = 7; // 保留最近 7 天的日志
+    // 先清除
+    this.clearJobs()
 
-    // 默认保留 7 天
+    const cronTime: string = '0 0 4 * * *'; // 每天凌晨四点
+
     const daysToKeep = await this.configRepository.getValueByName('daysToKeep', '日志保留天数', day)
 
     await this.scheduleLogCleanup(cronTime, +daysToKeep);
+
+    return daysToKeep
   }
 }

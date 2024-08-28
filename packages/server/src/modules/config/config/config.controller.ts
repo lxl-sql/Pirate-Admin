@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Post} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post} from '@nestjs/common';
 import {ConfigEmailDto} from '@/common/email/dto/config-email.dto';
 import {GenerateEmailDto} from '@/common/email/dto/generate-email.dto';
 import {ConfigService} from './config.service';
@@ -6,8 +6,10 @@ import {DatabaseConfigDto} from './dto/database-config.dto';
 import {CreateConfigDto} from "./dto/create-config.dto";
 import {ValueConfigDto} from "./dto/value-config.dto";
 import {ConfigDto} from './dto/config.dto';
+import {RequireLogin} from "@/decorators/custom.decorator";
 
 @Controller('config')
+@RequireLogin()
 export class ConfigController {
   constructor(private readonly configService: ConfigService) {
   }
@@ -15,6 +17,11 @@ export class ConfigController {
   @Get()
   public async findAll() {
     return await this.configService.findAll();
+  }
+
+  @Get('/:name')
+  public async findOneByName(@Param('name') name: string) {
+    return await this.configService.findOneByName(name);
   }
 
   @Post()

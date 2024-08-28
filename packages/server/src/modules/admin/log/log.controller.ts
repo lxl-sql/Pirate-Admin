@@ -1,10 +1,10 @@
-import { Body, Controller, Get, Inject, Param, Post, Query } from '@nestjs/common';
-import { ApiTags } from "@nestjs/swagger";
-import { generateParseIntPipe } from '@/utils/tools';
-import { RequireLogin } from '@/decorators/custom.decorator';
-import { IdsDto } from "@/dtos/remove.dto";
-import { LogService } from './log.service';
-import { QueryLogDto } from './dto/query-log.dto';
+import {Body, Controller, Get, Inject, Param, Post, Query} from '@nestjs/common';
+import {ApiTags} from "@nestjs/swagger";
+import {generateParseIntPipe} from '@/utils/tools';
+import {RequireLogin} from '@/decorators/custom.decorator';
+import {IdsDto} from "@/dtos/remove.dto";
+import {LogService} from './log.service';
+import {QueryLogDto} from './dto/query-log.dto';
 
 @ApiTags('Admin Log')
 @Controller('admin/log')
@@ -16,9 +16,9 @@ export class LogController {
   @RequireLogin()
   public async list(
     @Query('page', generateParseIntPipe('page', 1))
-    page: number,
+      page: number,
     @Query('size', generateParseIntPipe('size', 10))
-    size: number,
+      size: number,
     @Query() query: QueryLogDto,
   ) {
     return await this.logService.list(page, size, query);

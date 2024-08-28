@@ -1,19 +1,36 @@
 <!-- 管理员日志管理 -->
 <script setup lang="ts">
 import {ClearOutlined, SendOutlined,} from "@ant-design/icons-vue";
-import {provide} from "vue";
-import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
-import {findById, list, remove} from "@/api/auth/log";
+import TableSettings from "@/utils/tableSettings";
+import {clear, findById, list, remove} from "@/api/auth/log";
 import {formatTime} from "@/utils/common";
 import CodeSegment from "@/components/CodeSegment/index.vue";
-import {Modal} from "ant-design-vue";
+import {message, Modal} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
+import {findOneByName} from "@/api/config";
+import {onMounted, shallowRef} from "vue";
 
 const {t} = useI18n()
+
+const daysToKeep = shallowRef<number>(0)
+
+onMounted(async () => {
+  await findOneByNameAsync()
+})
 
 const toUrl = (url: string) => {
   window.open(url);
 };
+
+const findOneByNameAsync = async () => {
+  const {data} = await findOneByName('daysToKeep')
+  daysToKeep.value = +data.value
+}
+
+const clearAsync = async (day: number) => {
+  await clear(day)
+  message.success('保存成功')
+}
 
 const tableSettings: any = new TableSettings({
   api: {
@@ -169,6 +186,26 @@ const handleRemoveAll = () => {
     }
   })
 }
+
+const handleLogDay = async (value: number | KeyboardEvent) => {
+  if (typeof value !== 'number') {
+    const _value = (value.target as HTMLInputElement)?.value;
+    value = parseInt(_value, 10);
+  }
+  // console.log('handleLogDay', value)
+  if (value === daysToKeep.value) return;
+  if (!isNaN(value)) {
+    const _value = daysToKeep.value
+    daysToKeep.value = value
+    try {
+      await clearAsync(value);
+      daysToKeep.value = value
+    } catch (error) {
+      daysToKeep.value = _value
+    }
+  }
+}
+
 </script>
 
 <template>
@@ -182,7 +219,12 @@ const handleRemoveAll = () => {
       </a-button>
       <div class="flex items-center">
         <span class="mr-2">日志保留天数</span>
-        <a-input-number/>
+        <a-input-number
+          :min="0"
+          :value="daysToKeep"
+          @step="handleLogDay"
+          @press-enter="handleLogDay"
+        />
       </div>
     </template>
     <template #url="{ value }">

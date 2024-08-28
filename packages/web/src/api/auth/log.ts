@@ -14,3 +14,8 @@ export const findById = (id?: number) => {
 export const remove = (data) => {
   return request.post("/admin/log/remove", data);
 }
+
+// 设置日志保留天数
+export const clear = (day: number) => {
+  return request.get("/admin/log/clear/" + day);
+}

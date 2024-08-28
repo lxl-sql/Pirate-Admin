@@ -134,6 +134,14 @@ export class ConfigService {
   }
 
   /**
+   * 根据name获取数据
+   * @param name
+   */
+  public async findOneByName(name: string) {
+    return await this.configRepository.findOneByName(name)
+  }
+
+  /**
    * 新增配置项目
    * @param body
    */
@@ -221,7 +229,7 @@ export class ConfigService {
 
     let quickEntrance = []
     config.forEach((conf) => {
-      const groupName = conf.group.name
+      const groupName = conf.group?.name
 
       if (!groupedData[groupName]) {
         groupedData[groupName] = []

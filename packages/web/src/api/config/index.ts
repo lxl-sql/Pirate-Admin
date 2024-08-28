@@ -23,3 +23,8 @@ export const saveEmail = (data: Record<string, any>) => {
 export const testEmail = (data: Record<string, any>) => {
   return request.post("/config/test-email", data);
 };
+
+// 发送测试邮件
+export const findOneByName = (name: string) => {
+  return request.get("/config/" + name);
+};
