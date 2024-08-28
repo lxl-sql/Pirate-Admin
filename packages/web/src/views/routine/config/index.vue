@@ -89,8 +89,13 @@ const onConfirm = async (data) => {
             <a-empty v-else/>
           </div>
         </a-tab-pane>
-        <a-tab-pane key="-1" tab="新增配置项"/>
+        <a-tab-pane key="-1" tab="新增配置项" />
       </a-tabs>
+      <a-empty
+        v-if="!configGroupList?.length"
+        class="pt-4"
+        description="暂无配置项"
+      />
       <add-config-item-modal
         ref="addConfigItemModalRef"
         @confirm="init"

@@ -1,7 +1,7 @@
 <!-- 附件管理 -->
 <script setup lang="ts">
-import {provide, ref, shallowRef} from "vue";
-import TableSettings, {tableSettingKey} from "@/utils/tableSettings";
+import {ref, shallowRef} from "vue";
+import TableSettings from "@/utils/tableSettings";
 import {getFileList, removeFile} from "@/api/routine/files";
 import {formatFileSize} from "@/utils/common";
 import {AppstoreOutlined, BarsOutlined} from '@ant-design/icons-vue'
@@ -123,8 +123,6 @@ const tableSettings: AnnexTableSettingsType = new TableSettings({
   }
 })
 
-provide(tableSettingKey, tableSettings)
-
 const onPreviewFileGroupUploadSuccess = async () => {
   if (layout.value === 'thumbnailGrid') {
     if (tableSettings.table.pages) {
@@ -170,7 +168,7 @@ const {dropZoneRef} = useDragAndDropUpload({
     v-loading="{ visible: loading, text: $t('tip.uploading'), global: true }"
     class="min-h-full !p-0"
   >
-    <i-crud>
+    <i-crud :setting="tableSettings">
       <template #afterActionRefresh>
         <i-upload
           :show-upload-list="false"

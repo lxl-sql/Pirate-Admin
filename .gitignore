@@ -11,4 +11,4 @@ pnpm-lock.yaml
 !.vscode/extensions.json
 
 # web
-packages/web/components.d.ts
+/packages/web/components.d.ts

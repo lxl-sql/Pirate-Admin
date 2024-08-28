@@ -1,6 +1,6 @@
 // index.ts
-import {createRouter, createWebHistory} from "vue-router";
-import {routes} from "./routes";
+import { createRouter, createWebHistory } from "vue-router";
+import { routes } from "./routes";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; // nprogress 样式文件
 import GlobalLoading from "@/views/common/loading";
@@ -22,6 +22,9 @@ const clearErrorCache = () => {
 
 //当路由开始跳转时
 router.beforeEach((to, from, next) => {
+  // 这个一定要加，没有next()页面不会跳转的。这部分还不清楚的去翻一下官网就明白了
+  next();
+
   document.title = to.meta.title as string;
 
   // 开启进度条
@@ -33,9 +36,6 @@ router.beforeEach((to, from, next) => {
   }, 500);
 
   clearErrorCache();
-
-  // 这个一定要加，没有next()页面不会跳转的。这部分还不清楚的去翻一下官网就明白了
-  next();
 });
 
 //当路由跳转结束后
