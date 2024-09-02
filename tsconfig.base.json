@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    // 跳过库文件的类型检查，提高编译速度。适用于大型项目。
+    "skipLibCheck": true,
+    // 跳过默认库文件（如 lib.d.ts）的类型检查。
+    "skipDefaultLibCheck": true,
+    // 启用严格的 null 和 undefined 检查，防止将 null 和 undefined 赋值给其他类型。
+    "strictNullChecks": true,
+    // 启用严格的函数类型检查，确保函数参数类型在赋值时兼容。
+    "strictFunctionTypes": true,
+    // 确保类的每个属性在构造函数中被初始化。
+    "strictPropertyInitialization": true,
+    // 捕获的异常变量使用 `unknown` 类型而不是 `any`，需要显式类型检查。
+    "useUnknownInCatchVariables": false,
+    // 禁止在函数中使用隐式的 `this`，确保 `this` 类型明确。
+    "noImplicitThis": true,
+    // 禁止定义未使用的局部变量，有助于清理代码。
+    "noUnusedLocals": true,
+    // 禁止定义未使用的函数参数，有助于清理函数参数。
+    "noUnusedParameters": true,
+    // 禁止函数中隐式返回 undefined，确保函数每个代码路径都有明确的返回值。
+    "noImplicitReturns": true,
+    // 禁止 switch 语句中的穿透情况，确保每个 case 语句块都包含 break 或其他控制流语句。
+    "noFallthroughCasesInSwitch": true,
+    // 指定模块解析策略，设置为 "node" 表示使用 Node.js 风格的模块解析。
+    "moduleResolution": "node",
+    // 允许从没有默认导出的模块中导入默认导出。
+    "allowSyntheticDefaultImports": true,
+    // 启用对 ECMAScript 模块与 CommonJS 模块的互操作性支持。
+    "esModuleInterop": true,
+    // 启用实验性的装饰器功能，如 @Component、@Injectable 等。
+    "experimentalDecorators": true,
+    // 允许生成装饰器的元数据，通常用于依赖注入等功能。
+    "emitDecoratorMetadata": true,
+    // 强制文件名的大小写一致性，避免因文件系统对大小写敏感而导致的问题。
+    "forceConsistentCasingInFileNames": true
+  }
+}

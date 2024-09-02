@@ -1,7 +1,7 @@
 packages:
   # root directory
   - "."
-  # all packages in subdirs of packages/
+  # all packages in sub dirs of packages/
   - "packages/**"
   # exclude packages that are inside test/ directories
   - "!**/test/**" # '!' means exclude
