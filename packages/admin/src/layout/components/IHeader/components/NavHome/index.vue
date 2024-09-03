@@ -9,9 +9,11 @@ defineOptions({
 
 <template>
   <!-- 你的前台首页/小程序/app -->
-  <div class="nav-menu-item" title="会员首页">
-    <desktop-outlined/>
-  </div>
+  <a-tooltip title="会员首页">
+    <div class="nav-menu-item">
+      <desktop-outlined/>
+    </div>
+  </a-tooltip>
 </template>
 
 <style lang="less" scoped>

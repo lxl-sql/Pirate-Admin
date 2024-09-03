@@ -1,6 +1,6 @@
 <!-- 系统配置 -->
 <script setup lang="ts">
-import {nextTick, onMounted, provide, Ref, ref} from "vue";
+import {nextTick, onMounted, provide, Ref, ref, shallowRef} from "vue";
 import AddConfigItemModal from "./components/AddConfigItemModal/index.vue";
 import ConfigItem from "./components/ConfigItem/index.vue";
 import {getConfig} from "@/api/routine/config";
@@ -25,6 +25,7 @@ const configGroupList = ref<Group[]>([])
 const quickEntrance = ref<Entrance[]>([])
 const config = ref({})
 const activeKey = ref<string>("0");
+const loading = shallowRef<boolean>(false)
 
 provide<Ref<Group[]>>('configGroupList', configGroupList)
 
@@ -33,8 +34,13 @@ onMounted(async () => {
 })
 
 const init = async () => {
-  const {data} = await getConfig()
-  await onConfirm(data)
+  loading.value = true
+  try {
+    const {data} = await getConfig()
+    await onConfirm(data)
+  } finally {
+    loading.value = false
+  }
 }
 
 const handleTabClick = (key: string) => {
@@ -67,35 +73,37 @@ const onConfirm = async (data) => {
 <template>
   <a-row class="default-main" :gutter="[16, 16]">
     <a-col :lg="16" :xs="24">
-      <a-tabs
-        v-model:activeKey="activeKey"
-        type="card"
-        class="main-card no-card"
-        @tab-click="handleTabClick"
-      >
-        <a-tab-pane
-          v-for="(group,index) in configGroupList"
-          :key="`${index}`"
-          :tab="group.title"
-          force-render
+      <a-spin :spinning="loading">
+        <a-tabs
+          v-model:activeKey="activeKey"
+          type="card"
+          class="main-card no-card"
+          @tab-click="handleTabClick"
         >
-          <div class="card-main is-always-shadow">
-            <config-item
-              v-if="config[group.name]?.length"
-              ref="configItemRef"
-              :items="config[group.name]"
-              @confirm="onConfirm"
-            />
-            <a-empty v-else/>
-          </div>
-        </a-tab-pane>
-        <a-tab-pane key="-1" tab="新增配置项" />
-      </a-tabs>
-      <a-empty
-        v-if="!configGroupList?.length"
-        class="pt-4"
-        description="暂无配置项"
-      />
+          <a-tab-pane
+            v-for="(group,index) in configGroupList"
+            :key="`${index}`"
+            :tab="group.title"
+            force-render
+          >
+            <div class="card-main is-always-shadow">
+              <config-item
+                v-if="config[group.name]?.length"
+                ref="configItemRef"
+                :items="config[group.name]"
+                @confirm="onConfirm"
+              />
+              <a-empty v-else/>
+            </div>
+          </a-tab-pane>
+          <a-tab-pane key="-1" tab="新增配置项"/>
+        </a-tabs>
+        <a-empty
+          v-if="!configGroupList?.length"
+          class="pt-4"
+          description="暂无配置项"
+        />
+      </a-spin>
       <add-config-item-modal
         ref="addConfigItemModalRef"
         @confirm="init"
@@ -105,7 +113,7 @@ const onConfirm = async (data) => {
       <div class="main-card is-always-shadow">
         <div class="card-head">快捷配置入口</div>
         <div class="card-main">
-          <template v-if="quickEntrance.length">
+          <a-space v-if="quickEntrance.length">
             <a-button
               v-for="item in quickEntrance"
               :key="item.key"
@@ -114,7 +122,7 @@ const onConfirm = async (data) => {
             >
               {{ item.key }}
             </a-button>
-          </template>
+          </a-space>
           <a-empty v-else/>
         </div>
       </div>

@@ -11,10 +11,12 @@ defineOptions({
 </script>
 
 <template>
-  <div class="nav-menu-item" title="切换主题" @click="theme.changeTheme">
-    <moon-outlined v-if="theme.isDartTheme"/>
-    <sun-outlined v-else/>
-  </div>
+  <a-tooltip title="主题模式">
+    <div class="nav-menu-item" @click="theme.changeTheme">
+      <moon-outlined v-if="theme.isDartTheme"/>
+      <sun-outlined v-else/>
+    </div>
+  </a-tooltip>
 </template>
 
 <style lang="less">

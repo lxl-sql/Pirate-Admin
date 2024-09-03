@@ -15,9 +15,11 @@ defineOptions({
 </script>
 
 <template>
-  <div class="nav-menu-item" title="设置" @click="openSettingDrawer">
-    <setting-outlined/>
-  </div>
+  <a-tooltip title="主题设置">
+    <div class="nav-menu-item" @click="openSettingDrawer">
+      <setting-outlined/>
+    </div>
+  </a-tooltip>
   <setting-drawer ref="settingDrawerRef"/>
 </template>
 

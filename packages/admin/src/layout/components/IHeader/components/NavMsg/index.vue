@@ -37,9 +37,11 @@ defineOptions({
         </div>
       </div>
     </template>
-    <div class="nav-menu-item" title="消息">
-      <bell-outlined class="msg-icon active"/>
-    </div>
+    <a-tooltip title="消息提醒" placement="left">
+      <div class="nav-menu-item">
+        <bell-outlined class="msg-icon active"/>
+      </div>
+    </a-tooltip>
   </a-popover>
 </template>
 

@@ -10,8 +10,10 @@ import NavHome from './components/NavHome/index.vue'
 import NavMsg from './components/NavMsg/index.vue'
 import NavTheme from './components/NavTheme/index.vue'
 import NavSetting from "./components/NavSetting/index.vue";
+import NavGithub from "./components/NavGithub/index.vue";
 import {useTheme} from "@/store/hooks";
 import SiderMenu from "../ISider/components/SiderMenu/index.vue";
+import NavGitee from "@/layout/components/IHeader/components/NavGitee/index.vue";
 
 const theme = useTheme()
 
@@ -20,6 +22,10 @@ const headerStyle = computed(() => {
     left: theme.isSidebarCollapsed ? 96 : 232 + 'px',
     display: theme.isLayoutFullScreen ? 'none' : undefined
   }
+})
+
+const isDrawerMenu = computed(() => {
+  return theme.isDrawerMenu
 })
 
 defineOptions({
@@ -32,16 +38,20 @@ defineOptions({
     class="flex justify-between i-header"
     :style="headerStyle"
   >
-    <tags-mobile v-if="theme.isDrawerMenu"/>
+    <tags-mobile v-if="isDrawerMenu"/>
     <tags-pc v-else-if="theme.menuMode === 'inline'"/>
     <sider-menu
-      v-else-if="!theme.isDrawerMenu"
+      v-else-if="!isDrawerMenu"
       mode="horizontal"
       :show-logo="theme.layoutMode === 'single-column'"
       :menus="theme.headerMenus"
     />
 
     <div class="i-header-menus flex items-center justify-center">
+      <!-- gitee -->
+      <nav-gitee v-if="!isDrawerMenu"/>
+      <!-- github -->
+      <nav-github v-if="!isDrawerMenu"/>
       <!-- home -->
       <nav-home/>
       <!-- use-theme -->
@@ -49,13 +59,13 @@ defineOptions({
       <!-- language -->
       <nav-language/>
       <!-- full-screen -->
-      <nav-full-screen/>
+      <nav-full-screen v-if="!isDrawerMenu"/>
       <!-- message -->
       <nav-msg/>
       <!-- clear-cache -->
       <!--      <nav-cache/>-->
       <!--setting -->
-      <nav-setting/>
+      <nav-setting v-if="!isDrawerMenu"/>
       <!-- user-info -->
       <nav-info/>
     </div>

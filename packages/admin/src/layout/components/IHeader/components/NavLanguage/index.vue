@@ -43,9 +43,11 @@ defineOptions({
         English
       </div>
     </template>
-    <div class="nav-menu-item" title="切换语言">
-      <translation-outlined/>
-    </div>
+    <a-tooltip title="切换语言" placement="left">
+      <div class="nav-menu-item">
+        <translation-outlined/>
+      </div>
+    </a-tooltip>
   </a-popover>
 </template>
 

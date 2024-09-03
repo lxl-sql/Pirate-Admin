@@ -2,8 +2,13 @@
 <script setup lang="ts">
 import {CompressOutlined, ExpandOutlined} from "@ant-design/icons-vue";
 import {useTheme} from "@/store/hooks";
+import {computed} from "vue";
 
 const theme = useTheme()
+
+const title = computed(() => {
+  return theme.isFullScreen ? '退出全屏' : '全屏'
+})
 
 defineOptions({
   name: "NavFullScreen",
@@ -11,18 +16,14 @@ defineOptions({
 </script>
 
 <template>
-  <div
-    class="nav-menu-item"
-    @click="theme.toggleFullScreen"
-    :title="theme.isFullScreen ? '取消全屏' : '全屏'"
-  >
-    <div class="d-flex-center c-pointer user-select">
+  <a-tooltip :title="title">
+    <div class="nav-menu-item" @click="theme.toggleFullScreen">
       <!-- 全屏 -->
-      <compress-outlined v-show="theme.isFullScreen"/>
+      <compress-outlined v-if="theme.isFullScreen"/>
       <!-- 取消全屏 -->
-      <expand-outlined v-show="!theme.isFullScreen"/>
+      <expand-outlined v-else/>
     </div>
-  </div>
+  </a-tooltip>
 </template>
 
 <style lang="less" scoped>
