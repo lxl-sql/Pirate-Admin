@@ -5,6 +5,7 @@ import {ScheduleModule} from "@nestjs/schedule";
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {JwtModule} from '@nestjs/jwt';
 import {join} from 'path';
+import * as chalk from "chalk";
 import {Permission as AdminPermission} from '@/modules/admin/permission/entities/permission.entity';
 import {Group as ConfigGroup} from "@/modules/config/group/entities/group.entity";
 import {UserPermission} from '@/modules/user/entities/permission-user.entity';
@@ -39,6 +40,8 @@ import {CronModule} from './modules/cron/cron/cron.module';
 import {LogModule as CronLogModule} from './modules/cron/log/log.module';
 import {Cron} from "@/modules/cron/cron/entities/cron.entity";
 import {Log as CronLog} from "@/modules/cron/log/entities/log.entity";
+import {WinstonModule} from './common/winston/winston.module';
+import {format, transports} from "winston";
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
@@ -101,6 +104,30 @@ const envFilePath = IS_DEV
         };
       },
       inject: [ConfigService],
+    }),
+    WinstonModule.forRoot({
+      level: 'debug',
+      transports: [
+        new transports.Console({
+          format: format.combine(
+            format.colorize(),
+            format.printf(({context, time, level, message}) => {
+              const app_str = chalk.green(`[Nest]`)
+              const context_str = chalk.yellow(`[${context}]`)
+
+              return `${app_str} ${time} ${level} ${context_str} ${message}`
+            })
+          )
+        }),
+        new transports.File({
+          format: format.combine(
+            format.timestamp(),
+            format.json()
+          ),
+          filename: 'name.log',
+          dirname: 'log'
+        })
+      ]
     }),
     UserModule,
     RedisModule,

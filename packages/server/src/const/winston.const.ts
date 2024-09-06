@@ -1,0 +1,1 @@
+export const WINSTON_LOGGER_TOKEN = "WINSTON_LOGGER";

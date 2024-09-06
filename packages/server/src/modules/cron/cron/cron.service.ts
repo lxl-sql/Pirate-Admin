@@ -1,11 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCronDto } from './dto/create-cron.dto';
-import { UpdateCronDto } from './dto/update-cron.dto';
+import {Injectable} from '@nestjs/common';
+import {CreateCronDto} from './dto/create-cron.dto';
+import {UpdateCronDto} from './dto/update-cron.dto';
+import {InjectRepository} from "@nestjs/typeorm";
+import {Cron} from "@/modules/cron/cron/entities/cron.entity";
+import {Repository} from "typeorm";
 
 @Injectable()
 export class CronService {
-  create(createCronDto: CreateCronDto) {
-    return 'This action adds a new cron';
+  @InjectRepository(Cron)
+  private readonly cronRepository: Repository<Cron>
+
+  async create(createCronDto: CreateCronDto) {
+    const newCron = this.cronRepository.create(createCronDto)
+
+    return await this.cronRepository.save(newCron)
   }
 
   findAll() {

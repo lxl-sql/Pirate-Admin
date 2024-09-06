@@ -11,6 +11,7 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '任务名称',
+    unique: true
   })
   name: string;
 
@@ -30,20 +31,12 @@ export class Cron extends DefaultEntity {
   description: string;
 
   @Column({
-    type: 'varchar',
-    length: 255,
+    type: 'char',
+    length: 20,
     comment: 'Cron 表达式',
     nullable: true
   })
   cron: string;
-
-  @Column({
-    type: 'varchar',
-    length: 255,
-    comment: '执行周期拼接',
-    nullable: true
-  })
-  cycle: string;
 
   @Column({
     name: 'cycle_type',
@@ -55,36 +48,12 @@ export class Cron extends DefaultEntity {
   cycleType: CronCycleTypeEnum;
 
   @Column({
-    name: 'cycle_week',
-    type: 'tinyint',
-    comment: '执行周期 周一至周日',
+    type: 'varchar',
+    length: 255,
+    comment: '执行周期拼接',
     nullable: true
   })
-  cycleWeek: number;
-
-  @Column({
-    name: 'cycle_day',
-    type: 'tinyint',
-    comment: '执行周期 天',
-    nullable: true
-  })
-  cycleDay: number;
-
-  @Column({
-    name: 'cycle_hour',
-    type: 'tinyint',
-    comment: '执行周期 时',
-    nullable: true
-  })
-  cycleHour: number;
-
-  @Column({
-    name: 'cycle_minute',
-    type: 'tinyint',
-    comment: '执行周期 分',
-    nullable: true
-  })
-  cycleMinute: number;
+  cycle: string;
 
   @Column({
     type: 'int',

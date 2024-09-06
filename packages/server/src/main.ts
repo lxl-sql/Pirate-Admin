@@ -10,6 +10,7 @@ import {InvokeRecordInterceptor} from '@/interceptors/invoke-record.interceptor'
 import {CustomExceptionFilter} from '@/filters/custom-exception.filter';
 import {UnloginFilter} from '@/filters/unlogin.filter';
 import {AppModule} from '@/app.module';
+import {WINSTON_LOGGER_TOKEN} from "@/const/winston.const";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -39,16 +40,19 @@ async function bootstrap() {
   app.useGlobalFilters(new UnloginFilter());
   app.useGlobalFilters(new CustomExceptionFilter());
 
-  app.use(
-    session({
-      secret: 'SM5j3^qwwRDQ',
-      name: 'session', // cookie名称，默认为connect.sid
-      resave: false, // 是否每次都重新保存会话，建议false
-      saveUninitialized: false, // 是否自动保存未初始化的会话，建议false
-      // rolling: true, // 强制在每个response上设置会话标识符cookie
-      cookie: {maxAge: 1000 * 60 * 5},
-    }),
-  );
+  app
+    .use(
+      session({
+        secret: 'SM5j3^qwwRDQ',
+        name: 'session', // cookie名称，默认为connect.sid
+        resave: false, // 是否每次都重新保存会话，建议false
+        saveUninitialized: false, // 是否自动保存未初始化的会话，建议false
+        // rolling: true, // 强制在每个response上设置会话标识符cookie
+        cookie: {maxAge: 1000 * 60 * 5},
+      }),
+    )
+    .useLogger(app.get(WINSTON_LOGGER_TOKEN));
+
 
   app.enableCors();
 

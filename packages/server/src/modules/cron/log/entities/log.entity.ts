@@ -1,11 +1,10 @@
 import {Column, Entity, ManyToOne} from "typeorm";
-import {DefaultEntity} from "@/entities/default.entity";
-import {Cron} from "../../cron/entities/cron.entity";
 import {Status} from "@/enums/status.enum";
+import {CreateTimeEntity} from "@/entities/create-time.entity";
+import {Cron} from "../../cron/entities/cron.entity";
 
 @Entity('cron-log')
-export class Log extends DefaultEntity {
-
+export class Log extends CreateTimeEntity {
   @Column({
     type: 'text',
     comment: '执行结果描述，例如成功或失败原因',
