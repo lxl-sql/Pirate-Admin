@@ -2,10 +2,10 @@
 <script setup lang="ts">
 import ISider from './components/ISider/index.vue'
 import IHeader from './components/IHeader/index.vue'
-import {computed, onBeforeMount, onBeforeUnmount, onMounted} from "vue";
-import {useTheme} from "@/store/hooks";
-import {onBeforeRouteUpdate} from "vue-router";
-import {useAdminStore} from "@/store";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted } from "vue";
+import { useTheme } from "@/store/hooks";
+import { onBeforeRouteUpdate } from "vue-router";
+import { useAdminStore } from "@/store";
 
 const adminStore = useAdminStore();
 const theme = useTheme()
@@ -13,14 +13,13 @@ const theme = useTheme()
 onBeforeMount(async () => {
   theme.initSiderState()
 
-  if (adminStore.userInfo.id) {
-    await adminStore.getAdminByIdRequest(adminStore.userInfo.id)
-  }
+  const userInfo = adminStore.userInfo || {};
+  await adminStore.getAdminByIdRequest(userInfo.id);
 })
 
 onMounted(async () => {
   theme.listenerChange(true);
-  await theme.initMenus()
+  await theme.initMenus();
 });
 
 onBeforeUnmount(() => {
@@ -29,8 +28,10 @@ onBeforeUnmount(() => {
 
 onBeforeRouteUpdate((route) => {
   if (theme.layoutMode !== 'double-column') return;
-  theme.changeMenus(route)
+  theme.changeMenus(route);
 })
+
+
 const containerClass = computed(() => {
   if (theme.isDrawerMenu) {
     return 'container-mobile'
@@ -47,21 +48,15 @@ const containerClass = computed(() => {
 <template>
   <a-layout class="pirate-container" :class="containerClass">
     <!-- 标签页全面只需要 v-show，修改整体布局使用 v-if -->
-    <i-sider
-      v-if="theme.layoutMode !== 'single-column' || theme.isDrawerMenu"
-      v-show="!theme.isLayoutFullScreen"
-    />
+    <i-sider v-if="theme.layoutMode !== 'single-column' || theme.isDrawerMenu" v-show="!theme.isLayoutFullScreen" />
 
     <a-layout class="layout">
-      <i-header/>
+      <i-header />
       <a-layout-content class="overflow-y-auto overflow-x-hidden">
-        <router-view
-          class="layout-view"
-          :class="{fullScreen: theme.isLayoutFullScreen}"
-          v-slot="{ Component, route }"
-        >
+        <router-view class="layout-view" :class="{ fullScreen: theme.isLayoutFullScreen }"
+          v-slot="{ Component, route }">
           <transition name="slide-right" mode="out-in">
-            <component v-if="!theme.isPageRefreshing" :is="Component" :key="route.fullPath"/>
+            <component v-if="!theme.isPageRefreshing" :is="Component" :key="route.fullPath" />
           </transition>
         </router-view>
       </a-layout-content>

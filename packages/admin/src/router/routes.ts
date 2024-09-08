@@ -1,11 +1,21 @@
 // routes.ts
-import {RouteRecordRaw} from "vue-router";
-import {dynamicAdminRouter, redirect} from './dynamicAdminRouter'
+import { RouteRecordRaw } from "vue-router";
+import { dynamicAdminRouter, redirect } from './dynamicAdminRouter'
+import { $local } from "@/utils/storage";
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "",
-    redirect: "/admin",
+    redirect: () => {
+      // 存在userInfo 跳转首页
+      const userInfo = $local.get('userInfo')
+      if (!userInfo) {
+        // 默认跳转登录页面
+        return "/admin/login"
+      }
+      // 如果有值调用 refresh 接口刷新状态
+      return '/admin'
+    },
   },
   {
     path: "/admin/login",
