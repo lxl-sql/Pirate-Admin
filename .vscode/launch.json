@@ -20,7 +20,7 @@
       "name": "运行脚本: start:debug",
       "request": "launch",
       "command": "pnpm run start:debug",
-      "cwd": "${workspaceFolder}\\packages\\web"
+      "cwd": "${workspaceFolder}\\packages\\server"
     }
   ]
 }

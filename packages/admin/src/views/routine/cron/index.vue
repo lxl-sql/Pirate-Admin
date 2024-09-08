@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { list, findById } from '@/api/routine/cron';
 import TableSettings from '@/utils/tableSettings';
 
 
 const tableSettings = new TableSettings({
   api: {
-    // find: getFileList,
-    // delete: removeFile
+    find: list,
+    findById: findById,
+    // delete: remove,
+    // upsert: upsert,
   },
   table: {
     operations: ['refresh', 'create', 'delete', 'row-delete', 'row-delete'],

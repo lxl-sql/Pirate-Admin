@@ -169,6 +169,7 @@ class AxiosUtils {
   private async unAuthorizedHandler(_response: AxiosResponse) {
     // 重新登录
     await router.push("/admin/login");
+    $local.clear()
     this.refreshing = false; // 重置刷新状态
     this.subscribers.length = 0; // 清空请求队列
     await setTimeoutPromise(500); // 等待500ms

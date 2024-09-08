@@ -1,9 +1,9 @@
-import {Column, Entity, OneToMany} from "typeorm";
-import {CronCycleTypeEnum} from "@/enums/cron-cycle-type.enum";
-import {CronTypeEnum} from "@/enums/cron-type.enum";
-import {Status} from "@/enums/status.enum";
-import {DefaultEntity} from "@/entities/default.entity";
-import {Log} from "../../log/entities/log.entity";
+import { Column, Entity, OneToMany } from "typeorm";
+import { CronCycleTypeEnum } from "@/enums/cron-cycle-type.enum";
+import { CronTypeEnum } from "@/enums/cron-type.enum";
+import { Status } from "@/enums/status.enum";
+import { DefaultEntity } from "@/entities/default.entity";
+import { Log } from "../../log/entities/log.entity";
 
 @Entity('cron')
 export class Cron extends DefaultEntity {
@@ -27,6 +27,7 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '任务描述',
+    nullable: true,
   })
   description: string;
 
@@ -73,6 +74,7 @@ export class Cron extends DefaultEntity {
     type: 'tinyint',
     comment: '是否启用通知',
     default: Status.DISABLED,
+    nullable: true
   })
   notice: Status;
 

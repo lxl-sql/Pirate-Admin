@@ -1,54 +1,56 @@
-import {IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min} from 'class-validator';
-import {Status} from "@/enums/status.enum";
-import {CronTypeEnum} from "@/enums/cron-type.enum";
-import {CronCycleTypeEnum} from "@/enums/cron-cycle-type.enum";
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min, ValidateIf } from 'class-validator';
+import { Status } from "@/enums/status.enum";
+import { CronTypeEnum } from "@/enums/cron-type.enum";
+import { CronCycleTypeEnum } from "@/enums/cron-cycle-type.enum";
 
 export class CreateCronDto {
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(255)
+  @MaxLength(255, { message: '名称不能超过255个字符' })
+  @IsString({ message: '名称必须是文本' })
+  @IsNotEmpty({ message: '名称不能为空' })
   name: string;
 
-  @IsEnum(CronTypeEnum)
+  @IsEnum(CronTypeEnum, { message: '请选择有效的定时任务类型' })
   type: CronTypeEnum;
 
+  @MaxLength(255, { message: '描述不能超过255个字符' })
+  @IsString({ message: '描述必须是文本' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
   description?: string;
 
+  @MaxLength(20, { message: 'cron表达式不能超过20个字符' })
+  @IsString({ message: 'cron表达式格式不正确' })
   @IsOptional()
-  @IsString()
-  @MaxLength(20)
   cron?: string;
 
+  @IsEnum(CronCycleTypeEnum, { message: '请选择有效的执行周期类型' })
   @IsOptional()
-  @IsEnum(CronCycleTypeEnum)
   cycleType?: CronCycleTypeEnum;
 
+  @MaxLength(255, { message: '执行周期不能超过255个字符' })
+  @IsString({ message: '执行周期格式不正确' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
   cycle?: string;
 
+  @Min(0, { message: '保存次数不能小于0' })
+  @IsInt({ message: '保存次数必须是整数' })
   @IsOptional()
-  @IsInt()
-  @Min(0)
   save?: number;
 
+  @Min(0, { message: '排序值不能小于0' })
+  @IsInt({ message: '排序值必须是整数' })
   @IsOptional()
-  @IsInt()
-  @Min(0)
   sort?: number;
 
-  @IsEnum(Status)
-  notice: Status;
-
+  @IsEnum(Status, { message: '请选择有效的通知状态' })
   @IsOptional()
-  @IsString()
-  @MaxLength(255)
+  notice?: Status;
+
+  @MaxLength(255, { message: '通知渠道不能超过255个字符' })
+  @IsString({ message: '通知渠道格式不正确' })
+  @ValidateIf((dto) => dto.notice === Status.ENABLED)
   noticeChannel?: string;
 
-  @IsEnum(Status)
-  status: Status;
+  @IsEnum(Status, { message: '请选择有效的状态' })
+  @IsOptional()
+  status?: Status;
 }

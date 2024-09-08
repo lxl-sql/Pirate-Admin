@@ -24,7 +24,7 @@ import {UserLoginInfoVo} from './vo/login-user.vo'
 
 @Injectable()
 export class UserService {
-  private logger = new Logger();
+  private logger = new Logger(UserService.name);
   @Inject(CaptchaService)
   private captchaService: CaptchaService;
 
