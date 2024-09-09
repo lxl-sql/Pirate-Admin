@@ -1,9 +1,10 @@
-import { Column, Entity, OneToMany } from "typeorm";
-import { CronCycleTypeEnum } from "@/enums/cron-cycle-type.enum";
-import { CronTypeEnum } from "@/enums/cron-type.enum";
-import { Status } from "@/enums/status.enum";
-import { DefaultEntity } from "@/entities/default.entity";
-import { Log } from "../../log/entities/log.entity";
+import { Column, Entity, OneToMany } from 'typeorm';
+import { DateFormatTransformer } from '@/utils/transformer';
+import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
+import { CronTypeEnum } from '@/enums/cron-type.enum';
+import { Status } from '@/enums/status.enum';
+import { DefaultEntity } from '@/entities/default.entity';
+import { Log } from '../../log/entities/log.entity';
 
 @Entity('cron')
 export class Cron extends DefaultEntity {
@@ -11,7 +12,6 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '任务名称',
-    unique: true
   })
   name: string;
 
@@ -19,9 +19,16 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '任务类型',
-    default: CronTypeEnum.SERVICE
+    default: CronTypeEnum.SERVICE,
   })
   type: CronTypeEnum;
+
+  @Column({
+    type: 'text',
+    comment: 'shell脚本 任务内容 排除规则 等',
+    nullable: true,
+  })
+  content: string;
 
   @Column({
     type: 'varchar',
@@ -35,7 +42,7 @@ export class Cron extends DefaultEntity {
     type: 'char',
     length: 20,
     comment: 'Cron 表达式',
-    nullable: true
+    nullable: true,
   })
   cron: string;
 
@@ -44,7 +51,7 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '执行周期类型',
-    nullable: true
+    nullable: true,
   })
   cycleType: CronCycleTypeEnum;
 
@@ -52,21 +59,38 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '执行周期拼接',
-    nullable: true
+    nullable: true,
   })
   cycle: string;
 
   @Column({
+    name: 'cycle_name',
+    type: 'varchar',
+    length: 255,
+    comment: '执行周期名称',
+    nullable: true,
+  })
+  cycleName: string;
+
+  @Column({
     type: 'int',
     comment: '已保存数量 保存到本地',
-    nullable: true
+    nullable: true,
   })
   save: number;
+
+  // 最大保存数量
+  @Column({
+    type: 'int',
+    comment: '最大保存数量',
+    nullable: true,
+  })
+  maxSave: number;
 
   @Column({
     type: 'int',
     comment: '排序',
-    default: 0
+    default: 0,
   })
   sort: number;
 
@@ -74,7 +98,7 @@ export class Cron extends DefaultEntity {
     type: 'tinyint',
     comment: '是否启用通知',
     default: Status.DISABLED,
-    nullable: true
+    nullable: true,
   })
   notice: Status;
 
@@ -83,7 +107,7 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '通知渠道',
-    nullable: true
+    nullable: true,
   })
   noticeChannel: string;
 
@@ -94,6 +118,15 @@ export class Cron extends DefaultEntity {
   })
   status: Status;
 
-  @OneToMany(() => Log, log => log.cron)
+  @Column({
+    name: 'last_execution_time',
+    type: 'datetime',
+    comment: '上次执行时间',
+    transformer: new DateFormatTransformer(),
+    nullable: true,
+  })
+  lastExecutionTime: Date;
+
+  @OneToMany(() => Log, (log) => log.cron)
   logs: Log[];
 }

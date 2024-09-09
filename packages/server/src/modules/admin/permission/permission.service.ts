@@ -1,26 +1,26 @@
-import {HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
-import {In} from "typeorm";
-import {treeRemovePublic, treeUpsertPublic} from "@/utils/crud";
-import {existsByOnFail, listToTree} from "@/utils/tools";
-import {IdsDto} from "@/dtos/remove.dto";
-import {NotPaginationVo} from "@/vos/response.vo";
-import {Permission} from "./entities/permission.entity";
-import {PermissionRepository} from "./permission.repository";
-import {UpsertPermissionDto} from './dto/upsert-permission.dto'
-import {PermissionVo} from './vo/permission.vo'
-import {StatusDto} from "@/dtos/status.dto";
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
+import { treeRemovePublic, treeUpsertPublic } from '@/utils/crud';
+import { existsByOnFail, listToTree } from '@/utils/tools';
+import { IdsDto } from '@/dtos/remove.dto';
+import { NotPaginationVo } from '@/vos/response.vo';
+import { Permission } from './entities/permission.entity';
+import { PermissionRepository } from './permission.repository';
+import { UpsertPermissionDto } from './dto/upsert-permission.dto';
+import { PermissionVo } from './vo/permission.vo';
+import { StatusDto } from '@/dtos/status.dto';
 
 @Injectable()
 export class PermissionService {
   @Inject(PermissionRepository)
-  private readonly permissionRepository: PermissionRepository
+  private readonly permissionRepository: PermissionRepository;
 
   /**
    * @description 获取用户菜单规则
    * @returns
    */
   public async list(): Promise<NotPaginationVo<PermissionVo>> {
-    const permissions = await this.permissionRepository.findAll()
+    const permissions = await this.permissionRepository.findAll();
 
     return {
       records: listToTree(permissions),
@@ -36,7 +36,7 @@ export class PermissionService {
   public async upsert(body: UpsertPermissionDto) {
     const permissionRepository = this.permissionRepository;
     try {
-      return await treeUpsertPublic(
+      await treeUpsertPublic(
         permissionRepository,
         body,
         async (permission: Permission) => {
@@ -44,6 +44,7 @@ export class PermissionService {
           return permission;
         },
       );
+      return body.id ? '编辑成功' : '新增成功';
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
         await existsByOnFail(
@@ -116,8 +117,12 @@ export class PermissionService {
       );
     }
     // 获取最大排序
-    const max_sort = target_permission.sort > data.sort ? target_permission.sort : data.sort;
-    const items = await this.permissionRepository.findMaxSort(target_permission.parentId, max_sort)
+    const max_sort =
+      target_permission.sort > data.sort ? target_permission.sort : data.sort;
+    const items = await this.permissionRepository.findMaxSort(
+      target_permission.parentId,
+      max_sort,
+    );
 
     const current_index = items.findIndex((item) => item.id === id);
     const target_index = items.findIndex((item) => item.id === targetId);

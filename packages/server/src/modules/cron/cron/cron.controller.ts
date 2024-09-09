@@ -10,11 +10,11 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { CronService } from './cron.service';
-import { CreateCronDto } from './dto/create-cron.dto';
-import { UpdateCronDto } from './dto/update-cron.dto';
+import { UpsertCronDto } from './dto/upsert-cron.dto';
 import { RequireLogin } from '@/decorators/custom.decorator';
 import { generateParseIntPipe } from '@/utils/tools';
 import { QueryCronDto } from './dto/query-cron.dto';
+import { IdsDto } from '@/dtos/remove.dto';
 
 @Controller('cron')
 export class CronController {
@@ -22,8 +22,8 @@ export class CronController {
 
   @Post()
   @RequireLogin()
-  create(@Body() createCronDto: CreateCronDto) {
-    return this.cronService.create(createCronDto);
+  upsert(@Body() upsertCronDto: UpsertCronDto) {
+    return this.cronService.upsert(upsertCronDto);
   }
 
   @Get()
@@ -44,18 +44,24 @@ export class CronController {
     return await this.cronService.start();
   }
 
+  @Get('start/:id')
+  @RequireLogin()
+  async startOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('cron') cron?: string,
+  ) {
+    return await this.cronService.startOne(id, cron);
+  }
+
   @Get(':id')
+  @RequireLogin()
   detail(@Param('id', ParseIntPipe) id: number) {
     return this.cronService.detail(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCronDto: UpdateCronDto) {
-    return this.cronService.update(+id, updateCronDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cronService.remove(+id);
+  @Post('/remove')
+  @RequireLogin()
+  public async remove(@Body() body: IdsDto) {
+    return await this.cronService.remove(body);
   }
 }

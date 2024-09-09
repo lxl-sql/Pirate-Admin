@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { list, findById } from '@/api/routine/cron';
-import TableSettings from '@/utils/tableSettings';
-
+import { list, findById } from "@/api/routine/cron";
+import TableSettings from "@/utils/tableSettings";
 
 const tableSettings = new TableSettings({
   api: {
@@ -11,7 +10,7 @@ const tableSettings = new TableSettings({
     // upsert: upsert,
   },
   table: {
-    operations: ['refresh', 'create', 'delete', 'row-delete', 'row-delete'],
+    operations: ["refresh", "create", "delete", "row-delete", "row-delete"],
     columns: [
       {
         title: "#",
@@ -28,20 +27,16 @@ const tableSettings = new TableSettings({
         dataIndex: "type",
       },
       {
-        title: "任务描述",
-        dataIndex: "description",
-      },
-      {
-        title: "Cron 表达式",
-        dataIndex: "cron",
-      },
-      {
-        title: "执行周期拼接",
-        dataIndex: "cycle",
+        title: "执行周期",
+        dataIndex: "cycleName",
       },
       {
         title: "状态",
         dataIndex: "status",
+      },
+      {
+        title: "上次执行时间",
+        dataIndex: "lastExecutionTime",
       },
       {
         title: "操作",
@@ -51,13 +46,12 @@ const tableSettings = new TableSettings({
         width: 60,
       },
     ],
-  }
-})
+  },
+});
 
 defineOptions({
-  name: "Cron"
-})
-
+  name: "Cron",
+});
 </script>
 
 <template>

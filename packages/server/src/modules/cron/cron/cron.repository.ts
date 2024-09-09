@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { DataSource, Repository } from "typeorm";
-import { findManyOption } from "@/utils/tools";
-import { WhereOptions } from "@/types";
-import { Cron } from "./entities/cron.entity";
+import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { findManyOption } from '@/utils/tools';
+import { WhereOptions } from '@/types';
+import { Cron } from './entities/cron.entity';
 
 @Injectable()
 export class CronRepository extends Repository<Cron> {
@@ -10,8 +10,11 @@ export class CronRepository extends Repository<Cron> {
     super(Cron, dataSource.createEntityManager());
   }
 
-
-  public async findAndCountAll(page: number, size: number, where: WhereOptions<Cron>) {
+  public async findAndCountAll(
+    page: number,
+    size: number,
+    where: WhereOptions<Cron>,
+  ) {
     return await this.findAndCount(
       findManyOption<Cron>(page, size, {
         // select: [
@@ -22,7 +25,7 @@ export class CronRepository extends Repository<Cron> {
         order: {
           createTime: 'DESC',
         },
-      })
+      }),
     );
   }
 }

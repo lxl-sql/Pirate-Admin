@@ -1,28 +1,31 @@
 <!-- 登录 -->
 <script setup lang="ts">
-import {LockOutlined, UserOutlined} from "@ant-design/icons-vue";
-import {onBeforeUnmount, onMounted, reactive} from "vue";
+import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { onBeforeUnmount, onMounted, reactive } from "vue";
 import * as pageBubble from "@/utils/pageBubble";
-import {setTimeoutPromise} from "@/utils/common";
+import { setTimeoutPromise } from "@/utils/common";
 import avatar_default from "@/assets/images/avatar.png";
-import {useI18n} from "vue-i18n";
-import {debounce} from "lodash-es";
-import {notification} from "ant-design-vue";
+import { useI18n } from "vue-i18n";
+import { debounce } from "lodash-es";
+import { notification } from "ant-design-vue";
 import router from "@/router";
-import {useAdminStore, useCaptchaStore} from "@/store";
-import {useForm} from "ant-design-vue/es/form";
+import { useAdminStore, useCaptchaStore } from "@/store";
+import { useForm } from "ant-design-vue/es/form";
 
-const {t} = useI18n();
+const { t } = useI18n();
 const captchaStore = useCaptchaStore();
 const adminStore = useAdminStore();
 
 const rules = reactive({
-  username: [{required: true, message: t("error.userName")}],
-  password: [{required: true, message: t("error.password")}],
-  captcha: [{required: true, message: t("error.captcha")}],
+  username: [{ required: true, message: t("error.userName") }],
+  password: [{ required: true, message: t("error.password") }],
+  captcha: [{ required: true, message: t("error.captcha") }],
 });
 
-const {resetFields, validate, validateInfos} = useForm(adminStore.loginFormState, rules);
+const { resetFields, validate, validateInfos } = useForm(
+  adminStore.loginFormState,
+  rules
+);
 
 onMounted(async () => {
   pageBubble.init();
@@ -35,16 +38,18 @@ onBeforeUnmount(() => {
 
 // 登录
 const handleLogin = async () => {
-  await validate()
+  await validate();
   try {
     const data = await adminStore.adminLoginRequest(captchaStore.uuid);
-    await router.push("/");
+    await router.replace({
+      name: "dashboard",
+    });
     await setTimeoutPromise(500);
     notification.success({
       message: t("success.login"),
       description: data.userInfo.username + " " + t("success.welcome"),
     });
-    resetFields()
+    resetFields();
   } catch (error) {
     await captchaStore.svgCaptchaRequest();
   }
@@ -54,7 +59,6 @@ const handleLogin = async () => {
 const handleUserNameInput = debounce(async () => {
   await adminStore.getAdminAvatarRequest(adminStore.loginFormState.username);
 }, 500);
-
 </script>
 
 <template>
@@ -68,7 +72,9 @@ const handleUserNameInput = debounce(async () => {
           class="head img-placeholder"
           style="--img-placeholder-rate: 35.11%"
         >
-          <div class="h-[150px] bg-cover bg-no-repeat bg-[url(@/assets/images/login-header.png)]"></div>
+          <div
+            class="h-[150px] bg-cover bg-no-repeat bg-[url(@/assets/images/login-header.png)]"
+          ></div>
         </div>
         <div class="form">
           <a-avatar
@@ -84,26 +90,28 @@ const handleUserNameInput = debounce(async () => {
               @finish="handleLogin"
             >
               <a-form-item v-bind="validateInfos.username">
+                <!-- :placeholder="$t('placeholder.username')" -->
                 <a-input
                   v-model:value="adminStore.loginFormState.username"
                   allow-clear
-                  :placeholder="$t('placeholder.username')"
+                  placeholder="admin"
                   @input="handleUserNameInput"
                 >
                   <template #prefix>
-                    <user-outlined class="site-form-item-icon"/>
+                    <user-outlined class="site-form-item-icon" />
                   </template>
                 </a-input>
               </a-form-item>
               <a-form-item v-bind="validateInfos.password">
+                <!-- :placeholder="$t('placeholder.password')" -->
                 <a-input-password
                   v-model:value="adminStore.loginFormState.password"
                   allow-clear
                   autocomplete="new-password"
-                  :placeholder="$t('placeholder.password')"
+                  placeholder="123456"
                 >
                   <template #prefix>
-                    <lock-outlined class="site-form-item-icon"/>
+                    <lock-outlined class="site-form-item-icon" />
                   </template>
                 </a-input-password>
               </a-form-item>
@@ -125,7 +133,9 @@ const handleUserNameInput = debounce(async () => {
                 </div>
               </a-form-item>
               <a-form-item v-bind="validateInfos.remember">
-                <a-checkbox v-model:checked="adminStore.loginFormState.remember">
+                <a-checkbox
+                  v-model:checked="adminStore.loginFormState.remember"
+                >
                   {{ $t("login.remember") }}
                 </a-checkbox>
               </a-form-item>

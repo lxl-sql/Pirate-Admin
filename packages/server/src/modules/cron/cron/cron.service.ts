@@ -1,21 +1,32 @@
 import {
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
 import { CronJob } from 'cron';
-import { WINSTON_LOGGER_TOKEN } from '@/const/winston.const';
-import { AppLogger } from '@/common/logger/app-logger.service';
-import { Cron } from './entities/cron.entity';
-import { CreateCronDto } from './dto/create-cron.dto';
-import { UpdateCronDto } from './dto/update-cron.dto';
 import { pageFormat } from '@/utils/tools';
+import { Status } from '@/enums/status.enum';
+import { WeekEnum, WeekNameEnum } from '@/enums/week.enum';
+import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
+import { WINSTON_LOGGER_TOKEN } from '@/const/winston.const';
+import { BackupService } from '@/common/backup/backup.service';
+import { AppLogger } from '@/common/logger/app-logger.service';
+import { ShellTaskService } from '@/common/shell-task/shell-task.service';
+import { Cron } from './entities/cron.entity';
+import { UpsertCronDto } from './dto/upsert-cron.dto';
 import { CronRepository } from './cron.repository';
 import { QueryCronDto } from './dto/query-cron.dto';
-import { BackupService } from '@/common/backup/backup.service';
 import { LogService } from '../log/log.service';
-import { Status } from '@/enums/status.enum';
+import { removePublic, upsertPublic } from '@/utils/crud';
+import { IdsDto } from '@/dtos/remove.dto';
+
+interface CronExpression {
+  cron: string;
+  cycleName: string;
+}
 
 @Injectable()
 export class CronService implements OnModuleInit, OnModuleDestroy {
@@ -24,6 +35,9 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
 
   @Inject(BackupService)
   private readonly backupService: BackupService;
+
+  @Inject(ShellTaskService)
+  private readonly shellTaskService: ShellTaskService;
 
   @Inject(LogService)
   private readonly logService: LogService;
@@ -58,22 +72,13 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     this.jobs.clear();
     this.logger.log('All scheduled jobs have been stopped and cleared.');
   }
-
   /**
-   * 新增定时任务
-   * @param createCronDto
+   * 查询定时任务列表
+   * @param page 页码
+   * @param size 每页数量
+   * @param query 查询条件
    * @returns
    */
-  async create(createCronDto: CreateCronDto) {
-    const new_cron = this.cronRepository.create(createCronDto);
-
-    const cron = await this.cronRepository.save(new_cron);
-
-    this.startJob(cron);
-
-    return '定时任务创建成功';
-  }
-
   public async list(page: number, size: number, query: QueryCronDto) {
     const condition = {};
 
@@ -84,6 +89,41 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     );
 
     return pageFormat(page, size, total, records);
+  }
+
+  /**
+   * 删除定时任务
+   * @param body 删除条件
+   * @returns
+   */
+  public async remove(body: IdsDto) {
+    await removePublic(this.cronRepository, body);
+    return '删除成功';
+  }
+
+  /**
+   * 新增/编辑定时任务
+   * @param upsertCronDto
+   * @returns
+   */
+  async upsert(body: UpsertCronDto) {
+    const cron = await upsertPublic<Cron, UpsertCronDto>(
+      this.cronRepository,
+      body,
+      async (cron) => {
+        const cron_expression = this.generateCronExpression(
+          cron.cycleType,
+          cron.cycle,
+        );
+        if (cron_expression) {
+          cron.cron = cron_expression.cron;
+          cron.cycleName = cron_expression.cycleName;
+        }
+        return cron;
+      },
+    );
+    this.startJob(cron);
+    return body.id ? '定时任务更新成功' : '定时任务创建成功';
   }
 
   /**
@@ -108,6 +148,24 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
 
     this.logger.log(msg);
     return msg;
+  }
+
+  /**
+   * 启动单个定时任务
+   * @param id 定时任务ID
+   * @param cron 定时任务表达式 测试cron表达式
+   */
+  public async startOne(id: number, cron?: string) {
+    const found_cron = await this.cronRepository.findOne({ where: { id } });
+    if (!found_cron) {
+      throw new HttpException('定时任务不存在', HttpStatus.NOT_FOUND);
+    }
+    if (cron) {
+      found_cron.cron = cron;
+    }
+    // await this.cronRepository.save(found_cron);
+    this.startJob(found_cron);
+    return '定时任务启动成功';
   }
 
   /**
@@ -153,8 +211,22 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     // 例如：
     if (cron.type === 'sql_backup') {
       await this.performSqlBackup(cron);
+    } else if (cron.type === 'shell_script') {
+      await this.performShellScript(cron);
+    } else {
+      // 添加其他类型的任务处理...
+      const msg = `Cron job "${cron.name}" (ID: ${cron.id}) has no type. Skipping.`;
+      this.logger.warn(msg);
+      await this.logService.create({
+        cronId: cron.id,
+        result: msg,
+        status: Status.DISABLED,
+      });
     }
-    // 添加其他类型的任务处理...
+    // 更新上次执行时间
+    await this.cronRepository.update(cron.id, {
+      lastExecutionTime: new Date(),
+    });
   }
 
   /**
@@ -164,12 +236,11 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
   private async performSqlBackup(cron: Cron) {
     try {
       const result = await this.backupService.createSqlBackup();
-      await this.logService.create({
-        cronId: cron.id,
-        result: result.logs.join('\n'),
-        status: result.success ? Status.ENABLED : Status.DISABLED,
-        backupFilePath: result.filePath,
-      });
+      await this.logService.createAndMaintainLogs(
+        cron.id,
+        result,
+        cron.maxSave,
+      );
     } catch (error) {
       this.logger.error(
         `SQL backup failed for cron job "${cron.name}" (ID: ${cron.id}): ${error.message}`,
@@ -177,6 +248,37 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
       await this.logService.create({
         cronId: cron.id,
         result: `Backup failed: ${error.message}`,
+        status: Status.DISABLED,
+      });
+    }
+  }
+
+  /**
+   * 执行shell脚本
+   * @param cron 当前执行的Cron任务实体
+   */
+  private async performShellScript(cron: Cron) {
+    if (!cron.content) {
+      return await this.logService.create({
+        cronId: cron.id,
+        result: 'Shell script execution failed: 任务内容为空',
+        status: Status.DISABLED,
+      });
+    }
+    try {
+      const result = await this.shellTaskService.executeCommand(cron.content);
+      await this.logService.createAndMaintainLogs(
+        cron.id,
+        result,
+        cron.maxSave,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Shell script execution failed for cron job "${cron.name}" (ID: ${cron.id}): ${error.message}`,
+      );
+      await this.logService.create({
+        cronId: cron.id,
+        result: `Shell script execution failed: ${error.message}`,
         status: Status.DISABLED,
       });
     }
@@ -195,11 +297,77 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     return cron;
   }
 
-  update(id: number, updateCronDto: UpdateCronDto) {
-    return `This action updates a #${id} cron`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cron`;
+  // 根据 cycleType 和 cycle 生成 cron 表达式
+  private generateCronExpression(
+    cycleType: CronCycleTypeEnum,
+    cycle?: string,
+  ): CronExpression | null {
+    if (!cycle) {
+      return null;
+    }
+    // cycle 格式为 周,月,日,时,分,秒
+    const cycle_arr = cycle.split(',');
+    switch (cycleType) {
+      case CronCycleTypeEnum.DAY: {
+        // 每天 N 点 N 分 0 秒 执行
+        const [hour, minute] = cycle_arr;
+        return {
+          cron: `0 ${minute} ${hour} * * *`,
+          cycleName: `每天，${hour}点 ${minute}分 执行`,
+        };
+      }
+      case CronCycleTypeEnum.DAY_N: {
+        // 每月第 N 天 N 点 N 分 0 秒 执行
+        const [day, hour, minute] = cycle_arr;
+        return {
+          cron: `0 ${minute} ${hour} ${day} * *`,
+          cycleName: `每月，第${day}天，${hour}点 ${minute}分 执行`,
+        };
+      }
+      case CronCycleTypeEnum.HOUR: {
+        // 每小时 N 分 0 秒 执行
+        const [minute] = cycle_arr;
+        return {
+          cron: `0 ${minute} * * * *`,
+          cycleName: `每小时，${minute}分 执行`,
+        };
+      }
+      case CronCycleTypeEnum.HOUR_N: {
+        // 每隔 N 小时 N 分 0 秒 执行
+        const [hour, minute] = cycle_arr;
+        return {
+          cron: `0 ${minute} */${hour} * * *`,
+          cycleName: `每隔${hour}小时，${minute}分 执行`,
+        };
+      }
+      case CronCycleTypeEnum.MINUTE_N: {
+        // 每隔 N 分钟 执行
+        const [minute] = cycle_arr;
+        return {
+          cron: `0 */${minute} * * * *`,
+          cycleName: `每隔${minute}分钟 执行`,
+        };
+      }
+      case CronCycleTypeEnum.WEEK: {
+        // 每周几 N 点 N 分 0 秒 执行
+        // week 格式为 1,2,3,4,5,6,7 指 1（星期天）到 7（星期六）
+        const [week, hour, minute] = cycle_arr;
+        const week_name = WeekNameEnum[WeekEnum[week]];
+        return {
+          cron: `0 ${minute} ${hour} * * ${week}`,
+          cycleName: `每周${week_name}，${hour}点 ${minute}分 执行`,
+        };
+      }
+      case CronCycleTypeEnum.MONTH: {
+        // 每月 N 点 N 分 0 秒 执行
+        const [day, hour, minute] = cycle_arr;
+        return {
+          cron: `0 ${minute} ${hour} ${day} * *`,
+          cycleName: `每月，第${day}天，${hour}点 ${minute}分 执行`,
+        };
+      }
+      default:
+        return null;
+    }
   }
 }

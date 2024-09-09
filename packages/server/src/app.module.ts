@@ -50,6 +50,7 @@ import { Cron } from '@/modules/cron/cron/entities/cron.entity';
 import { Log as CronLog } from '@/modules/cron/log/entities/log.entity';
 import { WinstonModule } from './common/winston/winston.module';
 import { format, transports } from 'winston';
+import { ShellTaskService } from './common/shell-task/shell-task.service';
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
@@ -163,6 +164,7 @@ const envFilePath = IS_DEV
       provide: APP_INTERCEPTOR,
       useClass: CustomLoggerInterceptor,
     },
+    ShellTaskService,
   ],
 })
 export class AppModule implements NestModule {

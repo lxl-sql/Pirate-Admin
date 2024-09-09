@@ -74,8 +74,8 @@ export class BackupService {
       await mysqldump({
         connection: dbConfig,
         dumpToFile: filePath,
-        // compressFile: true,  // 启用压缩
-        compressFile: false, // 暂时禁用压缩
+        compressFile: true, // 启用压缩
+        // compressFile: false, // 暂时禁用压缩
       });
 
       if (!existsSync(filePath)) {

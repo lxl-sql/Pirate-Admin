@@ -1,24 +1,24 @@
-import {HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
-import {In} from "typeorm";
-import {existsByOnFail} from "@/utils/tools";
-import {mapTree, sortTree} from "@/utils/tree";
-import {treeRemovePublic, treeUpsertPublic} from "@/utils/crud";
-import {IdsDto} from "@/dtos/remove.dto";
-import {Role} from "./entities/role.entity";
-import {PermissionRepository} from "../permission/permission.repository";
-import {RoleRepository} from "./role.repository";
-import {UpsertRoleDto} from './dto/upsert-role.dto'
-import {QueryRoleDto} from './dto/query-role.dto'
-import {RoleVo} from './vo/role.vo'
-import {StatusDto} from "@/dtos/status.dto";
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { In } from 'typeorm';
+import { existsByOnFail } from '@/utils/tools';
+import { mapTree, sortTree } from '@/utils/tree';
+import { treeRemovePublic, treeUpsertPublic } from '@/utils/crud';
+import { IdsDto } from '@/dtos/remove.dto';
+import { Role } from './entities/role.entity';
+import { PermissionRepository } from '../permission/permission.repository';
+import { RoleRepository } from './role.repository';
+import { UpsertRoleDto } from './dto/upsert-role.dto';
+import { QueryRoleDto } from './dto/query-role.dto';
+import { RoleVo } from './vo/role.vo';
+import { StatusDto } from '@/dtos/status.dto';
 
 @Injectable()
 export class RoleService {
   @Inject(RoleRepository)
-  private readonly roleRepository: RoleRepository
+  private readonly roleRepository: RoleRepository;
 
   @Inject(PermissionRepository)
-  private readonly permissionRepository: PermissionRepository
+  private readonly permissionRepository: PermissionRepository;
 
   /**
    * @description 获取角色列表 用于下拉框 返回所有角色的 id 和 name
@@ -48,30 +48,28 @@ export class RoleService {
   public async upsert(body: UpsertRoleDto) {
     const roleRepository = this.roleRepository;
     try {
-      return await treeUpsertPublic(
-        roleRepository,
-        body,
-        async (role: Role) => {
-          if (body.permissionIds?.length) {
-            role.permissions = await this.permissionRepository.findBy({
-              id: In(body.permissionIds),
-            });
-          }
-          if (body.parentId) {
-            role.parent = await roleRepository.findOneBy({
-              id: body.parentId,
-            });
-          }
-          role.updateTime = new Date();
-          return role;
-        },
-      );
+      await treeUpsertPublic(roleRepository, body, async (role: Role) => {
+        if (body.permissionIds?.length) {
+          role.permissions = await this.permissionRepository.findBy({
+            id: In(body.permissionIds),
+          });
+        }
+        if (body.parentId) {
+          role.parent = await roleRepository.findOneBy({
+            id: body.parentId,
+          });
+        }
+        role.updateTime = new Date();
+        return role;
+      });
+      return body.id ? '编辑成功' : '新增成功';
     } catch (error) {
       if (error.code === 'ER_DUP_ENTRY') {
         await existsByOnFail(roleRepository, 'name', body.name, '角色名已存在');
         await existsByOnFail(roleRepository, 'slug', body.slug, '角色标识重复');
       } else {
-        const message: string = error.message || (body.id ? '编辑失败' : '新增失败');
+        const message: string =
+          error.message || (body.id ? '编辑失败' : '新增失败');
         throw new HttpException(message, HttpStatus.BAD_REQUEST);
       }
     }
@@ -91,13 +89,17 @@ export class RoleService {
    * @returns
    */
   public async detail(id: number): Promise<RoleVo> {
-    const found_role = await this.roleRepository.findOneById(id, ['permissions'])
+    const found_role = await this.roleRepository.findOneById(id, [
+      'permissions',
+    ]);
 
     if (!found_role) {
       throw new HttpException('角色不存在', HttpStatus.NOT_FOUND);
     }
 
-    const permissionIds = found_role.permissions.map((permission) => permission.id);
+    const permissionIds = found_role.permissions.map(
+      (permission) => permission.id,
+    );
     return {
       id: found_role.id,
       name: found_role.name,
@@ -120,7 +122,7 @@ export class RoleService {
    */
   public async status(body: StatusDto) {
     try {
-      await this.roleRepository.status(body)
+      await this.roleRepository.status(body);
       return '修改成功';
     } catch (error) {
       throw new HttpException('修改失败', HttpStatus.BAD_REQUEST);

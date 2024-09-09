@@ -1,9 +1,14 @@
-import {HttpException, HttpStatus} from '@nestjs/common';
-import {In, Repository, TreeRepository} from 'typeorm';
-import {validateOrReject} from 'class-validator';
-import {DefaultEntity} from '@/entities/default.entity';
-import {UpsertDto} from '@/dtos/upsert.dto';
-import {IdsDto} from '@/dtos/remove.dto';
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { In, Repository, TreeRepository } from 'typeorm';
+import { validateOrReject } from 'class-validator';
+import { DefaultEntity } from '@/entities/default.entity';
+import { UpsertDto } from '@/dtos/upsert.dto';
+import { IdsDto } from '@/dtos/remove.dto';
+
+interface UpsertResult<Entity> {
+  entity: Entity;
+  operation: 'create' | 'update';
+}
 
 /**
  * @description 删除用户
@@ -15,17 +20,23 @@ export async function removePublic<Entity = any, D = IdsDto>(
   body: D,
   key = 'ids',
 ) {
-  const ids = body[key]?.filter(Boolean)
+  const ids = body[key]?.filter(Boolean);
 
   if (!Array.isArray(ids) || ids.length === 0) {
-    throw new HttpException('Invalid or empty IDs array.', HttpStatus.BAD_REQUEST);
+    throw new HttpException(
+      'Invalid or empty IDs array.',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 
   try {
     await respository.delete(body[key]);
     return '删除成功';
   } catch (error) {
-    throw new HttpException(`删除失败: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+    throw new HttpException(
+      `删除失败: ${error.message}`,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }
 
@@ -39,7 +50,7 @@ export async function treeRemovePublic<Entity = any, D = IdsDto>(
   body: D,
   key = 'ids',
 ) {
-  const condition = {parentId: In(body[key])};
+  const condition = { parentId: In(body[key]) };
   // 删除菜单的同时不能删除子菜单
   const children = await respository.findBy(condition as any);
   // 继续
@@ -64,12 +75,12 @@ export async function upsertPublic<
   repository: Repository<Entity> | TreeRepository<Entity>,
   body: D,
   callback?: (entity: Entity) => Promise<Entity> | Entity,
-) {
+): Promise<Entity> {
   await validateOrReject(body);
 
   let entity: Entity;
   if (body.id) {
-    const condition = {id: body.id};
+    const condition = { id: body.id };
     entity = await repository.findOneBy(condition as any);
     if (!entity) {
       throw new HttpException('数据不存在', HttpStatus.BAD_REQUEST);
@@ -78,9 +89,12 @@ export async function upsertPublic<
     entity = repository.create();
   }
 
-  repository.merge(entity, body as any, await callback?.(entity));
-  await repository.save(entity);
-  return body.id ? '编辑成功' : '添加成功';
+  const origin_data = { ...entity, ...body };
+  const new_data = await callback?.(origin_data);
+
+  repository.merge(origin_data, new_data);
+
+  return await repository.save(origin_data);
 }
 
 /**
@@ -89,7 +103,7 @@ export async function upsertPublic<
  * @param repository - 实体的仓库或树形结构的仓库，用于数据操作。
  * @param body - 包含要更新或插入的数据实体信息，以及父级ID。
  * @param callback - 可选回调函数，用于在实体更新或插入后执行额外的操作。
- * @returns {Promise<string>} 没有返回值的Promise。
+ * @returns {Promise<Entity>} 没有返回值的Promise。
  * @throws {HttpException} 如果尝试将实体的ID设置为其父ID，将抛出HTTP异常。
  */
 export async function treeUpsertPublic<
@@ -99,9 +113,12 @@ export async function treeUpsertPublic<
   repository: Repository<Entity> | TreeRepository<Entity>,
   body: D,
   callback?: (entity: Entity) => Promise<Entity> | Entity,
-): Promise<string> {
+): Promise<Entity> {
   if (body.id && body.id === body.parentId) {
-    throw new HttpException('父级 ID 不能和当前 ID 相同', HttpStatus.BAD_REQUEST,);
+    throw new HttpException(
+      '父级 ID 不能和当前 ID 相同',
+      HttpStatus.BAD_REQUEST,
+    );
   }
   return await upsertPublic(repository, body, callback);
 }

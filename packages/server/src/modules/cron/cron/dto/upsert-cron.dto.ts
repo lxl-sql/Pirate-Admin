@@ -1,9 +1,19 @@
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength, Min, ValidateIf } from 'class-validator';
-import { Status } from "@/enums/status.enum";
-import { CronTypeEnum } from "@/enums/cron-type.enum";
-import { CronCycleTypeEnum } from "@/enums/cron-cycle-type.enum";
+import {
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+  ValidateIf,
+} from 'class-validator';
+import { Status } from '@/enums/status.enum';
+import { CronTypeEnum } from '@/enums/cron-type.enum';
+import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
+import { UpsertDto } from '@/dtos/upsert.dto';
 
-export class CreateCronDto {
+export class UpsertCronDto extends UpsertDto {
   @MaxLength(255, { message: '名称不能超过255个字符' })
   @IsString({ message: '名称必须是文本' })
   @IsNotEmpty({ message: '名称不能为空' })
@@ -21,6 +31,10 @@ export class CreateCronDto {
   @IsString({ message: 'cron表达式格式不正确' })
   @IsOptional()
   cron?: string;
+
+  @IsString({ message: 'shell脚本格式不正确' })
+  @IsOptional()
+  content?: string;
 
   @IsEnum(CronCycleTypeEnum, { message: '请选择有效的执行周期类型' })
   @IsOptional()

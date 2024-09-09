@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BackupService } from '@/common/backup/backup.service';
+import { ShellTaskService } from '@/common/shell-task/shell-task.service';
 import { Cron } from './entities/cron.entity';
 import { CronRepository } from './cron.repository';
 import { CronController } from './cron.controller';
@@ -11,6 +12,12 @@ import { Log } from '../log/entities/log.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Cron, Log])],
   controllers: [CronController],
-  providers: [CronService, CronRepository, BackupService, LogService],
+  providers: [
+    CronService,
+    CronRepository,
+    BackupService,
+    LogService,
+    ShellTaskService,
+  ],
 })
 export class CronModule {}
