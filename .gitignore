@@ -4,11 +4,9 @@ pnpm-lock.yaml
 *.mjs
 
 # IDE - VSCode
+.idea/*
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-# web
-/packages/web/components.d.ts

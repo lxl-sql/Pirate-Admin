@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CronService } from './cron.service';
 import { CreateCronDto } from './dto/create-cron.dto';
 import { UpdateCronDto } from './dto/update-cron.dto';
@@ -8,7 +18,7 @@ import { QueryCronDto } from './dto/query-cron.dto';
 
 @Controller('cron')
 export class CronController {
-  constructor(private readonly cronService: CronService) { }
+  constructor(private readonly cronService: CronService) {}
 
   @Post()
   @RequireLogin()
@@ -28,9 +38,15 @@ export class CronController {
     return await this.cronService.list(page, size, query);
   }
 
+  @Get('start')
+  @RequireLogin()
+  async start() {
+    return await this.cronService.start();
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cronService.findOne(+id);
+  detail(@Param('id', ParseIntPipe) id: number) {
+    return this.cronService.detail(id);
   }
 
   @Patch(':id')
@@ -41,13 +57,5 @@ export class CronController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.cronService.remove(+id);
-  }
-  
-  @Get('start')
-  @RequireLogin()
-  async start() {
-    console.log('start ------->');
-    
-    return await this.cronService.start()
   }
 }

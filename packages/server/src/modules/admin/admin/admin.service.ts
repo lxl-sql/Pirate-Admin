@@ -1,25 +1,25 @@
-import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
-import {In, Not} from 'typeorm';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { In, Not } from 'typeorm';
 import * as dayjs from 'dayjs';
-import {like, md5, requestHost, trimmedIp,} from '@/utils/tools';
-import {removePublic} from '@/utils/crud';
-import {CaptchaTypeEnum} from "@/types/enum";
-import {CaptchaService} from "@/common/captcha/captcha.service";
-import {TokenService} from '@/common/token/token.service';
-import {VerifyCaptchaDto} from "@/common/captcha/dto/verify-captcha.dto";
-import {IdsDto} from '@/dtos/remove.dto';
-import {PaginationVo} from "@/vos/response.vo";
-import {Role} from '../role/entities/role.entity';
-import {Admin} from './entities/admin.entity';
-import {RoleRepository} from "../role/role.repository";
-import {AdminRepository} from "./admin.repository";
-import {UpsertAdminDto} from './dto/upsert-admin.dto';
-import {LoginAdminDto} from './dto/login-admin.dto';
-import {QueryAdminDto} from './dto/query-admin.dto';
-import {AdminProfileInfoVo} from "./vo/profile-info-admin.vo";
-import {AdminLoginInfoVo} from './vo/login-admin.vo';
-import {forEachTree} from "@/utils/tree";
+import { like, md5, requestHost, trimmedIp } from '@/utils/tools';
+import { removePublic } from '@/utils/crud';
+import { CaptchaTypeEnum } from '@/types/enum';
+import { CaptchaService } from '@/common/captcha/captcha.service';
+import { TokenService } from '@/common/token/token.service';
+import { VerifyCaptchaDto } from '@/common/captcha/dto/verify-captcha.dto';
+import { IdsDto } from '@/dtos/remove.dto';
+import { PaginationVo } from '@/vos/response.vo';
+import { Role } from '../role/entities/role.entity';
+import { Admin } from './entities/admin.entity';
+import { RoleRepository } from '../role/role.repository';
+import { AdminRepository } from './admin.repository';
+import { UpsertAdminDto } from './dto/upsert-admin.dto';
+import { LoginAdminDto } from './dto/login-admin.dto';
+import { QueryAdminDto } from './dto/query-admin.dto';
+import { AdminProfileInfoVo } from './vo/profile-info-admin.vo';
+import { AdminLoginInfoVo } from './vo/login-admin.vo';
+import { forEachTree } from '@/utils/tree';
 
 @Injectable()
 export class AdminService {
@@ -37,7 +37,6 @@ export class AdminService {
 
   @Inject(RoleRepository)
   private readonly roleRepository: RoleRepository;
-
 
   /**
    * @description 创建/编辑管理员
@@ -57,7 +56,9 @@ export class AdminService {
    * @param admin
    */
   private async create(admin: UpsertAdminDto) {
-    const exist_admin = await this.adminRepository.existsByUsername(admin.username);
+    const exist_admin = await this.adminRepository.existsByUsername(
+      admin.username,
+    );
 
     if (exist_admin) {
       throw new HttpException('用户名已存在', HttpStatus.CONFLICT);
@@ -82,13 +83,17 @@ export class AdminService {
    * @param originAdmin
    */
   private async update(admin: UpsertAdminDto & { roles?: Role[] }) {
-    const found_admin = await this.adminRepository.findOneById(admin.id, ['roles']);
+    const found_admin = await this.adminRepository.findOneById(admin.id, [
+      'roles',
+    ]);
 
     try {
       if (admin.roleIds) {
-        const sameRoles = found_admin.roles.every((role) => admin.roleIds.includes(role.id),);
+        const sameRoles = found_admin.roles.every((role) =>
+          admin.roleIds.includes(role.id),
+        );
         if (found_admin.roles.length !== admin.roleIds.length || !sameRoles) {
-          admin.roles = await this.roleRepository.findById(In(admin.roleIds))
+          admin.roles = await this.roleRepository.findById(In(admin.roleIds));
         }
       }
       this.adminRepository.merge(found_admin, admin, {
@@ -98,7 +103,7 @@ export class AdminService {
         updateTime: new Date(),
         password: admin.password ? md5(admin.password) : found_admin.password,
       });
-      found_admin.roles = admin.roles || found_admin.roles
+      found_admin.roles = admin.roles || found_admin.roles;
       await this.adminRepository.save(found_admin);
       return '修改成功';
     } catch (error) {
@@ -112,7 +117,7 @@ export class AdminService {
    * @returns
    */
   public async avatar(username: string, protocolHost: string) {
-    const found_admin = await this.adminRepository.findOneByUsername(username)
+    const found_admin = await this.adminRepository.findOneByUsername(username);
     return requestHost(protocolHost, found_admin.avatar);
   }
 
@@ -124,10 +129,21 @@ export class AdminService {
    * @param protocolHost
    * @returns
    */
-  public async login(loginAdmin: LoginAdminDto, ip: string, protocolHost: string): Promise<AdminLoginInfoVo> {
-    const redis_key = await this.captchaService.validateCaptcha('admin_login_captcha', loginAdmin.uuid, loginAdmin.captcha)
+  public async login(
+    loginAdmin: LoginAdminDto,
+    ip: string,
+    protocolHost: string,
+  ): Promise<AdminLoginInfoVo> {
+    const redis_key = await this.captchaService.validateCaptcha(
+      'admin_login_captcha',
+      loginAdmin.uuid,
+      loginAdmin.captcha,
+    );
 
-    const admin = await this.adminRepository.findOneByUsername(loginAdmin.username, ['roles', 'roles.permissions'])
+    const admin = await this.adminRepository.findOneByUsername(
+      loginAdmin.username,
+      ['roles', 'roles.permissions'],
+    );
 
     if (!admin || admin.password !== md5(loginAdmin.password)) {
       // 不能告诉用户是用户名错误还是密码错误 否则会有安全隐患 可以使用 HttpStatus.UNAUTHORIZED 代替 HttpStatus.BAD_REQUEST 返回
@@ -160,7 +176,7 @@ export class AdminService {
       );
     }
 
-    const {accessToken, refreshToken} = this.tokenService.generateToken(
+    const { accessToken, refreshToken } = this.tokenService.generateToken(
       sign,
       vo.userInfo,
       loginAdmin.remember,
@@ -169,19 +185,19 @@ export class AdminService {
     vo.accessToken = accessToken;
     vo.refreshToken = refreshToken;
 
-    await this.captchaService.delCaptcha(redis_key)
+    await this.captchaService.delCaptcha(redis_key);
 
-    const date = new Date()
+    const date = new Date();
 
     vo.userInfo.lastLoginIp = trimmedIp(ip);
-    vo.userInfo.lastLoginTime = dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+    vo.userInfo.lastLoginTime = dayjs(date).format('YYYY-MM-DD HH:mm:ss');
 
     this.adminRepository.update(admin.id, {
       lastLoginIp: vo.userInfo.lastLoginIp,
       lastLoginTime: date,
     });
 
-    return vo
+    return vo;
   }
 
   /**
@@ -205,7 +221,10 @@ export class AdminService {
       async (data) => {
         const relations = ['roles', 'roles.permissions'];
 
-        const found_admin = await this.adminRepository.findOneById(data.id, relations)
+        const found_admin = await this.adminRepository.findOneById(
+          data.id,
+          relations,
+        );
 
         return this.generateUserInfo(found_admin, relations, protocolHost);
       },
@@ -218,7 +237,11 @@ export class AdminService {
    * @param relations 是否需要角色和权限
    * @returns
    */
-  private generateUserInfo(info: Admin, relations: string[], protocolHost: string,): AdminProfileInfoVo {
+  private generateUserInfo(
+    info: Admin,
+    relations: string[],
+    protocolHost: string,
+  ): AdminProfileInfoVo {
     const userInfo: AdminProfileInfoVo = {
       id: info.id,
       username: info.username,
@@ -242,12 +265,12 @@ export class AdminService {
         : undefined,
       permissions: relations.includes('roles.permissions')
         ? info.roles.reduce((acc, cur) => {
-          cur.permissions.forEach((permission) => {
-            // 去重
-            if (!acc.includes(permission.name)) acc.push(permission.name);
-          });
-          return acc;
-        }, [])
+            cur.permissions.forEach((permission) => {
+              // 去重
+              if (!acc.includes(permission.name)) acc.push(permission.name);
+            });
+            return acc;
+          }, [])
         : undefined,
     };
   }
@@ -258,24 +281,24 @@ export class AdminService {
    * @private
    */
   private async findIdWithRoleIds(id: number) {
-    const found_admin = await this.adminRepository.findOneById(id, ['roles'])
-    const admin_roleIds = found_admin.roles.map(role => role.id)
-    const roles = await this.roleRepository.findTrees()
-    let bool = false
-    let roleIds: number[] = []
+    const found_admin = await this.adminRepository.findOneById(id, ['roles']);
+    const admin_roleIds = found_admin.roles.map((role) => role.id);
+    const roles = await this.roleRepository.findTrees();
+    let bool = false;
+    const roleIds: number[] = [];
     // 从最外层循环 只要找到数据 就不在查找
-    forEachTree(roles, (role, _i, _l, _p, level) => {
+    forEachTree(roles, (role) => {
       if (admin_roleIds.includes(role.id) && !bool) {
-        bool = true
-        roleIds.push(role.id)
-        forEachTree(role.children, r => {
-          roleIds.push(r.id)
-        })
-        return false
+        bool = true;
+        roleIds.push(role.id);
+        forEachTree(role.children, (r) => {
+          roleIds.push(r.id);
+        });
+        return false;
       }
-      return true
-    })
-    return roleIds
+      return true;
+    });
+    return roleIds;
   }
 
   /**
@@ -287,18 +310,28 @@ export class AdminService {
    * @param userId 当前登录用户的 id
    * @returns
    */
-  public async list(page: number, size: number, query: QueryAdminDto, protocolHost: string, userId: number): Promise<PaginationVo<AdminProfileInfoVo>> {
-    const roleIds = await this.findIdWithRoleIds(userId)
+  public async list(
+    page: number,
+    size: number,
+    query: QueryAdminDto,
+    protocolHost: string,
+    userId: number,
+  ): Promise<PaginationVo<AdminProfileInfoVo>> {
+    const roleIds = await this.findIdWithRoleIds(userId);
 
     const condition = {
       id: Not(userId),
       nickname: like(query.nickname),
       roles: {
-        id: In(roleIds)
-      }
+        id: In(roleIds),
+      },
     };
 
-    const [user, total] = await this.adminRepository.findAndCountAll(page, size, condition)
+    const [user, total] = await this.adminRepository.findAndCountAll(
+      page,
+      size,
+      condition,
+    );
 
     const records = user.map((item) => {
       return this.generateUserInfo(item, ['roles'], protocolHost);
@@ -350,7 +383,7 @@ export class AdminService {
       type,
       address,
       subject: `获取绑定${type === 'email' ? '邮箱' : '手机号'}验证码`,
-    })
+    });
   }
 
   /**
@@ -358,10 +391,10 @@ export class AdminService {
    * @param bindInfoDot
    */
   public async bindInfo(userId: number, bindInfo: VerifyCaptchaDto) {
-    await this.captchaService.verifyCaptcha('admin_bind_captcha', bindInfo)
+    await this.captchaService.verifyCaptcha('admin_bind_captcha', bindInfo);
     this.adminRepository.update(userId, {
-      [bindInfo.type]: bindInfo.address
-    })
-    return '绑定成功'
+      [bindInfo.type]: bindInfo.address,
+    });
+    return '绑定成功';
   }
 }

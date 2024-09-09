@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne } from "typeorm";
-import { Status } from "@/enums/status.enum";
-import { CreateTimeEntity } from "@/entities/create-time.entity";
-import { Cron } from "../../cron/entities/cron.entity";
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { Status } from '@/enums/status.enum';
+import { CreateTimeEntity } from '@/entities/create-time.entity';
+import { Cron } from '../../cron/entities/cron.entity';
 
 @Entity('cron-log')
 export class Log extends CreateTimeEntity {
@@ -26,8 +26,8 @@ export class Log extends CreateTimeEntity {
   })
   backupFilePath: string | null;
 
-  @ManyToOne(() => Cron, cron => cron.logs, {
+  @ManyToOne(() => Cron, (cron) => cron.logs, {
     onDelete: 'CASCADE', // 当任务被删除时，删除相关日志
   })
-  cron: Cron
+  cron: Cron;
 }

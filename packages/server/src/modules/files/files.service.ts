@@ -1,16 +1,30 @@
-import {HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {ConfigService} from '@nestjs/config';
-import {Repository} from 'typeorm';
-import {createReadStream, existsSync, readdirSync, readFileSync, statSync, unlinkSync} from 'fs';
-import {join, relative} from 'path';
-import {createHash} from 'crypto';
-import {Request} from 'express';
-import {between, filterFalsyValues, findManyOption, like, pageFormat, requestHost,} from '@/utils/tools';
-import {removePublic} from '@/utils/crud';
-import {IdsDto} from '@/dtos/remove.dto';
-import {File} from './entities/files.entity';
-import {QueryFileDto} from './dto/query-file.dto';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
+import { Repository } from 'typeorm';
+import {
+  createReadStream,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  unlinkSync,
+} from 'fs';
+import { join, relative } from 'path';
+import { createHash } from 'crypto';
+import { Request } from 'express';
+import {
+  between,
+  filterFalsyValues,
+  findManyOption,
+  like,
+  pageFormat,
+  requestHost,
+} from '@/utils/tools';
+import { removePublic } from '@/utils/crud';
+import { IdsDto } from '@/dtos/remove.dto';
+import { File } from './entities/files.entity';
+import { QueryFileDto } from './dto/query-file.dto';
 
 @Injectable()
 export class FilesService {
@@ -127,8 +141,8 @@ export class FilesService {
       findManyOption<File>(page, size, {
         where: condition,
         order: {
-          updateTime: "DESC"
-        }
+          updateTime: 'DESC',
+        },
       }),
     );
 

@@ -1,8 +1,8 @@
-import {Injectable} from "@nestjs/common";
-import {DataSource, Repository} from "typeorm";
-import {findManyOption} from "@/utils/tools";
-import {WhereOptions} from "@/types";
-import {Log} from "./entities/log.entity";
+import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { findManyOption } from '@/utils/tools';
+import { WhereOptions } from '@/types';
+import { Log } from './entities/log.entity';
 
 @Injectable()
 export class LogRepository extends Repository<Log> {
@@ -10,8 +10,11 @@ export class LogRepository extends Repository<Log> {
     super(Log, dataSource.createEntityManager());
   }
 
-
-  public async findAndCountAll(page: number, size: number, where: WhereOptions<Log>) {
+  public async findAndCountAll(
+    page: number,
+    size: number,
+    where: WhereOptions<Log>,
+  ) {
     return await this.findAndCount(
       findManyOption<Log>(page, size, {
         select: [
@@ -31,7 +34,7 @@ export class LogRepository extends Repository<Log> {
         order: {
           createTime: 'DESC',
         },
-      })
+      }),
     );
   }
 }

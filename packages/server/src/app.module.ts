@@ -1,13 +1,21 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { ConfigModule as NestConfigModule, ConfigService, } from '@nestjs/config';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
+import {
+  ConfigModule as NestConfigModule,
+  ConfigService,
+} from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { ScheduleModule } from "@nestjs/schedule";
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { join } from 'path';
-import * as chalk from "chalk";
+import * as chalk from 'chalk';
 import { Permission as AdminPermission } from '@/modules/admin/permission/entities/permission.entity';
-import { Group as ConfigGroup } from "@/modules/config/group/entities/group.entity";
+import { Group as ConfigGroup } from '@/modules/config/group/entities/group.entity';
 import { UserPermission } from '@/modules/user/entities/permission-user.entity';
 import { Role as AdminRole } from '@/modules/admin/role/entities/role.entity';
 import { Log as AdminLog } from '@/modules/admin/log/entities/log.entity';
@@ -17,7 +25,7 @@ import { Config } from '@/modules/config/config/entities/config.entity';
 import { File } from '@/modules/files/entities/files.entity';
 import { User } from '@/modules/user/entities/user.entity';
 import { CustomLoggerInterceptor } from '@/interceptors/custom-logger.interceptor';
-import { RealIpMiddleware } from "@/middlewares/real-ip.middleware";
+import { RealIpMiddleware } from '@/middlewares/real-ip.middleware';
 import { PermissionGuard } from '@/guards/permission.guard';
 import { LoginGuard } from '@/guards/login.guard';
 import { AppController } from '@/app.controller';
@@ -38,19 +46,16 @@ import { UserModule } from '@/modules/user/user.module';
 import { SmsModule } from '@/common/sms/sms.module';
 import { CronModule } from './modules/cron/cron/cron.module';
 import { LogModule as CronLogModule } from './modules/cron/log/log.module';
-import { Cron } from "@/modules/cron/cron/entities/cron.entity";
-import { Log as CronLog } from "@/modules/cron/log/entities/log.entity";
+import { Cron } from '@/modules/cron/cron/entities/cron.entity';
+import { Log as CronLog } from '@/modules/cron/log/entities/log.entity';
 import { WinstonModule } from './common/winston/winston.module';
-import { format, transports } from "winston";
+import { format, transports } from 'winston';
 
 const IS_DEV = process.env.NODE_ENV !== 'production';
 // 本地环境需要join 线上不需要
 const envFilePath = IS_DEV
   ? ['.env', '.env.development']
-  : [
-    join(__dirname, '.env'),
-    join(__dirname, '.env.production'),
-  ];
+  : [join(__dirname, '.env'), join(__dirname, '.env.production')];
 
 @Module({
   imports: [
@@ -83,7 +88,7 @@ const envFilePath = IS_DEV
           Config,
           ConfigGroup,
           Cron,
-          CronLog
+          CronLog,
         ],
         poolSize: 10,
         connectorPackage: 'mysql2',
@@ -112,22 +117,19 @@ const envFilePath = IS_DEV
           format: format.combine(
             format.colorize(),
             format.printf(({ context, time, level, message }) => {
-              const app_str = chalk.green(`[Nest]`)
-              const context_str = chalk.yellow(`[${context}]`)
+              const app_str = chalk.green(`[Nest]`);
+              const context_str = chalk.yellow(`[${context}]`);
 
-              return `${app_str} ${time} ${level} ${context_str} ${message}`
-            })
-          )
+              return `${app_str} ${time} ${level} ${context_str} ${message}`;
+            }),
+          ),
         }),
         new transports.File({
-          format: format.combine(
-            format.timestamp(),
-            format.json()
-          ),
+          format: format.combine(format.timestamp(), format.json()),
           filename: 'name.log',
-          dirname: 'log'
-        })
-      ]
+          dirname: 'logs',
+        }),
+      ],
     }),
     UserModule,
     RedisModule,

@@ -1,13 +1,19 @@
-import {Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit} from '@nestjs/common';
-import {LessThan} from "typeorm";
-import {CronJob} from "cron";
-import {removePublic} from "@/utils/crud";
-import {pageFormat} from "@/utils/tools";
-import {IdsDto} from "@/dtos/remove.dto";
-import {Log} from './entities/log.entity';
-import {LogRepository} from "./log.repository";
-import {QueryLogDto} from './dto/query-log.dto';
-import {ConfigRepository} from '../../config/config/config.repository';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from '@nestjs/common';
+import { LessThan } from 'typeorm';
+import { CronJob } from 'cron';
+import { removePublic } from '@/utils/crud';
+import { pageFormat } from '@/utils/tools';
+import { IdsDto } from '@/dtos/remove.dto';
+import { Log } from './entities/log.entity';
+import { LogRepository } from './log.repository';
+import { QueryLogDto } from './dto/query-log.dto';
+import { ConfigRepository } from '../../config/config/config.repository';
 
 @Injectable()
 export class LogService implements OnModuleInit, OnModuleDestroy {
@@ -19,14 +25,14 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
   @Inject(ConfigRepository)
   private readonly configRepository: ConfigRepository;
 
-  private jobs: CronJob[] = []
+  private jobs: CronJob[] = [];
 
   async onModuleInit() {
-    await this.clear('7')
+    await this.clear('7');
   }
 
   onModuleDestroy() {
-    this.clearJobs()
+    this.clearJobs();
   }
 
   public async list(page: number, size: number, query: QueryLogDto) {
@@ -34,27 +40,28 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
       userId: query.userId,
     };
 
-    const [records, total] = await this.logRepository.findAndCountAll(page, size, condition)
-
-    return pageFormat(
+    const [records, total] = await this.logRepository.findAndCountAll(
       page,
       size,
-      total,
-      records,
-    )
+      condition,
+    );
+
+    return pageFormat(page, size, total, records);
   }
 
   /**
    * @description: 创建日志
    * @param options
    */
-  public async loggerCreate(options: Omit<Log, 'id' | 'updateTime' | 'createTime'>,) {
+  public async loggerCreate(
+    options: Omit<Log, 'id' | 'updateTime' | 'createTime'>,
+  ) {
     const new_logger = this.logRepository.create(options);
     await this.logRepository.save(new_logger);
   }
 
   public async detail(id: number) {
-    return await this.logRepository.findOneBy({id});
+    return await this.logRepository.findOneBy({ id });
   }
 
   /**
@@ -62,15 +69,15 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
    * @param body [0] 清空日志 [...ids] 删除对应id
    */
   public async remove(body: IdsDto) {
-    const [firstId] = body.ids
+    const [firstId] = body.ids;
     if (firstId === 0) {
       // 清空日志
-      await this.logRepository.clear()
+      await this.logRepository.clear();
     } else {
       // 删除对应的 id | ids
-      await removePublic(this.logRepository, body)
+      await removePublic(this.logRepository, body);
     }
-    return '删除成功'
+    return '删除成功';
   }
 
   private clearJobs() {
@@ -89,14 +96,16 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
       return;
     }
 
-    const cutoff_date = new Date()
-    cutoff_date.setDate(cutoff_date.getDate() - daysToKeep)
+    const cutoff_date = new Date();
+    cutoff_date.setDate(cutoff_date.getDate() - daysToKeep);
 
     const delete_result = await this.logRepository.delete({
-      createTime: LessThan(cutoff_date)
-    })
+      createTime: LessThan(cutoff_date),
+    });
 
-    console.log(`Deleted ${delete_result.affected} logs older than ${daysToKeep} days.`);
+    console.log(
+      `Deleted ${delete_result.affected} logs older than ${daysToKeep} days.`,
+    );
   }
 
   /**
@@ -107,27 +116,33 @@ export class LogService implements OnModuleInit, OnModuleDestroy {
       this.clearOldLogs(daysToKeep).catch((err) => {
         this.logger.error('Failed to clear old logs', err);
       });
-    })
+    });
 
     job.start();
     this.jobs.push(job); // 将任务保存到 jobs 数组中
-    this.logger.log(`Scheduled log cleanup job with cron time: ${cronTime}, daysToKeep: ${daysToKeep}`);
+    this.logger.log(
+      `Scheduled log cleanup job with cron time: ${cronTime}, daysToKeep: ${daysToKeep}`,
+    );
   }
 
   /**
    * 清空指定天数之外的日志
    * @param day 日期 默认保留最近 7 天的日志
    */
-  public async clear(day: string = '7') {
+  public async clear(day = '7') {
     // 先清除
-    this.clearJobs()
+    this.clearJobs();
 
-    const cronTime: string = '0 0 4 * * *'; // 每天凌晨四点
+    const cronTime = '0 0 4 * * *'; // 每天凌晨四点
 
-    const daysToKeep = await this.configRepository.getValueByName('daysToKeep', '日志保留天数', day)
+    const daysToKeep = await this.configRepository.getValueByName(
+      'daysToKeep',
+      '日志保留天数',
+      day,
+    );
 
     await this.scheduleLogCleanup(cronTime, +daysToKeep);
 
-    return daysToKeep
+    return daysToKeep;
   }
 }
