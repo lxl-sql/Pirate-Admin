@@ -1,13 +1,18 @@
-import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse,} from "axios";
-import {notification} from "ant-design-vue";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
+import { notification } from "ant-design-vue";
 import i18n from "@/locales";
-import {setTimeoutPromise} from "@/utils/common";
-import {refresh} from "@/api/auth/admin";
-import {$local} from "@/utils/storage";
-import {RefreshResult} from "@/api/types/user";
+import { setTimeoutPromise } from "@/utils/common";
+import { refresh } from "@/api/auth/admin";
+import { $local } from "@/utils/storage";
+import { RefreshResult } from "@/api/types/user";
 import router from "@/router";
 
-const {t} = i18n.global;
+const { t } = i18n.global;
 
 interface PendingTask {
   config: AxiosRequestConfig;
@@ -16,17 +21,24 @@ interface PendingTask {
 
 class AxiosUtils {
   public baseUrl: string = import.meta.env.VITE_BASE_API;
+  // 请求实例
   private readonly http: AxiosInstance;
+  // 是否正在刷新
   private refreshing: boolean = false;
+  // 请求队列
   private readonly subscribers: PendingTask[] = [];
-  private readonly errorCache: Set<string>;
+  // 错误缓存
+  private readonly errorCache: Set<string> = new Set();
+  // 错误缓存键
+  private readonly errorCacheMap: Map<string, NodeJS.Timeout> = new Map();
+  // 错误缓存定时器
+  private errorCacheTimeout: NodeJS.Timeout | null = null;
 
   constructor() {
     this.http = axios.create({
       baseURL: this.baseUrl,
       timeout: 1000 * 60,
     });
-    this.errorCache = new Set();
 
     // 要在constructor里面进行调用 发请求的时候就要开始调用 就要对请求和响应进行拦截
     this.interceptors();
@@ -38,12 +50,12 @@ class AxiosUtils {
    */
   private async refreshAccessToken(): Promise<RefreshResult> {
     const refreshToken = $local.get("refreshToken");
-    const {data, code} = await refresh(refreshToken);
+    const { data, code } = await refresh(refreshToken);
 
     console.log("refresh", code, data);
     $local.set("accessToken", data.accessToken);
     $local.set("refreshToken", data.refreshToken);
-    return {data, code};
+    return { data, code };
   }
 
   // 拦截器
@@ -100,7 +112,7 @@ class AxiosUtils {
    * @private
    */
   private async responseErrorHandler(error: AxiosError) {
-    const {response} = error;
+    const { response } = error;
 
     if (!response) {
       notification.error({
@@ -110,7 +122,7 @@ class AxiosUtils {
       return Promise.reject(error);
     }
 
-    const {data, config} = response as AxiosResponse;
+    const { data, config } = response as AxiosResponse;
 
     if (["/user/avatar", "/admin/avatar"].includes(config.url!)) {
       // 上传头像接口不做错误处理
@@ -127,7 +139,7 @@ class AxiosUtils {
 
     if (this.refreshing) {
       return new Promise((resolve) => {
-        this.subscribers.push({config, resolve});
+        this.subscribers.push({ config, resolve });
       });
     }
 
@@ -137,11 +149,11 @@ class AxiosUtils {
     ) {
       this.refreshing = true;
       // console.log(config.url);
-      const {code} = await this.refreshAccessToken();
+      const { code } = await this.refreshAccessToken();
       this.refreshing = false;
 
       if (code === 200) {
-        this.subscribers.forEach(({config, resolve}) => {
+        this.subscribers.forEach(({ config, resolve }) => {
           resolve(this.http(config));
         });
 
@@ -152,12 +164,12 @@ class AxiosUtils {
       return Promise.reject(error);
     }
     console.log("错误", error, data);
-    // this.errorCacheHandler(error, data)
+    this.errorCacheHandler(error, data);
     // 生成错误缓存键
-    notification.error({
-      message: t("message.fail"),
-      description: data.message || t("error.server"),
-    });
+    // notification.error({
+    //   message: t("message.fail"),
+    //   description: data.message || t("error.server"),
+    // });
     return Promise.reject(error);
   }
 
@@ -169,7 +181,7 @@ class AxiosUtils {
   private async unAuthorizedHandler(_response: AxiosResponse) {
     // 重新登录
     await router.push("/admin/login");
-    $local.clear()
+    $local.clear();
     this.refreshing = false; // 重置刷新状态
     this.subscribers.length = 0; // 清空请求队列
     await setTimeoutPromise(500); // 等待500ms
@@ -180,14 +192,21 @@ class AxiosUtils {
   }
 
   /**
-   * 错误缓存处理
-   * @param error
-   * @param data
+   * 错误缓存处理 使用防抖 防止重复弹出相同的错误提示
+   * @param error 错误信息
+   * @param data 错误响应数据
    * @private
    */
-  private errorCacheHandler(error: AxiosError, data: AxiosResponse['data']) {
-    // 错误缓存处理
-    const errorKey = `${error.response?.status}:${error.message}`;
+  private errorCacheHandler(error: AxiosError, data: AxiosResponse["data"]) {
+    const errorKey = `${error.response?.status}-${error.message}`;
+    // 存储为多个定时器
+    const errorTimeoutKey = `${errorKey}-timeout`;
+    console.log("errorKey", errorKey, errorTimeoutKey);
+
+    if (this.errorCacheMap.has(errorTimeoutKey)) {
+      return;
+    }
+
     // 如果之前没有弹出过相同的错误提示，则弹出提示
     if (!this.errorCache.has(errorKey)) {
       this.errorCache.add(errorKey);
@@ -195,6 +214,16 @@ class AxiosUtils {
         message: t("message.fail"),
         description: data.message || t("error.server"),
       });
+      this.errorCacheMap.set(
+        errorTimeoutKey,
+        setTimeout(() => {
+          this.errorCache.delete(errorKey);
+          if (this.errorCacheMap.has(errorTimeoutKey)) {
+            clearTimeout(this.errorCacheMap.get(errorTimeoutKey));
+            this.errorCacheMap.delete(errorTimeoutKey);
+          }
+        }, 1000)
+      );
     }
   }
 
@@ -202,13 +231,18 @@ class AxiosUtils {
    * 清除请求缓存
    */
   public clearErrorCache() {
-    if (this.errorCache) {
+    if (this.errorCache.size > 0) {
       this.errorCache.clear();
     }
   }
 
   // 封装一个request方法
-  private request(url: string, method: string, data: any = {}, options?: AxiosRequestConfig) {
+  private request(
+    url: string,
+    method: string,
+    data: any = {},
+    options?: AxiosRequestConfig
+  ) {
     return this.http({
       url,
       method,

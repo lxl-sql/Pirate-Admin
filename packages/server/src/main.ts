@@ -1,16 +1,16 @@
-import {NestExpressApplication} from '@nestjs/platform-express';
-import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {ValidationPipe} from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
-import {NestFactory} from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 import * as session from 'express-session';
-import {UndefinedToNullInterceptor} from '@/interceptors/undefined-to-null.interceptor';
-import {FormatResponseInterceptor} from '@/interceptors/format-response.interceptor';
-import {InvokeRecordInterceptor} from '@/interceptors/invoke-record.interceptor';
-import {CustomExceptionFilter} from '@/filters/custom-exception.filter';
-import {UnloginFilter} from '@/filters/unlogin.filter';
-import {AppModule} from '@/app.module';
-import {WINSTON_LOGGER_TOKEN} from "@/const/winston.const";
+import { UndefinedToNullInterceptor } from '@/interceptors/undefined-to-null.interceptor';
+import { FormatResponseInterceptor } from '@/interceptors/format-response.interceptor';
+import { InvokeRecordInterceptor } from '@/interceptors/invoke-record.interceptor';
+import { CustomExceptionFilter } from '@/filters/custom-exception.filter';
+import { UnloginFilter } from '@/filters/unlogin.filter';
+import { AppModule } from '@/app.module';
+import { WINSTON_LOGGER_TOKEN } from '@/const/winston.const';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -19,9 +19,9 @@ async function bootstrap() {
     .setTitle('Pirate API')
     .setDescription('The API description')
     .setVersion('1.0')
-    .build()
-  const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('doc', app, document)
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('doc', app, document);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -48,11 +48,10 @@ async function bootstrap() {
         resave: false, // 是否每次都重新保存会话，建议false
         saveUninitialized: false, // 是否自动保存未初始化的会话，建议false
         // rolling: true, // 强制在每个response上设置会话标识符cookie
-        cookie: {maxAge: 1000 * 60 * 5},
+        cookie: { maxAge: 1000 * 60 * 5 },
       }),
     )
     .useLogger(app.get(WINSTON_LOGGER_TOKEN));
-
 
   app.enableCors();
 

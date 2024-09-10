@@ -1,4 +1,11 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   RequireLogin,
@@ -9,6 +16,14 @@ import {
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
+
+  @Get('error/:status')
+  getError(@Param('status', ParseIntPipe) status: number): string {
+    if (status) {
+      throw new HttpException(`This is a custom message ${status}`, status);
+    }
+    return 'error';
+  }
 
   @Get()
   getHello(): string {
