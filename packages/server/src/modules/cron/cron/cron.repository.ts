@@ -3,6 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { findManyOption } from '@/utils/tools';
 import { WhereOptions } from '@/types';
 import { Cron } from './entities/cron.entity';
+import { StatusDto } from '@/dtos/status.dto';
 
 @Injectable()
 export class CronRepository extends Repository<Cron> {
@@ -17,15 +18,19 @@ export class CronRepository extends Repository<Cron> {
   ) {
     return await this.findAndCount(
       findManyOption<Cron>(page, size, {
-        // select: [
-        //   'id',
-        //   'createTime',
-        // ],
         where: where,
         order: {
           createTime: 'DESC',
         },
       }),
     );
+  }
+
+  public async status(body: StatusDto) {
+    return await this.createQueryBuilder()
+      .update(Cron)
+      .set({ status: body.status })
+      .whereInIds(body.ids)
+      .execute();
   }
 }

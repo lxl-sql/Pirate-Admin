@@ -2,9 +2,12 @@
 <script setup lang="ts">
 import {computed, inject} from "vue";
 import {tableSettingKey} from "@/utils/tableSettings";
-import {TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
+import {TableSettingColumn, TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
 import {IModalProps} from "@/components/IComponents/IModal/types";
 import {useI18n} from "vue-i18n";
+import CustomForm from "@/components/IComponents/IOther/CustomForm/index.vue";
+
+type Column = TableSettingColumn
 
 const {t} = useI18n()
 
@@ -14,48 +17,50 @@ const form = computed(() => tableSettings?.form)
 const modal = computed(() => tableSettings?.modal)
 
 // 获取排序字段
-const getSort = (column: TableSettingColumns) => {
+const getSort = (column: Column) => {
   return column.formSort || column.sort || 0;
 };
 
 // 获取列的 span
-const getSpan = (column: TableSettingColumns) => {
+const getSpan = (column: Column) => {
   return Number(column.formSpan || form.value?.defaultSpan || 24);
 };
 
 // 24 / span
 const formColumns = computed(() => {
   if (!tableSettings?.table.columns) return [];
-  const rowColumns: TableSettingColumns[][] = [[]];
-  let count = 0;
-  let idx: number = 0;
-  tableSettings?.table.columns
-    .filter((column: TableSettingColumns) => column.form && (typeof column.form === 'function' ? column.form(form.value!.fields) : column.form))
-    .sort((a, b) => getSort(a) - getSort(b))
-    .forEach((column: TableSettingColumns, index: number) => {
-      // const _span: number = getSpan(column);
-      // if (index % (24 / _span) === 0) {
-      //   rowColumns[count] = [];
-      //   count++;
-      // }
-      // rowColumns[count - 1].push(column);
-      const _span = getSpan(column);
-      count += _span;
+  const columns = tableSettings.table.columns;
+  const layout = form.value.layout;
+  const newColumns = columns
+    .filter((column: Column) => {
+      return column.form && (typeof column.form === 'function' ? column.form(form.value.fields) : column.form)
+    })
+    .sort((a, b) => getSort(a) - getSort(b));
+  if (layout === 'multiple-columns') {
+    // 一行多列
+    const rowColumns: TableSettingColumns<'multiple-columns'> = [[]];
+    let count = 0;
+    let idx: number = 0;
+    newColumns.forEach((column: Column, index: number) => {
+      const span = getSpan(column);
+      count += span;
       if (24 % count !== 0 && count > 24) {
         rowColumns.push([]);
         idx++;
-        count = _span;
+        count = span;
       }
       rowColumns[idx].push(column);
     })
-  return rowColumns
+    return rowColumns
+  }
+  return newColumns
 });
 
-const valueProp = (column: TableSettingColumns) => {
+const valueProp = (column: Column) => {
   return column.formValueProp || column.dataIndex;
 };
 
-const getOptions = (column: TableSettingColumns) => {
+const getOptions = (column: Column) => {
   if (typeof column.options === 'function') {
     const dataSource = tableSettings?.table.dataSource || []
     const fields = form.value?.fields
@@ -64,7 +69,7 @@ const getOptions = (column: TableSettingColumns) => {
 };
 
 
-const formItemAttrs = (column: TableSettingColumns) => ({
+const formItemAttrs = (column: Column) => ({
   ...tableSettings?.formRefs?.validateInfos[valueProp(column)],
   ...column.formItemConfig,
 });
@@ -89,9 +94,9 @@ defineOptions({
   >
     <slot>
       <custom-form
+        span-prop="formSpan"
         :name="form.name"
         :columns="formColumns"
-        :label-col="{ span: 4 }"
         :default-span="form.defaultSpan"
         :model="form.fields"
         v-bind="form.formConfig"

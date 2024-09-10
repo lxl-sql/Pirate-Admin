@@ -195,6 +195,9 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
     defaultExpandAllRows: true,
   },
   form: {
+    formConfig: {
+      labelCol: {span: 4},
+    },
     fields: {
       parentId: undefined,
       id: undefined,

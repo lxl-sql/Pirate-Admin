@@ -3,11 +3,13 @@
 import {CompressOutlined, ExpandOutlined} from "@ant-design/icons-vue";
 import {useTheme} from "@/store/hooks";
 import {computed} from "vue";
+import {useI18n} from "vue-i18n";
 
+const {t} = useI18n()
 const theme = useTheme()
 
 const title = computed(() => {
-  return theme.isFullScreen ? '退出全屏' : '全屏'
+  return theme.isFullScreen ? t('layout.header.title.full screen') : t('layout.header.title.exit full screen')
 })
 
 defineOptions({

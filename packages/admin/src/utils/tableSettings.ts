@@ -82,6 +82,7 @@ export default class TableSettings<
     rules: undefined,
     defaultSpan: 24,
     i18nPrefixProp: 'form',
+    layout: 'horizontal',
     modal: {
       open: false,
       maskClosable: false,

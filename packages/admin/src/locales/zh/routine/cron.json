@@ -1,0 +1,22 @@
+{
+  "table": {
+    "columns": {
+      "number": "#",
+      "type": "任务类型",
+      "name": "任务名称",
+      "cycleName": "执行周期",
+      "status": "状态",
+      "lastExecutionTime": "上次执行时间",
+      "operation": "操作"
+    }
+  },
+  "detail": {
+    "label": {
+      "username": "Username",
+      "ip": "IP"
+    }
+  },
+  "title": {
+    "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?": "计划任务暂停后将无法继续运行，您真的要停用这个计划任务吗？"
+  }
+}

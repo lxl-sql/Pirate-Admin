@@ -19,7 +19,7 @@ export const useState = (): ThemeState => {
     algorithm: defaultTheme.defaultAlgorithm,
   })
   const themeColor = shallowRef<string>('#1677ff')
-  const layoutMode = shallowRef<LayoutMode>('default')
+  const layoutMode = shallowRef<LayoutMode>('default');
   // 是否暗黑主题 黑/白 默认白 false; 黑 true
   const isDartTheme = shallowRef<boolean>(false);
 

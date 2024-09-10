@@ -14,3 +14,13 @@ export const findById = (id?: number) => {
 export const remove = (data) => {
   return request.post("/cron/remove", data);
 }
+
+// 新增/编辑定时任务
+export const upsert = (data) => {
+  return request.post("/cron", data);
+}
+
+// 修改状态
+export const status = (data) => {
+  return request.post("/cron/status", data);
+}

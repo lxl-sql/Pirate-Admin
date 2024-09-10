@@ -2,11 +2,11 @@
 <script setup lang="ts">
 import {useI18n} from "vue-i18n";
 import {computed, inject, watch} from "vue";
-import {TableSettingColumns} from "@/types/tableSettingsType";
+import {TableSettingColumn} from "@/types/tableSettingsType";
 import {IOptions} from "@/types";
 
 interface CustomFormItemProps {
-  column?: TableSettingColumns;
+  column?: TableSettingColumn;
   options?: any[];
   i18nPrefix?: string;
   i18nPropPrefix?: string; // form | table.column

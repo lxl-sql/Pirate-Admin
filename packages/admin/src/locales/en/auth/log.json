@@ -1,0 +1,25 @@
+{
+  "table": {
+    "columns": {
+      "userId": "User ID",
+      "username": "Username",
+      "title": "Title",
+      "url": "Url",
+      "ip": "IP",
+      "ipAddress": "IP Address",
+      "method": "Method",
+      "userAgent": "User-Agent",
+      "createTime": "CreateTime",
+      "status": "Status",
+      "responseTime": "ResponseTime",
+      "params": "Params",
+      "operation": "Operation"
+    }
+  },
+  "detail": {
+    "label": {
+      "username": "Username",
+      "ip": "IP"
+    }
+  }
+}

@@ -7,7 +7,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { CronJob } from 'cron';
-import { pageFormat } from '@/utils/tools';
+import { like, pageFormat } from '@/utils/tools';
 import { Status } from '@/enums/status.enum';
 import { WeekEnum, WeekNameEnum } from '@/enums/week.enum';
 import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
@@ -22,6 +22,8 @@ import { QueryCronDto } from './dto/query-cron.dto';
 import { LogService } from '../log/log.service';
 import { removePublic, upsertPublic } from '@/utils/crud';
 import { IdsDto } from '@/dtos/remove.dto';
+import { StatusDto } from '@/dtos/status.dto';
+import { In } from 'typeorm';
 
 interface CronExpression {
   cron: string;
@@ -80,7 +82,10 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
    * @returns
    */
   public async list(page: number, size: number, query: QueryCronDto) {
-    const condition = {};
+    const condition = {
+      name: like(query.name),
+      type: query.type,
+    };
 
     const [records, total] = await this.cronRepository.findAndCountAll(
       page,
@@ -166,6 +171,46 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     // await this.cronRepository.save(found_cron);
     this.startJob(found_cron);
     return '定时任务启动成功';
+  }
+
+  /**
+   * 修改定时任务状态
+   * @param body 修改条件
+   * @returns
+   */
+  public async status(body: StatusDto) {
+    await this.cronRepository.status(body);
+    if (body.status === Status.DISABLED) {
+      body.ids.forEach((id) => {
+        this.stopJob({ status: body.status, id });
+      });
+    } else {
+      const crons = await this.cronRepository.find({
+        where: { id: In(body.ids) },
+      });
+      crons.forEach((cron) => {
+        this.startJob(cron);
+      });
+    }
+    return '修改成功';
+  }
+  /**
+   * 停止单个定时任务
+   * @param cron 定时任务实体
+   */
+  private async stopJob(cron: Pick<Cron, 'status' | 'id'>) {
+    const job = this.jobs.get(cron.id);
+    if (job) {
+      job.stop();
+      this.jobs.delete(cron.id);
+      const msg = `修改定时任务状态为: ${cron.status}，停止定时任务: ${cron.id}`;
+      this.logger.log(msg);
+      this.logService.create({
+        cronId: cron.id,
+        result: msg,
+        status: cron.status,
+      });
+    }
   }
 
   /**

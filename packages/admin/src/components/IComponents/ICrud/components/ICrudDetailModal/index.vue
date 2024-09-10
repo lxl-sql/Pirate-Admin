@@ -1,12 +1,12 @@
 <!-- 自定义详情弹窗 -->
 <script setup lang="ts">
 import {computed, inject} from "vue";
-import {TableSettingColumns, TableSettingsType} from "@/types/tableSettingsType";
+import {TableSettingColumn, TableSettingsType} from "@/types/tableSettingsType";
 import {tableSettingKey} from "@/utils/tableSettings";
 import {useI18n} from "vue-i18n";
 import {IModalProps} from "@/components/IComponents/IModal/types";
 
-type Columns = TableSettingColumns
+type Columns = TableSettingColumn
 
 const {t, te} = useI18n();
 

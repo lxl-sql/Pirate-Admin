@@ -1,9 +1,14 @@
-<!-- 消息 -->
+<!-- 消息提醒 -->
 <script setup lang="ts">
-import {ref} from "vue";
+import {shallowRef} from "vue";
 import {BellOutlined} from "@ant-design/icons-vue";
 
-const open = ref<boolean>(false);
+const open = shallowRef<boolean>(false);
+const tooltipOpen = shallowRef<boolean>(false);
+
+const handleOpenChange = (visible: boolean) => {
+  tooltipOpen.value = !visible;
+};
 
 defineOptions({
   name: "NavMsg",
@@ -13,11 +18,11 @@ defineOptions({
 <template>
   <a-popover
     v-model:open="open"
-    placement="bottomRight"
-    title="消息提醒"
+    :title="$t('layout.header.title.message')"
+    placement="bottom"
     trigger="click"
     overlay-class-name="nav-msg-popover"
-    arrow-point-at-center
+    @click="tooltipOpen = false"
   >
     <template #content>
       <div class="nav-msg-content">
@@ -37,7 +42,7 @@ defineOptions({
         </div>
       </div>
     </template>
-    <a-tooltip title="消息提醒" placement="left">
+    <a-tooltip v-model:open="tooltipOpen" :title="$t('layout.header.title.message')">
       <div class="nav-menu-item">
         <bell-outlined class="msg-icon active"/>
       </div>

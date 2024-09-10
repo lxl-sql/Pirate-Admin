@@ -574,3 +574,14 @@ export const base64Encode = (str: string): string => {
 export function mergeArraysUnique<T>(arr1: T[], arr2: T[]) {
   return [...new Set([...arr1, ...arr2])];
 }
+
+/**
+ * 将 enum 转换为 Option[] 形式
+ * @param enumObj
+ */
+export function convertEnumToArray<T extends object>(enumObj: T): IOptions[] {
+  return Object.entries(enumObj).map(([key, value]) => ({
+    value: key,
+    label: value
+  }));
+};

@@ -1,4 +1,4 @@
-<!-- 黑/白 -->
+<!-- 主题模式 -->
 <script setup lang="ts">
 import {useTheme} from '@/store/hooks'
 
@@ -11,7 +11,7 @@ defineOptions({
 </script>
 
 <template>
-  <a-tooltip title="主题模式">
+  <a-tooltip :title="$t('layout.header.title.use theme')">
     <div class="nav-menu-item" @click="theme.changeTheme">
       <moon-outlined v-if="theme.isDartTheme"/>
       <sun-outlined v-else/>

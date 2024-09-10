@@ -1,0 +1,33 @@
+{
+  "table": {
+    "columns": {
+      "title": "标题"
+    }
+  },
+  "form": {
+    "label": {
+      "title": "规则标题",
+      "type": "规则类型"
+    },
+    "placeholder": {
+      "parentId": "请选择上级分组",
+      "name": "请输入组别名称",
+      "title": "请输入规则标题",
+      "slug": "请输入角色标识",
+      "permissionIds": "请选择权限"
+    }
+  },
+  "enum": {
+    "type": {
+      "1": "菜单目录",
+      "2": "菜单项",
+      "3": "页面按钮"
+    }
+  },
+  "error": {
+    "path": "请输入路径",
+    "name": "请输入组别名称",
+    "slug": "请输入角色标识",
+    "permissionIds": "请选择权限"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": {
+    "cache": "Clear Cache",
+    "gitee": "Gitee",
+    "github": "Github",
+    "home": "Home",
+    "use theme": "Use Theme",
+    "language": "Language",
+    "full screen": "Full Screen",
+    "exit full screen": "Exit Full Screen",
+    "message": "Message",
+    "setting": "Setting",
+    "userInfo": "UserInfo"
+  }
+}

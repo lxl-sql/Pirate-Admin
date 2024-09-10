@@ -246,11 +246,11 @@ const onReset = () => {
  */
 const getHeaderCellName = (column: IColumns) => {
   // 是否开启国际化 默认全局开启 优先级 isI18n > isI18nGlobal
-  const startI18n = typeof column.isI18n !== 'boolean' ? props.isI18nGlobal : column.isI18n
+  const startI18n = typeof column.isI18n !== 'boolean' ? props.isI18nGlobal : column.isI18n;
   if (!startI18n) return column.title;
   const il8nName = (column.i18nName || column.dataIndex) as string;
-  const title = [props.i18nPrefix, "table.columns", il8nName].filter(Boolean).join(".")
-  return te(title) ? t(title) : title;
+  const title = [props.i18nPrefix, "table.columns", il8nName].filter(Boolean).join(".");
+  return te(title) ? t(title) : column.title;
 };
 /**
  * 获取溢出省略的 `props`
@@ -290,6 +290,7 @@ defineOptions({
           <slot name="queryForm">
             <query-form
               ref="formRef"
+              layout="multiple-columns"
               :model="model"
               :columns="formColumns"
               :default-span="defaultSpan"
@@ -355,15 +356,21 @@ defineOptions({
                   </label>
                 </a-checkbox-group>
               </template>
-              <a-radio-button
-                value="menu"
-                :title="$t('title.filter')"
-                @click="handleMenuOrSearchRadio('menu')"
-              >
-                <table-outlined/>
-              </a-radio-button>
+              <a-tooltip placement="bottom" :title="$t('title.filter')">
+                <a-radio-button
+                  value="menu"
+                  :title="$t('title.filter')"
+                  @click="handleMenuOrSearchRadio('menu')"
+                >
+                  <table-outlined/>
+                </a-radio-button>
+              </a-tooltip>
             </a-popover>
-            <a-tooltip v-if="formColumns.length" placement="bottomRight">
+            <a-tooltip
+              v-if="formColumns.length"
+              placement="bottomRight"
+              arrow-point-at-center
+            >
               <template #title v-if="!isOpenSearch">
                 {{ $t("title.expandUniversalSearch") }}
               </template>

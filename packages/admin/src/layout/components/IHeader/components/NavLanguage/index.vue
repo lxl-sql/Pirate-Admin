@@ -1,23 +1,23 @@
-<!-- 首页 -->
+<!-- 切换语言 -->
 <script setup lang="ts">
-import { shallowRef } from "vue";
-import { TranslationOutlined } from "@ant-design/icons-vue";
-import { useI18n } from "vue-i18n";
-import { $local } from "@/utils/storage";
+import {shallowRef} from "vue";
+import {TranslationOutlined} from "@ant-design/icons-vue";
+import {useI18n} from "vue-i18n";
+import {$local} from "@/utils/storage";
 
-const { locale } = useI18n();
+const {locale} = useI18n();
 
 const open = shallowRef(false); // 语言
 const tooltipOpen = shallowRef(false); // 语言
 
 // 设置语言
-const putLanguage = (lang: string) => {
+const handleLanguageChange = (lang: string) => {
   open.value = false;
   locale.value = lang;
   $local.set("lang", lang);
 };
 
-const handleVisibleChange = (visible: boolean) => {
+const handleOpenChange = (visible: boolean) => {
   tooltipOpen.value = !visible;
 };
 
@@ -29,29 +29,29 @@ defineOptions({
 <template>
   <a-popover
     v-model:open="open"
-    :trigger="['click']"
+    trigger="click"
     overlayClassName="i-popover-menu"
-    @visibleChange="handleVisibleChange"
+    @click="tooltipOpen = false"
   >
     <template #content>
       <div
         class="i-popover-item"
         :class="{ active: locale === 'zh' }"
-        @click="putLanguage('zh')"
+        @click="handleLanguageChange('zh')"
       >
         中文简体
       </div>
       <div
         class="i-popover-item"
         :class="{ active: locale === 'en' }"
-        @click="putLanguage('en')"
+        @click="handleLanguageChange('en')"
       >
         English
       </div>
     </template>
-    <a-tooltip title="切换语言" v-model:open="tooltipOpen">
+    <a-tooltip v-model:open="tooltipOpen" :title="$t('layout.header.title.language')">
       <div class="nav-menu-item">
-        <translation-outlined />
+        <translation-outlined/>
       </div>
     </a-tooltip>
   </a-popover>

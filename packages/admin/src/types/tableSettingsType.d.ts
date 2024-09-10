@@ -5,9 +5,10 @@ import {type Ref} from "vue";
 import {FormInstance, FormProps, PaginationProps, TableProps} from "ant-design-vue";
 import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
 import type {RuleError} from "ant-design-vue/lib/form/interface";
-import {FormType, IOptions, Rules} from "@/types/form";
+import {FormLayout, FormType, IOptions, Rules} from "@/types/form";
 import {IModalProps} from "@/components/IComponents/IModal/types";
 import type {TableRowSelection} from "ant-design-vue/es/table/interface";
+import {CustomFormProps} from "@/components/IComponents/IOther/CustomForm/index.vue";
 
 /**
  * 表示操作按钮或操作类型的枚举。
@@ -91,7 +92,7 @@ export interface PrivateApi {
   sortable: Function;
 }
 
-export interface TableSettingColumns<RecordType = DefaultRecordType> extends IColumns<RecordType> {
+export interface TableSettingColumn<RecordType = DefaultRecordType> extends IColumns<RecordType> {
   /** 是否显示表单 */
   form?: boolean | ((fields?: Record<string, any>) => boolean)
   /** 表单内容类型 */
@@ -128,12 +129,22 @@ export interface TableSettingColumns<RecordType = DefaultRecordType> extends ICo
   options?: IColumns<RecordType>['options'] | ((dataSource?: RecordType[], fields?: Record<string, any>) => IOptions[])
 }
 
+/**
+ * 表格设置的列类型
+ */
+export type TableSettingColumns<
+  Layout extends FormLayout = 'horizontal',
+  RecordType = DefaultRecordType
+> = Layout extends 'multiple-columns'
+  ? TableSettingColumn<RecordType>[][]
+  : TableSettingColumn<RecordType>[]
+
 export interface TableReactive<
   RecordType = DefaultRecordType,
   QueryForm = DefaultQueryFormType
 > extends TableProps<RecordType> {
   /** 表格列配置 */
-  columns?: TableSettingColumns<RecordType>[];
+  columns?: TableSettingColumn<RecordType>[];
   /** 查询表单数据 */
   dataSource?: RecordType[];
   /** 操作按钮 */
@@ -176,17 +187,20 @@ export interface TableReactive<
   showRemark?: boolean;
 }
 
+
 export interface FormReactive<Fields = DefaultFieldsType> {
   /** 表单数据对象 */
   fields: Fields;
   /** 表单配置 */
-  formConfig?: FormProps;
+  formConfig?: Pick<FormProps, CustomFormProps>;
   /** 表单验证规则 */
   rules?: Rules;
   /** 表单名称，会作为表单字段 id 前缀使用 */
   name?: string;
   /** 国际化前缀 */
   i18nPrefixProp?: string;
+  /** 表单布局 */
+  layout?: FormLayout;
   /** 表单布局 */
   defaultSpan?: number;
   /** 表单弹窗配置 */

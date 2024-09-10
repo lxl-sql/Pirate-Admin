@@ -1,3 +1,4 @@
+<!-- 设置 -->
 <script setup lang="ts">
 import {SettingOutlined} from "@ant-design/icons-vue";
 import SettingDrawer from "./components/SettingDrawer/index.vue";
@@ -15,7 +16,7 @@ defineOptions({
 </script>
 
 <template>
-  <a-tooltip title="主题设置">
+  <a-tooltip :title="$t('layout.header.title.setting')">
     <div class="nav-menu-item" @click="openSettingDrawer">
       <setting-outlined/>
     </div>

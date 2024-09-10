@@ -24,11 +24,12 @@ defineOptions({
 </script>
 
 <template>
-  <div class="flex justify-between p-3 border border-solid query-form">
+  <div class="flex flex-col sm:flex-row sm:justify-between p-3 border border-solid query-form">
     <custom-form
       ref="formRef"
       layout="inline"
       class="flex-1"
+      span-prop="searchSpan"
       :columns="columns"
       :default-span="defaultSpan"
       v-bind="$attrs"
@@ -37,7 +38,7 @@ defineOptions({
         <slot :column="column"/>
       </template>
     </custom-form>
-    <a-space class="ml-4 self-end">
+    <a-space class="sm:ml-4 self-end">
       <a-button type="primary" @click="emits('query')">查询</a-button>
       <a-button @click="emits('reset')">重置</a-button>
     </a-space>

@@ -64,7 +64,7 @@ export class BackupService {
     const fileName = `backup-${startTime
       .toISOString()
       .replace(/:/g, '-')
-      .replace(/\./g, '-')}.sql`;
+      .replace(/\./g, '-')}.sql.gz`;
     const filePath = join(backupDir, fileName);
     // 相对路径
     const relativePath = join('backups', fileName);
@@ -74,8 +74,8 @@ export class BackupService {
       await mysqldump({
         connection: dbConfig,
         dumpToFile: filePath,
-        compressFile: true, // 启用压缩
-        // compressFile: false, // 暂时禁用压缩
+        // compressFile: true, // 启用压缩
+        compressFile: false, // 暂时禁用压缩
       });
 
       if (!existsSync(filePath)) {

@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/lxl-sql/Pirate-Vue">
-    <img width="160" src="/packages/web/src/assets/images/logo_piece.png">
+    <img width="160" src="/packages/admin/src/assets/images/logo_piece.png">
   </a>
 </p>
 

@@ -1,0 +1,25 @@
+{
+  "table": {
+    "columns": {
+      "userId": "管理员ID",
+      "username": "管理员用户名",
+      "title": "标题",
+      "url": "URL",
+      "ip": "IP",
+      "ipAddress": "IP属地",
+      "method": "请求方式",
+      "userAgent": "UserAgent",
+      "createTime": "创建时间",
+      "status": "状态码",
+      "responseTime": "响应时间",
+      "params": "请求数据",
+      "operation": "操作"
+    }
+  },
+  "detail": {
+    "label": {
+      "username": "操作管理员",
+      "ip": "操作人IP"
+    }
+  }
+}

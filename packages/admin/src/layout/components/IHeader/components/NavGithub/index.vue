@@ -11,7 +11,7 @@ defineOptions({
 </script>
 
 <template>
-  <a-tooltip title="Github">
+  <a-tooltip :title="$t('layout.header.title.github')">
     <div class="nav-menu-item" @click="openWindow(url)">
       <github-outlined/>
     </div>

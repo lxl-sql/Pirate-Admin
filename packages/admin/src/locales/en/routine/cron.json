@@ -1,0 +1,22 @@
+{
+  "table": {
+    "columns": {
+      "number": "#",
+      "type": "Type",
+      "name": "Name",
+      "cycleName": "Cycle Name",
+      "status": "Status",
+      "lastExecutionTime": "Last Execution Time",
+      "operation": "Operation"
+    }
+  },
+  "detail": {
+    "label": {
+      "username": "Username",
+      "ip": "IP"
+    }
+  },
+  "title": {
+    "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?": "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?"
+  }
+}

@@ -2,6 +2,9 @@ import {Rule} from "ant-design-vue/es/form";
 import {Dayjs} from "dayjs";
 import type {RuleType as AntRuleType} from "ant-design-vue/es/form/interface";
 
+// 一行多列 | 水平的 | 一行展示 | 垂直的
+export type FormLayout = 'multiple-columns' | 'horizontal' | 'inline' | 'vertical';
+
 // Input框 type
 export type FormType =
   | "input"

@@ -7,7 +7,7 @@ import {CaptchaType} from "@/types/request";
 import {bindCaptcha, bindInfo} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
 import useCountdown from "@/hooks/useCountdown";
-import {CAPTCHA_TYPE} from "@/const/captcha-type.const";
+import {CaptchaTypeName} from "@/enums/captcha-type.enum";
 
 const {t} = useI18n()
 const {timeLeft, isRunning, start, reset} = useCountdown();
@@ -82,7 +82,7 @@ const handleConfirm = async () => {
 }
 
 const title = computed(() => {
-  const name = CAPTCHA_TYPE[type.value]
+  const name = CaptchaTypeName[type.value]
   if (name) {
     return `绑定${name}`
   }

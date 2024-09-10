@@ -15,6 +15,7 @@ import { RequireLogin } from '@/decorators/custom.decorator';
 import { generateParseIntPipe } from '@/utils/tools';
 import { QueryCronDto } from './dto/query-cron.dto';
 import { IdsDto } from '@/dtos/remove.dto';
+import { StatusDto } from '@/dtos/status.dto';
 
 @Controller('cron')
 export class CronController {
@@ -51,6 +52,12 @@ export class CronController {
     @Query('cron') cron?: string,
   ) {
     return await this.cronService.startOne(id, cron);
+  }
+
+  @Post('status')
+  @RequireLogin()
+  async status(@Body() body: StatusDto) {
+    return await this.cronService.status(body);
   }
 
   @Get(':id')

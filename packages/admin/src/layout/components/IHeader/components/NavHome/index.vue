@@ -1,4 +1,4 @@
-<!-- 语言 -->
+<!-- 会员首页 -->
 <script setup lang="ts">
 import {DesktopOutlined} from "@ant-design/icons-vue";
 
@@ -9,7 +9,7 @@ defineOptions({
 
 <template>
   <!-- 你的前台首页/小程序/app -->
-  <a-tooltip title="会员首页">
+  <a-tooltip :title="$t('layout.header.title.home')">
     <div class="nav-menu-item">
       <desktop-outlined/>
     </div>
