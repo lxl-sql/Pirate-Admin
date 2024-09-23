@@ -1,10 +1,7 @@
 {
   "name": "pirate-server",
   "version": "0.0.1",
-  "description": "pirate-admin的后端代码",
-  "author": "lxlsql",
   "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "build-win": "cross-env NODE_ENV=production nest build && copy .env.production dist && copy .env dist",
     "build-win:dev": "cross-env NODE_ENV=development nest build && copy .env.development dist && copy .env dist",

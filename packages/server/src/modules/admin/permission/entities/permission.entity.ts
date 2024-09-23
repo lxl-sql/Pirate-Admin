@@ -1,5 +1,5 @@
 import {Column, Entity} from 'typeorm';
-import {Status} from '@/enums/status.enum'
+import {Status} from '@/enums';
 import {DefaultEntity} from '@/entities/default.entity';
 
 // 管理员权限表

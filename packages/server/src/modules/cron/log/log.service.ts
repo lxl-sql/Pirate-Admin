@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { CreateLogDto } from './dto/create-log.dto';
-import { UpdateLogDto } from './dto/update-log.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Log } from '@/modules/cron/log/entities/log.entity';
-import { Repository } from 'typeorm';
-import { Status } from '@/enums/status.enum';
+import {Injectable} from '@nestjs/common';
+import {CreateLogDto} from './dto/create-log.dto';
+import {UpdateLogDto} from './dto/update-log.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Log} from '@/modules/cron/log/entities/log.entity';
+import {Repository} from 'typeorm';
+import {Status} from '@/enums';
 
 interface ExecutionResult {
   logs: string[];
@@ -20,7 +20,7 @@ export class LogService {
   public async create(createLogDto: CreateLogDto): Promise<Log> {
     const new_log = this.logRepository.create({
       ...createLogDto,
-      cron: { id: createLogDto.cronId },
+      cron: {id: createLogDto.cronId},
     });
     return await this.logRepository.save(new_log);
   }
@@ -59,8 +59,8 @@ export class LogService {
     if (maxSave <= 0) return;
 
     const logs = await this.logRepository.find({
-      where: { cron: { id: cronId } },
-      order: { id: 'DESC' },
+      where: {cron: {id: cronId}},
+      order: {id: 'DESC'},
       take: maxSave,
     });
     if (logs.length > 0) {

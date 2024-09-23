@@ -1,4 +1,4 @@
-export enum CronTypeEnum {
+export enum CronType {
   SERVICE = 'service',
   LOG_BACKUP = 'log_backup',
   LOG_CUT = 'log_cut',
@@ -6,7 +6,7 @@ export enum CronTypeEnum {
   SHELL_SCRIPT = 'shell_script',
 }
 
-export enum CronTypeEnumName {
+export const enum CronTypeName {
   service = '服务',
   log_backup = '日志备份',
   log_cut = '日志切割',

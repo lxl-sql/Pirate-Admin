@@ -1,8 +1,6 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { DateFormatTransformer } from '@/utils/transformer';
-import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
-import { CronTypeEnum } from '@/enums/cron-type.enum';
-import { Status } from '@/enums/status.enum';
+import { CronType, CronCycleType, Status } from '@/enums';
 import { DefaultEntity } from '@/entities/default.entity';
 import { Log } from '../../log/entities/log.entity';
 
@@ -19,9 +17,9 @@ export class Cron extends DefaultEntity {
     type: 'varchar',
     length: 255,
     comment: '任务类型',
-    default: CronTypeEnum.SERVICE,
+    default: CronType.SERVICE,
   })
-  type: CronTypeEnum;
+  type: CronType;
 
   @Column({
     type: 'text',
@@ -53,7 +51,7 @@ export class Cron extends DefaultEntity {
     comment: '执行周期类型',
     nullable: true,
   })
-  cycleType: CronCycleTypeEnum;
+  cycleType: CronCycleType;
 
   @Column({
     type: 'varchar',

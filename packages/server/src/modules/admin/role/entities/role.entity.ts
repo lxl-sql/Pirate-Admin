@@ -1,5 +1,5 @@
 import {Column, Entity, JoinColumn, JoinTable, ManyToMany, Tree, TreeChildren, TreeParent,} from 'typeorm';
-import {Status} from "@/enums/status.enum";
+import {Status} from '@/enums';
 import {DefaultEntity} from '@/entities/default.entity';
 import {Permission} from '../../permission/entities/permission.entity';
 

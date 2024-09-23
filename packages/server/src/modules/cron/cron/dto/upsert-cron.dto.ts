@@ -8,9 +8,7 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator';
-import { Status } from '@/enums/status.enum';
-import { CronTypeEnum } from '@/enums/cron-type.enum';
-import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
+import { Status, CronType, CronCycleType } from '@/enums';
 import { UpsertDto } from '@/dtos/upsert.dto';
 
 export class UpsertCronDto extends UpsertDto {
@@ -19,8 +17,8 @@ export class UpsertCronDto extends UpsertDto {
   @IsNotEmpty({ message: '名称不能为空' })
   name: string;
 
-  @IsEnum(CronTypeEnum, { message: '请选择有效的定时任务类型' })
-  type: CronTypeEnum;
+  @IsEnum(CronType, { message: '请选择有效的定时任务类型' })
+  type: CronType;
 
   @MaxLength(255, { message: '描述不能超过255个字符' })
   @IsString({ message: '描述必须是文本' })
@@ -36,9 +34,9 @@ export class UpsertCronDto extends UpsertDto {
   @IsOptional()
   content?: string;
 
-  @IsEnum(CronCycleTypeEnum, { message: '请选择有效的执行周期类型' })
+  @IsEnum(CronCycleType, { message: '请选择有效的执行周期类型' })
   @IsOptional()
-  cycleType?: CronCycleTypeEnum;
+  cycleType?: CronCycleType;
 
   @MaxLength(255, { message: '执行周期不能超过255个字符' })
   @IsString({ message: '执行周期格式不正确' })

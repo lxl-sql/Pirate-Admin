@@ -1,6 +1,12 @@
 {
-  "extends": "./tsconfig.base.json",
-  "exclude": [
-    "node_modules"
-  ]
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@pirate/shared/*": [
+        "packages/shared/src/*"
+      ]
+    },
+    "noEmit": true
+  }
 }

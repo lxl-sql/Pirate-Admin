@@ -7,7 +7,7 @@ import {CaptchaType} from "@/types/request";
 import {bindCaptcha, bindInfo} from "@/api/auth/admin";
 import {useI18n} from "vue-i18n";
 import useCountdown from "@/hooks/useCountdown";
-import {CaptchaTypeName} from "@/enums/captcha-type.enum";
+import {CaptchaTypeName} from "@pirate/shared";
 
 const {t} = useI18n()
 const {timeLeft, isRunning, start, reset} = useCountdown();

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { Status } from '@/enums/status.enum';
+import { Status } from '@/enums';
 import { IdsDto } from '@/dtos/remove.dto';
 
 export class StatusDto extends IdsDto {

@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import {findById, list, remove, status, upsert} from "@/api/routine/cron";
 import TableSettings from "@/utils/tableSettings";
-import {CronTypeEnumName} from "@/enums/cron-type.enum";
+import {CronType, CronTypeName} from "@pirate/shared";
 import {computed} from "vue";
-import {convertEnumToArray} from "@/utils/common";
+import {mapEnumToOptions} from "@/utils/common";
 import {message, Modal} from "ant-design-vue";
 import {useI18n} from "vue-i18n";
 
 const {t} = useI18n()
 
-const typeOptions = computed(() => convertEnumToArray(CronTypeEnumName))
+const typeOptions = computed(() => mapEnumToOptions(CronType, CronTypeName))
 
 const tableSettings = new TableSettings({
   api: {
@@ -33,7 +33,7 @@ const tableSettings = new TableSettings({
         align: 'center',
         width: 100,
         customRender: ({text}) => {
-          return CronTypeEnumName[text];
+          return CronTypeName[text];
         },
         search: true,
         form: true,

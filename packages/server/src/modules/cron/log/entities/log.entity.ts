@@ -1,7 +1,7 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { Status } from '@/enums/status.enum';
-import { CreateTimeEntity } from '@/entities/create-time.entity';
-import { Cron } from '../../cron/entities/cron.entity';
+import {Column, Entity, ManyToOne} from 'typeorm';
+import {Status} from '@/enums';
+import {CreateTimeEntity} from '@/entities/create-time.entity';
+import {Cron} from '../../cron/entities/cron.entity';
 
 @Entity('cron-log')
 export class Log extends CreateTimeEntity {

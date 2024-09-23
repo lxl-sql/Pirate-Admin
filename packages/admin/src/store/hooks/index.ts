@@ -1,3 +1,3 @@
 export * from './useNavTabs';
-export * from './useTheme'
+export * from './useTheme';
 

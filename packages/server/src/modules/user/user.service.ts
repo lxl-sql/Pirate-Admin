@@ -10,7 +10,7 @@ import {CaptchaService} from '@/common/captcha/captcha.service';
 import {RedisService} from '@/common/redis/redis.service';
 import {BaseUserInfoVo} from '@/common/token/vo/user-info.vo';
 import {CaptchaTypeEnum} from "@/types/enum";
-import {Status} from "@/enums/status.enum";
+import {Status} from '@/enums';
 import {UserRole} from './entities/role-user.entity';
 import {User} from './entities/user.entity';
 import {UpdatePasswordUserDto} from './dto/update-password-user.dto';

@@ -1,4 +1,4 @@
-import {Status} from "@/enums/status.enum";
+import {Status} from '@/enums';
 
 export class QueryRoleDto {
   name: string;

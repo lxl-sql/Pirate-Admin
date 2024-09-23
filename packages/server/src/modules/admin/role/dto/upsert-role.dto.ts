@@ -1,6 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional} from 'class-validator';
-import {Status} from "@/enums/status.enum";
+import {Status} from '@/enums';
 
 export class UpsertRoleDto {
   @ApiProperty({description: '角色 ID', example: 1, required: false})

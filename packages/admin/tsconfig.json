@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "ESNext",
       "DOM"
@@ -16,7 +17,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "outDir": "dist",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "rootDir": "src",
     "paths": {
       "@/*": [
@@ -28,16 +29,11 @@
       "vite/client",
       "node"
     ],
-    // 允许隐式的any
     "noImplicitAny": false,
-    // 严格的null与undefined检查
     "strictNullChecks": true,
-    // 防止在switch代码块里的两个case之间忘记添加break语句。
     "noFallthroughCasesInSwitch": true,
-    // 允许this有隐式的any类型
     "noImplicitThis": false
   },
-  // 读取所有可识别的src目录下的文件
   "include": [
     "src/**/*",
     "src/**/*.ts",
@@ -47,8 +43,7 @@
     "types/**/*.d.ts"
   ],
   "exclude": [
-    "node_modules",
-    "../server"
+    "node_modules"
   ],
   "references": [
     {

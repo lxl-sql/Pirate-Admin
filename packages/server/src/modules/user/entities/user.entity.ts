@@ -1,7 +1,6 @@
 import {Column, Entity, JoinTable, ManyToMany} from 'typeorm';
 import {DateFormatTransformer} from '@/utils/transformer';
-import {Status} from "@/enums/status.enum";
-import {Gender} from "@/enums/gender.enum";
+import {Gender, Status} from '@/enums';
 import {DefaultEntity} from '@/entities/default.entity';
 import {UserRole} from './role-user.entity';
 

@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {Gender} from "@/enums/gender.enum";
+import {Gender} from '@/enums';
 import {BaseUserInfoVo} from "@/common/token/vo/user-info.vo";
 
 export class UserProfileInfoVo extends BaseUserInfoVo {

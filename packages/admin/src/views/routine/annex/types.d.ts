@@ -1,6 +1,6 @@
 import {type RecordType} from "@/types/table";
 import {TableSettingsType} from "@/types/tableSettingsType";
-import {Usertype} from "@/enums/usertype.enus";
+import {Usertype} from "@pirate/shared";
 
 export interface AnnexRecordType extends RecordType {
   /** 附件名称 */

@@ -584,4 +584,16 @@ export function convertEnumToArray<T extends object>(enumObj: T): IOptions[] {
     value: key,
     label: value
   }));
-};
+}
+
+/**
+ * 将 enum 与 const enum 转换为 Option[] 形式
+ * @param enumObj
+ * @param constEnumObj
+ */
+export function mapEnumToOptions<T extends object>(enumObj: T, constEnumObj: T): IOptions[] {
+  return Object.keys(enumObj).map(key => ({
+    value: enumObj[key as keyof T],
+    label: constEnumObj[enumObj[key as keyof T] as keyof T],
+  }));
+}

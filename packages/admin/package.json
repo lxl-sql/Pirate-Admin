@@ -17,6 +17,7 @@
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
     "@highlightjs/vue-plugin": "^2.1.0",
+    "@pirate/shared": "workspace:*",
     "@types/lodash-es": "^4.17.12",
     "@vueuse/core": "^6.1.0",
     "ant-design-vue": "^4.2.3",
@@ -31,7 +32,8 @@
     "sortablejs": "^1.15.0",
     "vue": "^3.4.25",
     "vue-i18n": "^9.9.1",
-    "vue-router": "^4.1.6"
+    "vue-router": "^4.1.6",
+    "workspace": "0.0.1-preview.1"
   },
   "devDependencies": {
     "@types/js-beautify": "^1.14.3",

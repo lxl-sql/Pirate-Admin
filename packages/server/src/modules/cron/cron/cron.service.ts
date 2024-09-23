@@ -8,9 +8,8 @@ import {
 } from '@nestjs/common';
 import { CronJob } from 'cron';
 import { like, pageFormat } from '@/utils/tools';
-import { Status } from '@/enums/status.enum';
 import { WeekEnum, WeekNameEnum } from '@/enums/week.enum';
-import { CronCycleTypeEnum } from '@/enums/cron-cycle-type.enum';
+import { CronCycleType, Status } from '@/enums';
 import { WINSTON_LOGGER_TOKEN } from '@/const/winston.const';
 import { BackupService } from '@/common/backup/backup.service';
 import { AppLogger } from '@/common/logger/app-logger.service';
@@ -344,7 +343,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
 
   // 根据 cycleType 和 cycle 生成 cron 表达式
   private generateCronExpression(
-    cycleType: CronCycleTypeEnum,
+    cycleType: CronCycleType,
     cycle?: string,
   ): CronExpression | null {
     if (!cycle) {
@@ -353,7 +352,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     // cycle 格式为 周,月,日,时,分,秒
     const cycle_arr = cycle.split(',');
     switch (cycleType) {
-      case CronCycleTypeEnum.DAY: {
+      case CronCycleType.DAY: {
         // 每天 N 点 N 分 0 秒 执行
         const [hour, minute] = cycle_arr;
         return {
@@ -361,7 +360,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
           cycleName: `每天，${hour}点 ${minute}分 执行`,
         };
       }
-      case CronCycleTypeEnum.DAY_N: {
+      case CronCycleType.DAY_N: {
         // 每月第 N 天 N 点 N 分 0 秒 执行
         const [day, hour, minute] = cycle_arr;
         return {
@@ -369,7 +368,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
           cycleName: `每月，第${day}天，${hour}点 ${minute}分 执行`,
         };
       }
-      case CronCycleTypeEnum.HOUR: {
+      case CronCycleType.HOUR: {
         // 每小时 N 分 0 秒 执行
         const [minute] = cycle_arr;
         return {
@@ -377,7 +376,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
           cycleName: `每小时，${minute}分 执行`,
         };
       }
-      case CronCycleTypeEnum.HOUR_N: {
+      case CronCycleType.HOUR_N: {
         // 每隔 N 小时 N 分 0 秒 执行
         const [hour, minute] = cycle_arr;
         return {
@@ -385,7 +384,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
           cycleName: `每隔${hour}小时，${minute}分 执行`,
         };
       }
-      case CronCycleTypeEnum.MINUTE_N: {
+      case CronCycleType.MINUTE_N: {
         // 每隔 N 分钟 执行
         const [minute] = cycle_arr;
         return {
@@ -393,7 +392,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
           cycleName: `每隔${minute}分钟 执行`,
         };
       }
-      case CronCycleTypeEnum.WEEK: {
+      case CronCycleType.WEEK: {
         // 每周几 N 点 N 分 0 秒 执行
         // week 格式为 1,2,3,4,5,6,7 指 1（星期天）到 7（星期六）
         const [week, hour, minute] = cycle_arr;
@@ -403,7 +402,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
           cycleName: `每周${week_name}，${hour}点 ${minute}分 执行`,
         };
       }
-      case CronCycleTypeEnum.MONTH: {
+      case CronCycleType.MONTH: {
         // 每月 N 点 N 分 0 秒 执行
         const [day, hour, minute] = cycle_arr;
         return {
