@@ -33,6 +33,10 @@ const layoutProp = computed<FormLayout>(() => {
   return props.layout
 })
 
+const getSpan = (column) => {
+  return column[props.spanProp] || props.defaultSpan
+}
+
 provide('model', props.model)
 
 defineExpose(formInstance)
@@ -60,10 +64,10 @@ defineOptions({
         <a-col
           v-for="(column) in _columns"
           :key="column.dataIndex"
-          :span="column[spanProp] || defaultSpan"
+          :span="getSpan(column)"
           :xs="24"
           :md="12"
-          :xl="column[spanProp] || defaultSpan"
+          :xl="getSpan(column)"
         >
           <slot name="col" :column="column"/>
         </a-col>
@@ -74,5 +78,6 @@ defineOptions({
         <slot name="col" :column="column"/>
       </template>
     </template>
+    <slot name="formAfter" :model="model"/>
   </a-form>
 </template>

@@ -184,12 +184,12 @@ const tableSettings: AdminTableSettingsType = new TableSettings({
       roleIds: [{required: true, message: t("user.error.roles")}],
     },
     modal: {
-      beforeOpen(type: ModalType) {
+      onOpenBefore(type: ModalType) {
         if (tableSettings.form.rules) {
           tableSettings.form.rules.password = [{required: type === 0, message: t("user.error.password")}]
         }
       },
-      afterOpen(type: ModalType, fields: AdminFields) {
+      onOpenAfter(type: ModalType, fields: AdminFields) {
         if (type !== 1) return;
         const file = {
           // 按照要求乱填即可

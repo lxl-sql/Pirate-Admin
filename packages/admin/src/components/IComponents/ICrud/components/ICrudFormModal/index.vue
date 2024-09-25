@@ -11,10 +11,10 @@ type Column = TableSettingColumn
 
 const {t} = useI18n()
 
-const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
+const setting = inject<TableSettingsType>(tableSettingKey, {} as any);
 
-const form = computed(() => tableSettings?.form)
-const modal = computed(() => tableSettings?.modal)
+const form = computed(() => setting.form)
+const modal = computed(() => setting.modal)
 
 // 获取排序字段
 const getSort = (column: Column) => {
@@ -23,13 +23,13 @@ const getSort = (column: Column) => {
 
 // 获取列的 span
 const getSpan = (column: Column) => {
-  return Number(column.formSpan || form.value?.defaultSpan || 24);
+  return Number(column.formSpan || form.value.defaultSpan || 24);
 };
 
 // 24 / span
 const formColumns = computed(() => {
-  if (!tableSettings?.table.columns) return [];
-  const columns = tableSettings.table.columns;
+  if (!setting.table?.columns) return [];
+  const columns = setting.table.columns;
   const layout = form.value.layout;
   const newColumns = columns
     .filter((column: Column) => {
@@ -62,21 +62,21 @@ const valueProp = (column: Column) => {
 
 const getOptions = (column: Column) => {
   if (typeof column.options === 'function') {
-    const dataSource = tableSettings?.table.dataSource || []
-    const fields = form.value?.fields
+    const dataSource = setting.table.dataSource || []
+    const fields = form.value.fields
     return column.options(dataSource, fields)
   }
 };
 
 
 const formItemAttrs = (column: Column) => ({
-  ...tableSettings?.formRefs?.validateInfos[valueProp(column)],
+  ...setting.formRefs?.validateInfos[valueProp(column)],
   ...column.formItemConfig,
 });
 
 const modalProps = computed<IModalProps>(() => ({
   ...modal.value, // 公共弹窗配置
-  ...form.value?.modal, // form 表单弹窗配置
+  ...form.value.modal, // form 表单弹窗配置
 }))
 
 defineOptions({
@@ -88,8 +88,8 @@ defineOptions({
   <i-modal
     v-if="form"
     :title="$t(form.fields.id ? 'title.update' : 'title.create')"
-    @cancel="tableSettings?.cancelForm(1)"
-    @confirm="tableSettings?.confirmForm"
+    @cancel="setting.cancelForm(1)"
+    @confirm="setting.confirmForm"
     v-bind="modalProps"
   >
     <slot>
@@ -99,21 +99,29 @@ defineOptions({
         :columns="formColumns"
         :default-span="form.defaultSpan"
         :model="form.fields"
+        :layout="form.layout"
         v-bind="form.formConfig"
       >
         <template #col="{column}">
           <custom-form-item
             :column="column"
             :options="getOptions(column)"
-            :i18n-prefix="tableSettings.table.i18nPrefix"
+            :i18n-prefix="setting.table.i18nPrefix"
             :i18n-prop-prefix="form.i18nPrefixProp"
             type-prop="formType"
             v-bind="formItemAttrs(column)"
           >
             <template #default="scope">
-              <slot name="field" v-bind="scope"></slot>
+              <slot name="field" :fields="form.fields" v-bind="scope"></slot>
             </template>
           </custom-form-item>
+        </template>
+        <template
+          v-for="name in ['formAfter']"
+          :key="name"
+          v-slot:[name]="scope"
+        >
+          <slot :name="name" v-bind="scope"></slot>
         </template>
       </custom-form>
     </slot>

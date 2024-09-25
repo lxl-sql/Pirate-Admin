@@ -8,11 +8,13 @@ import {computed, toRefs} from "vue";
 
 interface ProcessingTag extends ITagProps {
   value?: DefaultStatus;
+  activeValue?: string;
+  unActiveValue?: string;
 }
 
 const props = defineProps<ProcessingTag>()
 
-const {value, color, ...resetProps} = toRefs(props)
+const {value, color, activeValue, unActiveValue, ...resetProps} = toRefs(props)
 
 const resetBind = computed(() => {
   return Object.keys(resetProps).reduce((prev, key) => {
@@ -36,7 +38,3 @@ defineOptions({
     {{ $t(`enum.status.${value}`) }}
   </a-tag>
 </template>
-
-<style scoped lang="less">
-
-</style>

@@ -2,7 +2,7 @@ import {FormFieldProps, IColumns, IPages, ITableProps} from "@/types/table";
 import {DefaultRecordType} from "ant-design-vue/es/vc-table/interface";
 import {Key} from "ant-design-vue/lib/table/interface";
 import {type Ref} from "vue";
-import {FormInstance, FormProps, PaginationProps, TableProps} from "ant-design-vue";
+import {DescriptionsProps, FormInstance, FormProps, PaginationProps, TableProps} from "ant-design-vue";
 import {Props, ValidateInfo, validateOptions,} from "ant-design-vue/lib/form/useForm";
 import type {RuleError} from "ant-design-vue/lib/form/interface";
 import {FormLayout, FormType, IOptions, Rules} from "@/types/form";
@@ -46,10 +46,10 @@ export declare type DefaultFieldsType = {
 };
 
 interface ModalCallback<T = any> {
-  beforeOpen?: (...args: T) => void
-  afterOpen?: (...args: T) => void
-  beforeClose?: (...args: T) => void
-  afterClose?: (...args: T) => void
+  onOpenBefore?: (...args: T) => void
+  onOpenAfter?: (...args: T) => void
+  onCloseBefore?: (...args: T) => void
+  onCloseAfter?: (...args: T) => void
 }
 
 export interface QueryAllOptions {
@@ -214,10 +214,12 @@ export interface DetailReactive<Fields = DefaultFieldsType> {
   column?: number;
   /** 表单布局 */
   defaultSpan?: number;
-  /** 表单弹窗配置 */
-  modal: IModalProps & ModalCallback;
   /** 国际化前缀 */
   i18nPrefixProp?: string;
+  /** 表单弹窗配置 */
+  modal: IModalProps & ModalCallback;
+  /** 默认描述列表配置 */
+  descriptionsConfig?: DescriptionsProps
 }
 
 

@@ -311,7 +311,7 @@ defineOptions({
       <div class="i-table-header">
         <!-- 左侧按钮 可自定义左侧按钮内容 -->
         <a-space>
-          <slot name="leftActions"></slot>
+          <slot name="leftActions"/>
         </a-space>
         <!-- 右侧功能区域 -->
         <a-space class="ml-auto">
@@ -421,14 +421,15 @@ defineOptions({
             </template>
             <template #bodyCell="score">
               <slot name="bodyCell" v-bind="score">
-                <ellipsis
-                  v-if="score.column?.ellipsis"
-                  :value="score.value"
-                  :width="score.column.width"
-                  placement="top"
-                  tooltip
-                  v-bind="getEllipsisProps(score.column.ellipsis)"
-                />
+                <slot :name="score.column?.dataIndex" v-bind="score">
+                  <ellipsis
+                    v-if="score.column?.ellipsis"
+                    :value="score.value"
+                    :width="score.column.width - 32"
+                    tooltip
+                    v-bind="getEllipsisProps(score.column.ellipsis)"
+                  />
+                </slot>
               </slot>
             </template>
           </a-table>

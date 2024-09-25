@@ -92,6 +92,7 @@ export default class TableSettings<
   public readonly detail = reactive({
     fields: {} as Fields,
     i18nPrefixProp: 'detail',
+    descriptionsConfig: undefined,
     column: 2,
     modal: {
       open: false,
@@ -281,7 +282,7 @@ export default class TableSettings<
 
   public openForm = async (type: Omit<ModalType, 2>, id?: Key) => {
     this.form.fields.id = id;
-    this.form.modal.beforeOpen?.(type, this.form.fields)
+    this.form.modal.onOpenBefore?.(type, this.form.fields)
     // 当 rules 的类型为 function 默认认为需要动态修改校验
     if (typeof this.form.rules === "function") {
       this.initFormRefs();
@@ -290,7 +291,7 @@ export default class TableSettings<
     if (type === 1 && id) {
       await this.detailById(type, id);
     }
-    this.form.modal.afterOpen?.(type, this.form.fields)
+    this.form.modal.onOpenAfter?.(type, this.form.fields)
   };
 
   /**
@@ -310,14 +311,14 @@ export default class TableSettings<
    */
   public cancelForm = (type: Omit<ModalType, 0>) => {
     if (type === 1) {
-      this.form.modal.beforeClose?.(this.form.fields)
+      this.form.modal.onCloseBefore?.(this.form.fields)
       this.form.modal.open = false;
       this.clearForm(type)
-      this.form.modal.afterClose?.()
+      this.form.modal.onCloseAfter?.()
     } else {
-      this.detail.modal.beforeClose?.()
+      this.detail.modal.onCloseBefore?.()
       this.detail.modal.open = false;
-      this.detail.modal.afterClose?.()
+      this.detail.modal.onCloseAfter?.()
     }
   };
 
@@ -325,7 +326,7 @@ export default class TableSettings<
     await this.formRefs?.validate();
     const {fields} = this.form;
     const params = this.getParams("confirmForm", fields);
-    this.form.modal.beforeClose?.(params)
+    this.form.modal.onCloseBefore?.(params)
     this.modal.loading = true;
     try {
       await this.api.upsert(params);
@@ -338,7 +339,7 @@ export default class TableSettings<
       await this.queryAll();
     } finally {
       this.modal.loading = false;
-      this.form.modal.afterClose?.()
+      this.form.modal.onCloseAfter?.()
     }
   };
 
@@ -348,12 +349,12 @@ export default class TableSettings<
    */
   public openDetail = async (id: Key) => {
     this.detail.fields.id = id
-    this.detail.modal.beforeOpen?.(id, this.detail.fields)
+    this.detail.modal.onOpenBefore?.(id, this.detail.fields)
 
     this.detail.modal.open = true;
     await this.detailById(2, id);
 
-    this.detail.modal.afterOpen?.(id, this.detail.fields)
+    this.detail.modal.onOpenAfter?.(id, this.detail.fields)
   };
 
   /**

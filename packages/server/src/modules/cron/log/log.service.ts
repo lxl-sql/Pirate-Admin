@@ -1,10 +1,12 @@
-import {Injectable} from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {CreateLogDto} from './dto/create-log.dto';
-import {UpdateLogDto} from './dto/update-log.dto';
-import {InjectRepository} from '@nestjs/typeorm';
 import {Log} from '@/modules/cron/log/entities/log.entity';
-import {Repository} from 'typeorm';
 import {Status} from '@/enums';
+import {pageFormat} from "@/utils/tools";
+import {IdsDto} from "@/dtos/remove.dto";
+import {removePublic} from "@/utils/crud";
+import {LogRepository} from "./log.repository";
+import {QueryLogDto} from "./dto/query-log.dto";
 
 interface ExecutionResult {
   logs: string[];
@@ -14,8 +16,8 @@ interface ExecutionResult {
 
 @Injectable()
 export class LogService {
-  @InjectRepository(Log)
-  private readonly logRepository: Repository<Log>;
+  @Inject(LogRepository)
+  private readonly logRepository: LogRepository;
 
   public async create(createLogDto: CreateLogDto): Promise<Log> {
     const new_log = this.logRepository.create({
@@ -69,19 +71,39 @@ export class LogService {
     return null;
   }
 
-  findAll() {
-    return `This action returns all log`;
+  public async list(page: number, size: number, query: QueryLogDto) {
+    const condition = {
+      cron: {id: query.cronId},
+      status: query.status,
+    };
+
+    const [records, total] = await this.logRepository.findAndCountAll(
+      page,
+      size,
+      condition,
+    );
+
+    const result: Log[] = records.map(log => {
+      return {
+        ...log,
+        cronId: log.cron.id,
+        cron: null
+      }
+    })
+
+    return pageFormat(page, size, total, result);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} log`;
+  public async detail(id: number) {
+    return await this.logRepository.findOneBy({id});
   }
 
-  update(id: number, updateLogDto: UpdateLogDto) {
-    return `This action updates a #${id} log`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} log`;
+  /**
+   *
+   * @param body [0] 清空日志 [...ids] 删除对应id
+   */
+  public async remove(body: IdsDto) {
+    await removePublic(this.logRepository, body);
+    return '删除成功';
   }
 }

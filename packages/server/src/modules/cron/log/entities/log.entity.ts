@@ -19,6 +19,7 @@ export class Log extends CreateTimeEntity {
   status: Status;
 
   @Column({
+    name: 'backup_file_path',
     type: 'varchar',
     length: 255,
     comment: '备份文件路径',

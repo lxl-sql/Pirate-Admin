@@ -214,9 +214,9 @@ const tableSettings: AdminRoleTableSettingsType = new TableSettings({
       permissionIds: [{required: true, message: t("admin_role.error.permissionIds")}],
     },
     modal: {
-      afterOpen: formAfterOpen,
-      beforeClose: formBeforeClose,
-      afterClose: formAfterClose
+      onOpenAfter: formAfterOpen,
+      onCloseBefore: formBeforeClose,
+      onCloseAfter: formAfterClose
     }
   },
 });

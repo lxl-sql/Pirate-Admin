@@ -10,14 +10,14 @@ type Columns = TableSettingColumn
 
 const {t, te} = useI18n();
 
-const tableSettings = inject<TableSettingsType>(tableSettingKey, {} as any);
+const setting = inject<TableSettingsType>(tableSettingKey, {} as any);
 
-const detail = computed(() => tableSettings?.detail)
-const modal = computed(() => tableSettings?.modal)
+const detail = computed(() => setting.detail || {})
+const modal = computed(() => setting.modal || {})
 
 const modalProps = computed<IModalProps>(() => ({
   ...modal.value, // 公共弹窗配置
-  ...detail.value?.modal, // form 表单弹窗配置
+  ...detail.value.modal, // form 表单弹窗配置
 }))
 
 // 获取排序字段
@@ -26,18 +26,18 @@ const getSort = (column: Columns) => {
 };
 
 const detailColumns = computed(() => {
-  if (!tableSettings?.table.columns) return [];
-  return tableSettings.table.columns
-    .filter((column: Columns) => typeof column.detail === 'function' ? column.detail(detail.value!.fields) : column.detail)
+  if (!setting.table.columns) return [];
+  return setting.table.columns
+    .filter((column: Columns) => typeof column.detail === 'function' ? column.detail(detail.value.fields) : column.detail)
     .sort((a, b) => getSort(a) - getSort(b))
 })
 
-const getValueName = (column: Columns) => {
+const getValueProp = (column: Columns) => {
   return column.detailValueProp || column.dataIndex;
 };
 
 const getI18nName = (column: Columns, key: string) => {
-  return [tableSettings.table.i18nPrefix, detail.value.i18nPrefixProp, key, column.i18nName || getValueName(column)]
+  return [setting.table.i18nPrefix, detail.value.i18nPrefixProp, key, column.i18nName || getValueProp(column)]
     .filter(Boolean)
     .join(".");
 };
@@ -48,9 +48,9 @@ const getLabelName = (column: Columns) => {
   return column.detailLabelProp || (te(il8nName) ? t(il8nName) : column.title);
 }
 
-const getValue = (column: Columns) => {
-  const value = detail.value?.fields[getValueName(column)]
-  return column.detailRender ? column.detailRender(value, detail.value?.fields) : value
+const getValue = (column: Columns, index: number) => {
+  const value = detail.value.fields?.[getValueProp(column)]
+  return column.detailRender ? column.detailRender(value, detail.value.fields, index) : value
 }
 
 const getSpan = (column: Columns) => {
@@ -65,25 +65,28 @@ defineOptions({
   <i-modal
     v-if="detail"
     :title="$t('title.detail')"
-    @cancel="() => tableSettings?.cancelForm(2)"
+    @cancel="() => setting.cancelForm(2)"
     v-bind="modalProps"
   >
     <a-descriptions
+      v-if="detailColumns.length"
       bordered
-      size="middle"
+      size="small"
       :label-style="{width: '150px'}"
       :column="detail.column"
+      v-bind="detail.descriptionsConfig"
     >
       <a-descriptions-item
-        v-for="column in detailColumns"
+        v-for="(column,index) in detailColumns"
         :key="column.dataIndex"
         :label="getLabelName(column)"
         :span="getSpan(column)"
       >
-        <slot name="field" :column="column" :value="getValue(column)">
-          {{ getValue(column) }}
+        <slot name="field" :column="column" :value="getValue(column, index)">
+          {{ getValue(column, index) }}
         </slot>
       </a-descriptions-item>
     </a-descriptions>
+    <slot name="detailAfter" :fields="detail.fields"/>
   </i-modal>
 </template>

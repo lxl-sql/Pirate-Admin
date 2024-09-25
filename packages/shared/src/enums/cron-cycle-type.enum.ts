@@ -42,3 +42,13 @@ export enum CronCycleType {
    */
   MONTH = 'month',
 }
+
+export const enum CronCycleTypeName {
+  'day' = '每天',
+  'day-n' = '每N天',
+  'hour' = '每小时',
+  'hour-n' = '每N小时',
+  'minute-n' = '每N分钟',
+  'week' = '每周',
+  'month' = '每月',
+}

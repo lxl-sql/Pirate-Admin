@@ -17,6 +17,7 @@
     }
   },
   "title": {
-    "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?": "计划任务暂停后将无法继续运行，您真的要停用这个计划任务吗？"
+    "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?": "计划任务暂停后将无法继续运行，您真的要停用这个计划任务吗？",
+    "This scheduled task is disabled. Do you want to enable this scheduled task?": "该计划任务已停用，是否要启用这个计划任务？"
   }
 }

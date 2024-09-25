@@ -17,6 +17,7 @@
     }
   },
   "title": {
-    "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?": "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?"
+    "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?": "Once the scheduled task is paused, it will not continue running. Are you sure you want to disable this scheduled task?",
+    "This scheduled task is disabled. Do you want to enable this scheduled task?": "This scheduled task is disabled. Do you want to enable this scheduled task?"
   }
 }

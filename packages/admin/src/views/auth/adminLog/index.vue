@@ -111,13 +111,6 @@ const tableSettings: any = new TableSettings({
         detail: true,
         detailSort: 8,
         detailSpan: 2,
-        customCell() {
-          return {
-            style: {
-              maxWidth: '200px'
-            }
-          }
-        }
       },
       {
         title: "创建时间",

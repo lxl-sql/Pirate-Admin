@@ -1,8 +1,8 @@
-import { Column, Entity, OneToMany } from 'typeorm';
-import { DateFormatTransformer } from '@/utils/transformer';
-import { CronType, CronCycleType, Status } from '@/enums';
-import { DefaultEntity } from '@/entities/default.entity';
-import { Log } from '../../log/entities/log.entity';
+import {Column, Entity, OneToMany} from 'typeorm';
+import {DateFormatTransformer} from '@/utils/transformer';
+import {CronCycleType, CronType, Status} from '@/enums';
+import {DefaultEntity} from '@/entities/default.entity';
+import {Log} from '../../log/entities/log.entity';
 
 @Entity('cron')
 export class Cron extends DefaultEntity {
@@ -26,7 +26,7 @@ export class Cron extends DefaultEntity {
     comment: 'shell脚本 任务内容 排除规则 等',
     nullable: true,
   })
-  content: string;
+  content?: string;
 
   @Column({
     type: 'varchar',
@@ -34,7 +34,7 @@ export class Cron extends DefaultEntity {
     comment: '任务描述',
     nullable: true,
   })
-  description: string;
+  description?: string;
 
   @Column({
     type: 'char',
@@ -42,7 +42,7 @@ export class Cron extends DefaultEntity {
     comment: 'Cron 表达式',
     nullable: true,
   })
-  cron: string;
+  cron?: string;
 
   @Column({
     name: 'cycle_type',
@@ -51,7 +51,7 @@ export class Cron extends DefaultEntity {
     comment: '执行周期类型',
     nullable: true,
   })
-  cycleType: CronCycleType;
+  cycleType?: CronCycleType;
 
   @Column({
     type: 'varchar',
@@ -59,7 +59,7 @@ export class Cron extends DefaultEntity {
     comment: '执行周期拼接',
     nullable: true,
   })
-  cycle: string;
+  cycle?: string;
 
   @Column({
     name: 'cycle_name',
@@ -68,14 +68,14 @@ export class Cron extends DefaultEntity {
     comment: '执行周期名称',
     nullable: true,
   })
-  cycleName: string;
+  cycleName?: string;
 
   @Column({
     type: 'int',
     comment: '已保存数量 保存到本地',
     nullable: true,
   })
-  save: number;
+  save?: number;
 
   // 最大保存数量
   @Column({
@@ -83,7 +83,7 @@ export class Cron extends DefaultEntity {
     comment: '最大保存数量',
     nullable: true,
   })
-  maxSave: number;
+  maxSave?: number;
 
   @Column({
     type: 'int',
@@ -98,7 +98,7 @@ export class Cron extends DefaultEntity {
     default: Status.DISABLED,
     nullable: true,
   })
-  notice: Status;
+  notice?: Status;
 
   @Column({
     name: 'notice_channel',
@@ -107,7 +107,7 @@ export class Cron extends DefaultEntity {
     comment: '通知渠道',
     nullable: true,
   })
-  noticeChannel: string;
+  noticeChannel?: string;
 
   @Column({
     type: 'tinyint',
@@ -123,7 +123,7 @@ export class Cron extends DefaultEntity {
     transformer: new DateFormatTransformer(),
     nullable: true,
   })
-  lastExecutionTime: Date;
+  lastExecutionTime?: Date;
 
   @OneToMany(() => Log, (log) => log.cron)
   logs: Log[];

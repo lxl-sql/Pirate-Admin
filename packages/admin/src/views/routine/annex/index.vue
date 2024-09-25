@@ -146,7 +146,7 @@ const onUploadChange = async (files: FileList) => {
   if (layout.value === 'thumbnailGrid') {
     previewFileGroupRef.value.upload(files)
   } else {
-    onUpload(files)
+    await onUpload(files)
   }
 }
 
@@ -169,7 +169,7 @@ const {dropZoneRef} = useDragAndDropUpload({
     class="min-h-full !p-0"
   >
     <i-crud :setting="tableSettings">
-      <template #afterActionRefresh>
+      <template #refreshActionAfter>
         <i-upload
           :show-upload-list="false"
           list-type="text"
@@ -177,7 +177,7 @@ const {dropZoneRef} = useDragAndDropUpload({
           @success="onUploadSuccess"
         />
       </template>
-      <template #afterLeftAction>
+      <template #leftActionAfter>
         <a-radio-group v-model:value="layout">
           <a-radio-button value="default">
             <bars-outlined/>

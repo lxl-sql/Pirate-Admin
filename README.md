@@ -25,10 +25,26 @@
 
 `Pirate Admin` 内置了 `约定式路由`、`layout布局`、`请求封装`、`请求拦截`、`登录拦截`、`Tailwindcss`、`i18n多语言` 等基础功能。
 
+## 待办
+- [x] 侧边栏记忆收起功能 刷新页面也保持状态
+- [x] 修改主题色
+- [ ] 配置数据库短信签名等
+- [ ] 上传文件 【分片上传，大文件上传】
+- [ ] 定时任务
+- [ ] 版本更新更新弹出提示, 并且刷新所有已打开页面
+- [ ] 管理员日志 ip 操作统计
+- [x] 管理员日志 定时清理
+- [ ] docker 一键部署 前端/后端
+- [ ] 将所有配置项抽离成环境变量
+- [ ] 取消调用接口 cancel
+- [ ] 前/后端错误监控日志
+- [ ] 定制化插件
+- [ ] 工作流集成
+
 ![](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <p align="center">
-  <a href="https://admin.bqrlm.cn/" target="_blank">📱 在线预览</a>
+  <a href="https://admin.lxlsql.cn/" target="_blank">📱 在线预览</a>
   <!-- <span style="margin:0 10px;">|</span> -->
   <!-- <a href="https://codercup.github.io/unibest-docs/" target="_blank">📖 阅读文档</a> -->
 </p>
