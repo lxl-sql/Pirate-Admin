@@ -22,7 +22,9 @@
     "paths": {
       "@/*": [
         "src/*"
-      ]
+      ],
+      "@pirate/shared": ["../shared/src"],
+      "@pirate/shared/*": ["../shared/src/*"]
     },
     "types": [
       "vue-router",
@@ -48,6 +50,7 @@
   "references": [
     {
       "path": "./tsconfig.node.json"
-    }
+    },
+    { "path": "../shared" }
   ]
 }

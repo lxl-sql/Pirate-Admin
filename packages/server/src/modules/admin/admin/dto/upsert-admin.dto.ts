@@ -11,7 +11,7 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 
 export class UpsertAdminDto {
   @ApiProperty({description: '类型', enum: [1, 2], example: 1})

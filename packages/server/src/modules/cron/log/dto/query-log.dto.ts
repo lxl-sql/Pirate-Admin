@@ -1,4 +1,4 @@
-import {Status} from "@/enums";
+import {Status} from "@pirate/shared/enums";
 import {IsEnum, IsInt, IsOptional} from "class-validator";
 
 export class QueryLogDto {

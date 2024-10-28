@@ -1,6 +1,6 @@
 import {Column, Entity, OneToMany} from 'typeorm';
 import {DateFormatTransformer} from '@/utils/transformer';
-import {CronCycleType, CronType, Status} from '@/enums';
+import {CronCycleType, CronType, Status} from '@pirate/shared/enums';
 import {DefaultEntity} from '@/entities/default.entity';
 import {Log} from '../../log/entities/log.entity';
 

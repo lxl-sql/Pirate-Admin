@@ -1,5 +1,5 @@
 import {Column, Entity, ManyToOne} from 'typeorm';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 import {CreateTimeEntity} from '@/entities/create-time.entity';
 import {Cron} from '../../cron/entities/cron.entity';
 

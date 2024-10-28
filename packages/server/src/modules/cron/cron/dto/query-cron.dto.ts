@@ -1,5 +1,5 @@
 import { IsEnum, IsOptional } from 'class-validator';
-import { CronType } from '@/enums';
+import { CronType } from '@pirate/shared/enums';
 
 export class QueryCronDto {
   @IsOptional()

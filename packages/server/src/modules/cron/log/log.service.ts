@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {CreateLogDto} from './dto/create-log.dto';
 import {Log} from '@/modules/cron/log/entities/log.entity';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 import {pageFormat} from "@/utils/tools";
 import {IdsDto} from "@/dtos/remove.dto";
 import {removePublic} from "@/utils/crud";

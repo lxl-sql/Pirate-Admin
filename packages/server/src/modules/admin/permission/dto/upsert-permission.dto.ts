@@ -1,6 +1,6 @@
 import {ApiProperty} from "@nestjs/swagger";
 import {IsInt, IsNotEmpty, IsOptional, ValidateIf} from 'class-validator';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 
 export class UpsertPermissionDto {
   @ApiProperty({description: '权限 ID', example: 1, required: false})

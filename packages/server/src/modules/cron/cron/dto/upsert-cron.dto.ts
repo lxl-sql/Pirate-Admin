@@ -8,7 +8,7 @@ import {
   Min,
   ValidateIf,
 } from 'class-validator';
-import { Status, CronType, CronCycleType } from '@/enums';
+import { Status, CronType, CronCycleType } from '@pirate/shared/enums';
 import { UpsertDto } from '@/dtos/upsert.dto';
 
 export class UpsertCronDto extends UpsertDto {

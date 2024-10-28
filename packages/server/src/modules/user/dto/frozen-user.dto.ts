@@ -1,5 +1,5 @@
 import {IsEnum, IsNotEmpty} from 'class-validator';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 
 export class FrozenUserDto {
   @IsNotEmpty({message: '用户Id不能为空'})

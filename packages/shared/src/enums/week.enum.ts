@@ -8,7 +8,17 @@ export enum Week {
   SATURDAY = '7',
 }
 
-export const enum WeekName {
+export enum WeekCycleName {
+  '周日' = '1',
+  '周一' = '2',
+  '周二' = '3',
+  '周三' = '4',
+  '周四' = '5',
+  '周五' = '6',
+  '周六' = '7',
+}
+
+export enum WeekName {
   SUNDAY = '日',
   MONDAY = '一',
   TUESDAY = '二',
@@ -18,12 +28,3 @@ export const enum WeekName {
   SATURDAY = '六',
 }
 
-export const enum WeekCycleName {
-  '1' = '周日',
-  '2' = '周一',
-  '3' = '周二',
-  '4' = '周三',
-  '5' = '周四',
-  '6' = '周五',
-  '7' = '周六',
-}

@@ -1,5 +1,5 @@
 import {IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength,} from 'class-validator';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 
 export class CreateLogDto {
   @IsInt({message: '定时任务ID必须是一个整数'})

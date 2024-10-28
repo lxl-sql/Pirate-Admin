@@ -1,5 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
-import {Status} from '@/enums'
+import {Status} from '@pirate/shared/enums'
 import {DefaultVo} from "@/vos/default.vo";
 
 export class BaseUserInfoVo extends DefaultVo {

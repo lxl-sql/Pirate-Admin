@@ -1,6 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {IsEnum, IsNotEmpty} from 'class-validator';
-import {Status} from '@/enums';
+import {Status} from '@pirate/shared/enums';
 import {IdsDto} from '@/dtos/remove.dto';
 
 export class StatusPermissionDto extends IdsDto {

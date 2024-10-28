@@ -8,8 +8,7 @@ import {
 } from '@nestjs/common';
 import { CronJob } from 'cron';
 import { like, pageFormat } from '@/utils/tools';
-import { WeekEnum, WeekNameEnum } from '@/enums/week.enum';
-import { CronCycleType, Status } from '@/enums';
+import { CronCycleType, Status, Week, WeekName } from '@pirate/shared/enums';
 import { WINSTON_LOGGER_TOKEN } from '@/const/winston.const';
 import { BackupService } from '@/common/backup/backup.service';
 import { AppLogger } from '@/common/logger/app-logger.service';
@@ -73,6 +72,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     this.jobs.clear();
     this.logger.log('All scheduled jobs have been stopped and cleared.');
   }
+
   /**
    * 查询定时任务列表
    * @param page 页码
@@ -193,6 +193,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
     }
     return '修改成功';
   }
+
   /**
    * 停止单个定时任务
    * @param cron 定时任务实体
@@ -396,7 +397,7 @@ export class CronService implements OnModuleInit, OnModuleDestroy {
         // 每周几 N 点 N 分 0 秒 执行
         // week 格式为 1,2,3,4,5,6,7 指 1（星期天）到 7（星期六）
         const [week, hour, minute] = cycle_arr;
-        const week_name = WeekNameEnum[WeekEnum[week]];
+        const week_name = WeekName[Week[week]];
         return {
           cron: `0 ${minute} ${hour} * * ${week}`,
           cycleName: `每周${week_name}，${hour}点 ${minute}分 执行`,
